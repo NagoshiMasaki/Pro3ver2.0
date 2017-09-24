@@ -11,8 +11,6 @@ public class BoardStatus : MonoBehaviour {
     int lengthSize;
     [SerializeField]
     int sideSize;
-
-
     public GameObject GetMath(int length,int side)
     {
         return mathObjects[side, length];

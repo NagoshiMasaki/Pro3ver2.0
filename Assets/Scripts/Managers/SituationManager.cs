@@ -8,16 +8,17 @@ public class SituationManager : MonoBehaviour
     [SerializeField]
     GameMaster gameMasterScript;
     [SerializeField]
-    public enum Status
+    public enum Phase
     {
         None,
+        Draw,
         Main1,
         Move,
         Main2,
         End,
     }
 
-    Status status = Status.None;
+    Phase status = Phase.None;
     [SerializeField]
     int playerTurn;
 
@@ -26,23 +27,23 @@ public class SituationManager : MonoBehaviour
         return gameMasterScript.GetIsGamePlay();
     }
 
-    public void SetStatus(Status set)
+    public void SetPhase(Phase set)
     {
         switch (set)
         {
-            case Status.Main1:
+            case Phase.Main1:
                 break;
-            case Status.Main2:
+            case Phase.Main2:
                 break;
-            case Status.Move:
+            case Phase.Move:
                 break;
-            case Status.End:
+            case Phase.End:
                 break;
         }
         status = set;
     }
 
-    public Status GetStatus()
+    public Phase GetStatus()
     {
         return status;
     }

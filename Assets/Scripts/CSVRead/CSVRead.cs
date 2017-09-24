@@ -7,8 +7,8 @@ public class CSVRead : MonoBehaviour {
 
     [SerializeField]
     string fileName;
-
-
+    [SerializeField]
+    DeckClass deckClassScript;
      void Start()
     {
         StreamReader sr = new StreamReader(Application.dataPath + fileName, Encoding.GetEncoding("shift_jis"));
@@ -16,7 +16,11 @@ public class CSVRead : MonoBehaviour {
         {
             string[] cols = sr.ReadLine().Split(',');
             int col = int.Parse(cols[0]);
+            Debug.Log(col);
+            deckClassScript.SetCharacter(col);
         }
+        deckClassScript.IniShaffle();
     }
+
 
 }
