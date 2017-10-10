@@ -21,6 +21,7 @@ public class SPAPStatus : MonoBehaviour
     Vector3 defaultSPPos;
     List<GameObject> APList = new List<GameObject>();
     List<GameObject> SPList = new List<GameObject>();
+
     void Start()
     {
         defaultSPPos = SPPos.transform.position;
@@ -57,11 +58,18 @@ public class SPAPStatus : MonoBehaviour
         return SPObj;
     }
 
-    public void InstanceAPPos()
+    public void InstanceAP()
     {
         GameObject instanceobj = Instantiate(APObj, APPos.transform.position, Quaternion.identity);
         APList.Add(instanceobj);
         MoveAP();
+    }
+
+    public void InstanceSP()
+    {
+        GameObject instanceobj = Instantiate(SPObj, SPPos.transform.position, Quaternion.identity);
+        SPList.Add(instanceobj);
+        MoveSP();
     }
 
     void MoveAP()
@@ -78,12 +86,12 @@ public class SPAPStatus : MonoBehaviour
         SPPos.transform.position = pos;
     }
 
-    public void ResetAPPos()
+    void ResetAPPos()
     {
         APPos.transform.position = defaultAPPos;
     }
 
-    public void ResetSPPos()
+    void ResetSPPos()
     {
         SPPos.transform.position = defaultSPPos;
     }
@@ -118,6 +126,34 @@ public class SPAPStatus : MonoBehaviour
             Vector3 pos = SPPos.transform.position;
             pos.x--;
             SPPos.transform.position = pos;
+        }
+    }
+
+    public void IniInstanceSP()
+    {
+        for(int count = 0; count < SP;count++)
+        {
+            InstanceSP();
+        }
+    }
+
+    public void ResetApInstance()
+    {
+        AllDestroyAP();
+        ResetAPPos();
+        for(int count = 0;count < AP;count++)
+        {
+            InstanceAP();
+        }
+    }
+
+    public void ResetSpInstance()
+    {
+        AllDestroyAP();
+        ResetAPPos();
+        for (int count = 0; count < SP; count++)
+        {
+            InstanceSP();
         }
     }
 }
