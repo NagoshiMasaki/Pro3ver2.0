@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/////////////////
+//制作者　名越大樹
+//クラス名　手札を管理するクラス
+/////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,13 +36,20 @@ public class DeckHand : MonoBehaviour {
 
     public void RemoveDeckHand(GameObject obj)
     {
-        for (int count = 0; count <= deckHandList.Count; count++)
+        for (int count = 0; count < deckHandList.Count; count++)
         {
             if (obj == deckHandList[count])
             {
+                Destroy(deckHandList[count]);
                 deckHandList.RemoveAt(count);
             }
         }
+    }
+
+    public void RemoveIllustCard(GameObject obj)
+    {
+        RemoveDeckHand(obj);
+        ResetPos();
     }
 
     public void SetDrawObj(GameObject obj)
@@ -49,7 +61,8 @@ public class DeckHand : MonoBehaviour {
     void InstanceDraw(GameObject obj)
     {
         Vector3 pos = deckHandManagerScript.GetInstancePos(playerNumber);
-        Instantiate(obj,pos,Quaternion.identity);
+        GameObject instanceobj = Instantiate(obj,pos,Quaternion.identity);
+        instanceobj.GetComponent<IllustrationStatus>().SetPlayerNumber(playerNumber);
         MoveDeckHandPos();
     }
 
@@ -63,6 +76,11 @@ public class DeckHand : MonoBehaviour {
     public void ResetPos()
     {
         deckHandPos.transform.position = defaultPos;
+        for(int count = 0;count < deckHandList.Count;count++)
+        {
+            deckHandList[count].transform.position = deckHandPos.transform.position;
+            MoveDeckHandPos();
+        }
     }
 
     public int GetPlayerNumber()
@@ -79,4 +97,6 @@ public class DeckHand : MonoBehaviour {
     {
         deckHandPos.transform.position = pos;
     }
+
+
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MassStatus : MonoBehaviour {
+public class MassStatus : MonoBehaviour
+{
 
     [SerializeField]
     int lengthNumber;
@@ -14,17 +15,22 @@ public class MassStatus : MonoBehaviour {
     GameObject characterobj;
     [SerializeField]
     Material[] playermaterial;
+    [SerializeField]
     int materialNumber;
-    public void SetNumber(int length,int side,int number,int material)
+    [SerializeField]
+    bool isMove = false;
+    BoardManager.MassMoveStatus status;
+    public void SetNumber(int length, int side, int number, int materialnum)
     {
         lengthNumber = length;
         sideNumber = side;
         massNumber = number;
-        materialNumber = material;
+        materialNumber = materialnum;
         GetComponent<Renderer>().material = playermaterial[materialNumber];
+        status = BoardManager.MassMoveStatus.None;
     }
 
-    public void GetNumbers(ref int length,ref int side,ref int number)
+    public void GetNumbers(ref int length, ref int side, ref int number)
     {
         length = lengthNumber;
         side = sideNumber;
@@ -49,5 +55,25 @@ public class MassStatus : MonoBehaviour {
     public int GetMaterialNumber()
     {
         return materialNumber;
+    }
+
+    public bool GetIsMove()
+    {
+        return isMove;
+    }
+
+    public void SetIsMove(bool set)
+    {
+        isMove = set;
+    }
+
+    public void SetMassStatus(BoardManager.MassMoveStatus set)
+    {
+        status = set;
+    }
+
+    public BoardManager.MassMoveStatus GetMoveStatus()
+    {
+        return status;
     }
 }

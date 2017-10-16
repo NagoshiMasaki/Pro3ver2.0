@@ -34,5 +34,9 @@ public class IllustrationStatus : MonoBehaviour {
         dictionarynum = dictionaryNumber;
         costnum = costNumber;
         playernum = playerNumber;
-    }    
+    }
+    public void SetPlayerNumber(int num)
+    {
+        playerNumber = num;
+    }
 }

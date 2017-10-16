@@ -15,7 +15,7 @@ public class PlayerStatus : MonoBehaviour
     LayerMask illustrationLayer;
     [SerializeField]
     int iniDeckHandCount;
-
+    GameObject attachillustcard;
     public bool GetIsGamePlay()
     {
         return playerManagerScript.GetIsGamePlay();
@@ -58,5 +58,15 @@ public class PlayerStatus : MonoBehaviour
     public LayerMask GetIllustrationLayer()
     {
         return illustrationLayer;
+    }
+
+    public GameObject GetAttachIllustCard()
+    {
+        return attachillustcard;
+    }
+
+    public void SetAttachIllustCard(GameObject set)
+    {
+        attachillustcard = set;
     }
 }

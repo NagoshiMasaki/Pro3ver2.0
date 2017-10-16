@@ -18,19 +18,20 @@ public class SPAPManager : MonoBehaviour {
         IniInstanceSp(1);
     }
 
-    public void GetSP(int playernum)
+    public int GetSP(int playernum)
     {
         switch (playernum)
         {
             case 1:
-                spapStatus1.GetSP();
-                break;
+               return spapStatus1.GetSP();
+            case 2:
+               return spapStatus2.GetSP();
         }
+        return 0;
     }
 
     public void IniInstanceSp(int playernum)
     {
-        Debug.Log("hoge");
         switch (playernum)
         {
             case 1:

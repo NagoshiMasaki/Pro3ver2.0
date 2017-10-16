@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DeckHandManager : MonoBehaviour
 {
-
     [SerializeField]
     DeckHand decxHand1Script;
     [SerializeField]
@@ -22,6 +21,32 @@ public class DeckHandManager : MonoBehaviour
                 break;
         }
         return Vector3.zero;
+    }
+
+    public void InstanceDrawCard(int num,GameObject drawobj)
+    {
+        switch (num)
+        {
+            case 1:
+                decxHand1Script.SetDrawObj(drawobj);
+                break;
+            case 2:
+                decxHand2Script.SetDrawObj(drawobj);
+                break;
+        }
+    }
+
+    public void RemoveIllustCard(int num,GameObject target)
+    {
+        switch (num)
+        {
+            case 1:
+                decxHand1Script.RemoveIllustCard(target);
+                break;
+            case 2:
+                decxHand2Script.RemoveIllustCard(target);
+                break;
+        }
     }
 
 }

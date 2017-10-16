@@ -17,10 +17,15 @@ public class SituationManager : MonoBehaviour
         Main2,
         End,
     }
-
-    Phase status = Phase.None;
+    [SerializeField]
+    Phase status = Phase.Draw;
     [SerializeField]
     int playerTurn;
+
+    void Start()
+    {
+        status = Phase.Draw;//デバック用
+    }
 
     public bool GetIsGamePlay()
     {

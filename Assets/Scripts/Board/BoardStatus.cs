@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardStatus : MonoBehaviour {
-
+public class BoardStatus : MonoBehaviour
+{
+   [SerializeField]
+    MoveData moveDataScript;
     [SerializeField]
     BoardManager boardManagerScript;
-    GameObject[,] mathObjects = new GameObject[6, 6];
+    [SerializeField]
+    GameObject[,] massObjects = new GameObject[6, 6];
+    [SerializeField]
+    MassStatus[,] massStatuses = new MassStatus[6, 6];
     [SerializeField]
     int lengthSize;
     [SerializeField]
     int sideSize;
-    public GameObject GetMath(int length,int side)
+    List<GameObject> dataList = new List<GameObject>();
+    public GameObject GetMass(int length, int side)
     {
-        return mathObjects[side, length];
+        return massObjects[length, side];
     }
 
     public bool GetIsGamePlay()
@@ -36,9 +42,31 @@ public class BoardStatus : MonoBehaviour {
         return boardManagerScript.GetInstanceMathObj();
     }
 
-    public void SetMathObjects(int length,int size,GameObject setobj)
+    public void SetMathObjects(int length, int side, GameObject setobj)
     {
-        mathObjects[length, size] = setobj;
+        massObjects[length, side] = setobj;
+        massStatuses[length, side] = setobj.GetComponent<MassStatus>();
     }
 
+    public List<GameObject> GetInstancePos(int playernum)
+    {
+        dataList.Clear();
+        for (int length = 0; length < 6; length++)
+        {
+            for (int side = 0; side < 6; side++)
+            {
+                int number = massStatuses[length, side].GetMaterialNumber();
+                if (playernum == number)
+                {
+                    dataList.Add(massObjects[length, side]);
+                }
+            }
+        }
+        return dataList;
+    }
+
+    public void InstanceMovePos(MoveData.Rate rate, int playernum, int nowlengthmass, int nowsidemass)
+    {
+        moveDataScript.GetMoveData(rate, playernum, massObjects, massStatuses, nowlengthmass, nowsidemass,boardManagerScript.GetMovePosMassObj());
+    }
 }

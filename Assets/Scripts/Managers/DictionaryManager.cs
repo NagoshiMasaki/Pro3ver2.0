@@ -5,10 +5,16 @@ using UnityEngine;
 public class DictionaryManager : MonoBehaviour {
 
     [SerializeField]
-    GameObject[] CharacterArray;
-    
-    public GameObject GetCharacter(int num)
+    GameObject[] illustCharacterArray;
+    [SerializeField]
+    GameObject[] summonCharacterArray;
+    public GameObject GetIllustCharacter(int num)
     {
-        return CharacterArray[num];
+        return illustCharacterArray[num];
+    }
+
+    public GameObject GetSummonCharacter(int num)
+    {
+        return summonCharacterArray[num];
     }
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeckClass : MonoBehaviour {
+public class DeckClass : MonoBehaviour
+{
 
     [SerializeField]
     DictionaryManager dictopnaryManagerScript;
@@ -17,10 +18,10 @@ public class DeckClass : MonoBehaviour {
 
     public void SetCharacter(int num)
     {
-      GameObject character = dictopnaryManagerScript.GetCharacter(num);
-      characterList.Add(character);
-    } 
-    
+        GameObject character = dictopnaryManagerScript.GetIllustCharacter(num);
+        characterList.Add(character);
+    }
+
     public GameObject GetCharacter()
     {
         GameObject character = characterList[0];
@@ -38,8 +39,8 @@ public class DeckClass : MonoBehaviour {
         int num = playerStatusScript.GetIniDeckHandCount();
         for (int count = 0; num >= count; count++)
         {
-            deckHandScript.SetDrawObj(characterList[0]);
-            characterList.RemoveAt(0);
+            deckHandScript.SetDrawObj(characterList[0]);//デッキの一番先頭のカード
+            characterList.RemoveAt(0);//デッキの一番最初のカードを削除
         }
     }
     public int GetPlayerNumber()

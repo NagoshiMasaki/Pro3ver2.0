@@ -32,20 +32,18 @@ public class BoardAction : MonoBehaviour
                 int materialnum = 0;
                 if(length < 2)
                 {
-                    materialnum = 2;
+                    materialnum = 1;
                 }
                 else if(length >= 4)
                 {
-                    materialnum = 1;
+                    materialnum = 2;
                 }
                 GameObject instanceobj = Instantiate(mathobject, pos, Quaternion.identity);
-                instanceobj.GetComponent<MassStatus>().SetNumber(length,side,number,materialnum);                
+                instanceobj.GetComponent<MassStatus>().SetNumber(length,side,number,materialnum);
                 boardStatusScript.SetMathObjects(length,side,instanceobj);
                 pos.x++;
                 number++;
             }
-
-
             pos.y++;
             pos.x = 0;
         }
