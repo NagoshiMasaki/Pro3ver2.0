@@ -8,6 +8,7 @@ public class SituationManager : MonoBehaviour
     [SerializeField]
     GameMaster gameMasterScript;
     [SerializeField]
+    BoardManager boardManagerScript;
     public enum Phase
     {
         None,
@@ -18,13 +19,16 @@ public class SituationManager : MonoBehaviour
         End,
     }
     [SerializeField]
+    int moveCount;
+    [SerializeField]
     Phase status = Phase.Draw;
     [SerializeField]
     int playerTurn;
-
+    int copyMoveCount;
     void Start()
     {
         status = Phase.Draw;//デバック用
+        copyMoveCount = moveCount;
     }
 
     public bool GetIsGamePlay()
@@ -55,11 +59,32 @@ public class SituationManager : MonoBehaviour
 
     public void SetPlayerTurn(int set)
     {
+        boardManagerScript.ClearMoveDataList();
         playerTurn = set;
     }
 
     public int GetPlayerTurn()
     {
         return playerTurn;
+    }
+
+    public void DecrementMoveCount()
+    {
+        moveCount--;
+        if(moveCount == 0)
+        {
+            switch (playerTurn)
+            {
+                case 1:
+                    SetPlayerTurn(2);
+                    break;
+                case 2:
+                    SetPlayerTurn(1);
+                    break;
+            }
+            boardManagerScript.ClearMoveDataList();
+            moveCount = copyMoveCount;
+            status = Phase.Draw;
+        }
     }
 }

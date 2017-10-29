@@ -26,15 +26,12 @@ public class BoardManager : MonoBehaviour {
         Not
     }
     MassMoveStatus status;
-    public void IniInstanceSet()
-    {
-
-    }
 
     public GameObject[] GetMovePosMassObj()
     {
         return movePosMassObj;
     }
+
     public bool GetIsGamePlay()
     {
         return gameMasterScript.GetIsGamePlay();
@@ -56,5 +53,30 @@ public class BoardManager : MonoBehaviour {
     public void InstanceMoveData(MoveData.Rate rate, int playernum, int nowlengthmass, int nowsidemass)
     {
         boardStatusScript.InstanceMovePos(rate,playernum,nowlengthmass,nowsidemass);
+    }
+
+    public void AddMoveList(GameObject target)
+    {
+        boardStatusScript.AddMoveDataList(target);
+    }
+
+    public bool CheckMoveList(GameObject　target)
+    {
+        return boardStatusScript.CheckMoveDataList(target);
+    }
+
+    public void AddUpdateMoveList(MassStatus status)
+    {
+        boardStatusScript.AddUpdateMoveAreaList(status);
+    }
+
+    public void ClearUpdateMoveList()
+    {
+        boardStatusScript.ClearUpdateMoveAreList();
+    }
+
+    public void ClearMoveDataList()
+    {
+        boardStatusScript.ClearMoveDataList();
     }
 }

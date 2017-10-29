@@ -38,7 +38,7 @@ public class DeckHand : MonoBehaviour {
     {
         for (int count = 0; count < deckHandList.Count; count++)
         {
-            if (obj == deckHandList[count])
+            if (obj == deckHandList[count].gameObject)
             {
                 Destroy(deckHandList[count]);
                 deckHandList.RemoveAt(count);
@@ -54,7 +54,6 @@ public class DeckHand : MonoBehaviour {
 
     public void SetDrawObj(GameObject obj)
     {
-        deckHandList.Add(obj);
         InstanceDraw(obj);
     }
 
@@ -63,6 +62,7 @@ public class DeckHand : MonoBehaviour {
         Vector3 pos = deckHandManagerScript.GetInstancePos(playerNumber);
         GameObject instanceobj = Instantiate(obj,pos,Quaternion.identity);
         instanceobj.GetComponent<IllustrationStatus>().SetPlayerNumber(playerNumber);
+        deckHandList.Add(instanceobj);
         MoveDeckHandPos();
     }
 

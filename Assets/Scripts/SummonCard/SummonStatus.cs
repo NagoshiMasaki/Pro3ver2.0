@@ -11,6 +11,7 @@ public class SummonStatus : MonoBehaviour {
     bool isMove;
     [SerializeField]
     SkillBase skillobj;
+    [SerializeField]
     int playerNumber;
     [SerializeField]
     MoveData.Rate rate;
@@ -44,8 +45,17 @@ public class SummonStatus : MonoBehaviour {
         playerNumber = set;
     }
 
+    public void SetHp(int set)
+    {
+        hp = set;
+    }
     public MoveData.Rate GetRate()
     {
         return rate;
+    }
+
+    public void SetRate(MoveData.Rate set)
+    {
+        rate = set;
     }
 }

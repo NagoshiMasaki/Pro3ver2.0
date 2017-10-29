@@ -15,10 +15,8 @@ public class DeckHandManager : MonoBehaviour
         {
             case 1:
                 return decxHand1Script.GetPos();
-                break;
             case 2:
                 return decxHand2Script.GetPos();
-                break;
         }
         return Vector3.zero;
     }

@@ -20,6 +20,9 @@ public class PlayerManager : MonoBehaviour
     BoardManager boardManagerScript;
     [SerializeField]
     DictionaryManager dictionaryManagerScript;
+    [SerializeField]
+    BattleManager battleManagerScript;
+
     public bool GetIsGamePlay()
     {
         return gameMasterScript.GetIsGamePlay();
@@ -78,5 +81,30 @@ public class PlayerManager : MonoBehaviour
     public void InstanceMovePos(MoveData.Rate rate, int playernum, int nowlengthmass, int nowsidemass)
     {
         boardManagerScript.InstanceMoveData(rate, playernum, nowlengthmass, nowsidemass);
+    }
+
+    public void DecrementMoveCount()
+    {
+        situationManagerScript.DecrementMoveCount();
+    }
+
+    public void AddMoveList(GameObject target)
+    {
+        boardManagerScript.AddMoveList(target);
+    }
+
+    public bool CheckMoveList(GameObject target)
+    {
+       return boardManagerScript.CheckMoveList(target);
+    }
+
+    public BattleStatus.ResultStatus Battle(SummonStatus player,SummonStatus enemy)
+    {
+       return battleManagerScript.Battle(player,enemy);
+    }
+
+    public void ClearUpdateMoveList()
+    {
+        boardManagerScript.ClearUpdateMoveList();
     }
 }

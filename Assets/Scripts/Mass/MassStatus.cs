@@ -19,7 +19,7 @@ public class MassStatus : MonoBehaviour
     int materialNumber;
     [SerializeField]
     bool isMove = false;
-    BoardManager.MassMoveStatus status;
+    BoardManager.MassMoveStatus status = BoardManager.MassMoveStatus.Not;
     public void SetNumber(int length, int side, int number, int materialnum)
     {
         lengthNumber = length;

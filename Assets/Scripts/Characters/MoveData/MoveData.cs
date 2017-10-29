@@ -18,13 +18,15 @@ public class MoveData : MonoBehaviour
         King,
         FirstPorn
     }
+    [SerializeField]
+    BoardManager boardManagerscript;
 
     public void GetMoveData(Rate rate, int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int nowlengthmass, int nowsidemass, GameObject[] instanceobj)
     {
         switch (rate)
         {
             case Rate.Porn:
-                PornMove();
+                PornMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.Queen:
                 QueenMove();
@@ -33,7 +35,7 @@ public class MoveData : MonoBehaviour
                 NightMove();
                 break;
             case Rate.Luke:
-                LukeMove();
+                LukeMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.Bishop:
                 BishopMove();
@@ -47,15 +49,44 @@ public class MoveData : MonoBehaviour
         }
     }
 
-    void PornMove()
+    /// <summary>
+    /// 2回目以降のポーンの動きの処理
+    /// </summary>
+    void PornMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
+        if (playernum == 1)
+        {
+            length++;
+        }
+        else
+        {
+            length--;
+        }
+        for(int count =-1; count <= 1;count++)
+        {
+            int sidesum = side + count;
+           bool result = OutSideLength(length,sidesum);
+            if(result)
+            {
+                int num = 0;
+                GameObject character = massstatuses[length, sidesum].GetCharacterObj();
+                if (character != null)//キャラクターの所属先のプレイヤー番号の取得
+                {
+                    num = character.GetComponent<SummonStatus>().GetPlayer();
+                }
+                if(character == null)
+                {
+                    MassOnNotCharacter(length,sidesum,massobjects,massstatuses,instanceobj);
+                }
 
+                else if(playernum != num)
+                {
+                    MassOnEnemyCharacter(length,sidesum,massobjects,massstatuses,instanceobj);
+                }
+            }
+        }
     }
 
-    void PornsMove()
-    {
-
-    }
     void NightMove()
     {
 
@@ -70,7 +101,7 @@ public class MoveData : MonoBehaviour
 
     }
 
-    void LukeMove()
+    void LukeMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
 
     }
@@ -78,13 +109,15 @@ public class MoveData : MonoBehaviour
     {
 
     }
+
     /// <summary>
-    /// 最初にポーンを動かす時
+    /// 最初にポーンを動かす時の処理
     /// </summary>
     void FirstPornMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
         int num = 0;
         int value = 0;
+        int lengthsum = 0;
         if (playernum == 1)
         {
             value = 1;
@@ -93,29 +126,79 @@ public class MoveData : MonoBehaviour
         {
             value = -1;
         }
-        for (int count = 0; count <= 2; count += value)
+        if (value == 1)
         {
-            int lengthsum = count + length;
-            bool result = OutSideLength(length + count, side);
-            if (result)
+            for (int count = 1; count <= 2; count += value)
             {
-                GameObject character = massstatuses[lengthsum, side].GetCharacterObj();
-                if (character != null)//キャラクターの所属先のプレイヤー番号の取得
+                lengthsum = count + length;
+                bool result = OutSideLength(lengthsum, side);
+                if (result)
                 {
-                    num = character.GetComponent<SummonStatus>().GetPlayer();
+                    GameObject character = massstatuses[lengthsum, side].GetCharacterObj();
+                    if (character != null)//キャラクターの所属先のプレイヤー番号の取得
+                    {
+                        num = character.GetComponent<SummonStatus>().GetPlayer();
+                    }
+                    if (character == null)//マスにキャラクターがいなかった場合
+                    {
+                        MassOnNotCharacter(lengthsum, side, massobjects, massstatuses, instanceobj);
+                    }
+                    if (playernum != num)//マスにエネミーがいた場合
+                    {
+                        lengthsum++;
+                        break;
+                    }
                 }
-                if (character == null)//マスにキャラクターがいなかった場合
+            }
+        }
+        else if (value == -1)
+        {
+            for (int count = 0; count >= -2; count += value)
+            {
+                lengthsum = count + length;
+                bool result = OutSideLength(lengthsum, side);
+                if (result)
                 {
-                    MassOnNotCharacter(lengthsum, side, massobjects, massstatuses, instanceobj);
+                    GameObject character = massstatuses[lengthsum, side].GetCharacterObj();
+                    if (character != null)//キャラクターの所属先のプレイヤー番号の取得
+                    {
+                        num = character.GetComponent<SummonStatus>().GetPlayer();
+                    }
+                    if (character == null)//マスにキャラクターがいなかった場合
+                    {
+                        MassOnNotCharacter(lengthsum, side, massobjects, massstatuses, instanceobj);
+                    }
+                    if (playernum != num)//マスにエネミーがいた場合
+                    {
+                        lengthsum++;
+                        break;
+                    }
                 }
-                else if (playernum != num)//マスにエネミーがいた場合
+            }
+        }
+
+        for (int count = -1; count <= 1; count++)//ポーンの横の攻撃範囲索敵
+        {
+            int sidesum = count + side;
+            bool result = OutSideLength(lengthsum, sidesum);
+            if (result && count != 0)
+            {
+                GameObject character = massstatuses[lengthsum, sidesum].GetCharacterObj();
+                if (character != null)
                 {
-                    MassOnEnemyCharacter(lengthsum, side, massobjects, massstatuses, instanceobj);
+                    int getplayernum = character.GetComponent<SummonStatus>().GetPlayer();
+                    if (getplayernum != playernum)
+                    {
+                        MassOnEnemyCharacter(lengthsum, sidesum, massobjects, massstatuses, instanceobj);
+                    }
                 }
             }
         }
     }
 
+    /// <summary>
+    /// 縦と横のマスの範囲外ではないかをチェックする処理
+    /// </summary>
     bool OutSideLength(int length, int side)
     {
         if (length >= maxLength || length < 0)
@@ -130,19 +213,35 @@ public class MoveData : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// マス上にキャラクターが存在しなかった時
+    /// </summary>
     void MassOnNotCharacter(int length, int side, GameObject[,] massobjects, MassStatus[,] massstatuses, GameObject[] instanceobj)
     {
-        Vector3 pos = massobjects[length,side].transform.position;
+        Vector3 pos = massobjects[length, side].transform.position;
         pos.z -= 0.5f;
         Instantiate(instanceobj[0], pos, Quaternion.identity);
         massstatuses[length, side].SetMassStatus(BoardManager.MassMoveStatus.None);
+        AddUpdateMoveList(massstatuses[length,side]);
     }
 
+    /// <summary>
+    /// マス上に敵のキャラクターが存在した時の処理
+    /// </summary>
     void MassOnEnemyCharacter(int length, int side, GameObject[,] massobjects, MassStatus[,] massstatuses, GameObject[] instanceobj)
     {
         Vector3 pos = massobjects[length, side].transform.position;
         pos.z -= 0.5f;
         Instantiate(instanceobj[1], pos, Quaternion.identity);
         massstatuses[length, side].SetMassStatus(BoardManager.MassMoveStatus.Enemy);
+        AddUpdateMoveList(massstatuses[length, side]);
+    }
+
+    /// <summary>
+    /// 変更したマスをリストに追加
+    /// </summary>
+    void AddUpdateMoveList(MassStatus status)
+    {
+        boardManagerscript.AddUpdateMoveList(status);
     }
 }

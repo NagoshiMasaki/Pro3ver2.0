@@ -15,6 +15,10 @@ public class PlayerAction : MonoBehaviour
     List<GameObject> data = new List<GameObject>();
     [SerializeField]
     GameObject InstanceMass;
+    [SerializeField]
+    float delayTime;
+    float copyDelayTime;
+    GameObject attachmassobject;//現在どこのマスを刺しいるのかの確認
     public enum AttachStatus
     {
         None,
@@ -23,7 +27,14 @@ public class PlayerAction : MonoBehaviour
         MoveChoose,
         MoveChoosed
     };
+    [SerializeField]
     AttachStatus attachStatus = AttachStatus.None;
+
+    void Start()
+    {
+        copyDelayTime = delayTime;
+    }
+
     void Update()
     {
         Mouse();
@@ -31,22 +42,31 @@ public class PlayerAction : MonoBehaviour
 
     void Mouse()
     {
-        int turn = playerStatusScript.GetPlayerTurn();
-        if (turn == playerNumber)
+        //int turn = playerStatusScript.GetPlayerTurn();
+        //        if (turn == playerNumber)
+        //       {
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
-                RayAction();
-            else if (Input.GetMouseButtonUp(0))
-                RayAction();
+            RayAction();
         }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            RayAction();
+        }
+        //        }
+        DelayCount();
     }
 
     void RayAction()
     {
+        if (delayTime >= 0.0f)
+        {
+            return;
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         LayerMask masslayer = playerStatusScript.GetMassLayer();
-
+        DestroyInstancePosMass();
         //マスをクリックしたら
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, masslayer))
         {
@@ -65,10 +85,12 @@ public class PlayerAction : MonoBehaviour
         //手札のカードをクリックしたら
         LayerMask illustrationlayer = playerStatusScript.GetIllustrationLayer();
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, illustrationlayer);
-        if (hit2D.collider)
+        if (hit2D.collider && playerStatusScript.GetAttachSumonCard() == null)
         {
             AtachIllustration(hit2D.collider.gameObject);
         }
+        ResetDelayCount();
+        playerManagerScript.ClearUpdateMoveList();
     }
 
     /// <summary>
@@ -80,16 +102,21 @@ public class PlayerAction : MonoBehaviour
         GameObject summoncharacter = attachobj.GetComponent<MassStatus>().GetCharacterObj();
         switch (attachStatus)
         {
-            case AttachStatus.MoveChoose:
-                attachobj.GetComponent<MassStatus>().GetNumbers(ref length, ref side, ref number);
-                break;
             case AttachStatus.SummonChoise:
                 Sumon(attachobj);
                 break;
+
             case AttachStatus.None:
                 SummonMoveChoose(summoncharacter, attachobj);
                 break;
+
+            case AttachStatus.MoveChoose:
+                attachobj.GetComponent<MassStatus>().GetNumbers(ref length, ref side, ref number);
+                break;
+
             case AttachStatus.MoveChoosed:
+                MassStatus status = attachobj.GetComponent<MassStatus>();
+                SummonMoveChoosed(attachobj, status);
                 break;
         }
     }
@@ -115,7 +142,7 @@ public class PlayerAction : MonoBehaviour
     }
 
     /// <summary>
-    /// 手札のデッキをタッチした時の処理
+    /// 手札をタッチした時の処理
     /// </summary>
     /// <param name="attachobj"></param>
     void AtachIllustration(GameObject attachobj)
@@ -143,6 +170,9 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 召喚する時の関数
+    /// </summary>
     void Sumon(GameObject attachobj)
     {
         GameObject character = attachobj.GetComponent<MassStatus>().GetCharacterObj();
@@ -155,14 +185,17 @@ public class PlayerAction : MonoBehaviour
             Vector3 pos = attachobj.transform.position;
             pos.z--;
             GameObject instanceobj = Instantiate(sumonobj, pos, Quaternion.identity);
-            instanceobj.GetComponent<SummonStatus>().SetPlayerNumber(playerNumber);
+            instanceobj.GetComponent<SummonStatus>().SetPlayerNumber(playernumber);
             attachobj.GetComponent<MassStatus>().SetCharacterObj(instanceobj);
-            DestroyInstancePosMass();
-            playerManagerScript.ReMoveIllustCard(playernumber, attachobj);
+            playerManagerScript.ReMoveIllustCard(playernumber, attachillustcard);
+            playerStatusScript.SetAttachIllustCard(null);
             attachStatus = AttachStatus.None;
         }
     }
 
+    /// <summary>
+    /// マス上に存在する移動できるマスのオブジェクトの削除
+    /// </summary>
     void DestroyInstancePosMass()
     {
         var clones = GameObject.FindGameObjectsWithTag("InstancePos");
@@ -178,22 +211,160 @@ public class PlayerAction : MonoBehaviour
     /// <param name="character"></param>
     void SummonMoveChoose(GameObject character, GameObject mass)
     {
-        int getplayernum = character.GetComponent<SummonStatus>().GetPlayer();
-        MoveData.Rate getrate = character.GetComponent<SummonStatus>().GetRate();
-        int length = 0;
-        int side = 0;
-        int massnum = 0;
-        mass.GetComponent<MassStatus>().GetNumbers(ref length, ref side, ref massnum);
-        if (getplayernum == playerNumber)
+        bool result = playerManagerScript.CheckMoveList(character);
+        if (character == null)
         {
-            playerManagerScript.InstanceMovePos(getrate, getplayernum, length, side);
+            return;
         }
-        attachStatus = AttachStatus.MoveChoosed;
+        if (result)
+        {
+            int getplayernum = character.GetComponent<SummonStatus>().GetPlayer();
+            playerStatusScript.SetAttachSumonCard(character);
+            MoveData.Rate getrate = character.GetComponent<SummonStatus>().GetRate();
+            int length = 0;
+            int side = 0;
+            int massnum = 0;
+            mass.GetComponent<MassStatus>().GetNumbers(ref length, ref side, ref massnum);
+            if (getplayernum == playerManagerScript.GetPlayerTurn())
+            {
+                playerManagerScript.InstanceMovePos(getrate, getplayernum, length, side);
+            }
+            attachStatus = AttachStatus.MoveChoosed;
+        }
     }
 
-    //移動先が決定した時の処理
-    void SummonMoveChoosed(GameObject attachmass)
+    /// <summary>
+    /// 移動先が決定した時の処理
+    /// </summary>
+    void SummonMoveChoosed(GameObject attachmass, MassStatus attachmassstatus)
     {
+        GameObject attachmasscharcter = attachmassstatus.GetCharacterObj();
+        if(attachmasscharcter == playerStatusScript.GetAttachSumonCard())
+        {
+            playerStatusScript.SetAttachSumonCard(null);
+            attachStatus = AttachStatus.None;
+            return;
+        }
+        BoardManager.MassMoveStatus status = attachmassstatus.GetMoveStatus();
+        switch (status)
+        {
+            case BoardManager.MassMoveStatus.None:
+                MoveMassNoneCharacter(attachmass, attachmassstatus);
+                attachStatus = AttachStatus.None;
+                break;
+            case BoardManager.MassMoveStatus.Enemy:
+                MoveMassEnemyCharacter(attachmass, attachmassstatus);
+                attachStatus = AttachStatus.None;
+                break;
+        }
+    }
 
+    /// <summary>
+    /// 移動先のマスがキャラクターがいなかった時の処理
+    /// </summary>
+    void MoveMassNoneCharacter(GameObject attachmass, MassStatus attachmassstatus)
+    {
+        GameObject sumoncard = playerStatusScript.GetAttachSumonCard();
+        Vector3 pos = attachmass.transform.position;
+        pos.z = -1;
+        sumoncard.transform.position = pos;
+        attachmassstatus.SetCharacterObj(sumoncard);
+        DestroyInstancePosMass();
+        playerManagerScript.DecrementMoveCount();
+        playerManagerScript.AddMoveList(sumoncard);
+        FirstPornChangePorn(playerStatusScript.GetAttachSumonCard());
+        playerStatusScript.SetAttachSumonCard(null);
+        attachStatus = AttachStatus.None;
+    }
+
+    /// <summary>
+    /// 移動先のマスに敵がいた時の戦闘処理
+    /// </summary>
+    /// <param name="attachmass"></param>
+    /// <param name="attachmassstatus"></param>
+    void MoveMassEnemyCharacter(GameObject attachmass, MassStatus attachmassstatus)
+    {
+        GameObject attachcharacter = playerStatusScript.GetAttachSumonCard();
+        SummonStatus playerstatus = attachcharacter.GetComponent<SummonStatus>();
+        SummonStatus enemystatus = attachmassstatus.GetCharacterObj().GetComponent<SummonStatus>();
+        BattleStatus.ResultStatus result = playerManagerScript.Battle(playerstatus, enemystatus);
+        BattleResult(result,attachmass,attachmassstatus,playerStatusScript.GetAttachSumonCard(),attachmassstatus.GetCharacterObj());
+        playerManagerScript.DecrementMoveCount();
+        playerStatusScript.SetAttachSumonCard(null);
+    }
+    //////////////////////
+    /// 戦闘に関する関数開始
+    //////////////////////
+
+    /// <summary>
+    /// 戦闘した結果の処理
+    /// </summary>
+    void BattleResult(BattleStatus.ResultStatus result, GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
+    {
+        switch (result)
+        {
+            case BattleStatus.ResultStatus.Win:
+                BattleWin(attachmass, attachmassstatus, playercharacter, enemycharacter);
+                break;
+            case BattleStatus.ResultStatus.Draw:
+                BattleDraw();
+                break;
+            case BattleStatus.ResultStatus.Lose:
+                break;
+        }
+        if(result != BattleStatus.ResultStatus.Lose)
+        {
+            FirstPornChangePorn(playercharacter);
+        }
+        playerManagerScript.AddMoveList(playercharacter);
+    }
+
+    /// <summary>
+    /// 戦闘に引き分けになったときの処理
+    /// </summary>
+    void BattleDraw()
+    {
+        Debug.Log("ドロー");
+    }
+
+    /// <summary>
+    /// 戦闘に勝った時の処理
+    /// </summary>
+    void BattleWin(GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
+    {
+        Destroy(enemycharacter);
+        Vector3 pos = attachmass.transform.position;
+        pos.z--;
+        playercharacter.transform.position = pos;
+        attachmassstatus.SetCharacterObj(playercharacter);
+        FirstPornChangePorn(playercharacter);
+    }
+
+    void BattleLose(GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
+    {
+        Destroy(playercharacter);
+        attachmassstatus.SetMassStatus(BoardManager.MassMoveStatus.None);
+    }
+    /////////////////////////
+    //戦闘に関する関数終了
+    /////////////////////////
+
+    void DelayCount()
+    {
+        delayTime -= Time.deltaTime;
+    }
+
+    void ResetDelayCount()
+    {
+        delayTime = copyDelayTime;
+    }
+
+    void FirstPornChangePorn(GameObject playerobj)
+    {
+      MoveData.Rate rate =  playerobj.GetComponent<SummonStatus>().GetRate();
+        if(rate == MoveData.Rate.FirstPorn)
+        {
+            playerobj.GetComponent<SummonStatus>().SetRate(MoveData.Rate.Porn);
+        }
     }
 }

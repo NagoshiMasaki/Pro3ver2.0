@@ -16,7 +16,6 @@ public class CSVRead : MonoBehaviour {
         {
             string[] cols = sr.ReadLine().Split(',');
             int col = int.Parse(cols[0]);
-            Debug.Log(col);
             deckClassScript.SetCharacter(col);
         }
         deckClassScript.IniShaffle();

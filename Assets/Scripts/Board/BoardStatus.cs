@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BoardStatus : MonoBehaviour
 {
-   [SerializeField]
+    [SerializeField]
     MoveData moveDataScript;
     [SerializeField]
     BoardManager boardManagerScript;
@@ -17,6 +17,11 @@ public class BoardStatus : MonoBehaviour
     [SerializeField]
     int sideSize;
     List<GameObject> dataList = new List<GameObject>();
+    [SerializeField]
+    List<GameObject> movedatalist = new List<GameObject>();
+    [SerializeField]
+    List<MassStatus> updateMoveAreaList = new List<MassStatus>();
+
     public GameObject GetMass(int length, int side)
     {
         return massObjects[length, side];
@@ -56,7 +61,7 @@ public class BoardStatus : MonoBehaviour
             for (int side = 0; side < 6; side++)
             {
                 int number = massStatuses[length, side].GetMaterialNumber();
-                if (playernum == number)
+                if (playernum == number && massStatuses[length, side].GetCharacterObj() == null)
                 {
                     dataList.Add(massObjects[length, side]);
                 }
@@ -67,6 +72,46 @@ public class BoardStatus : MonoBehaviour
 
     public void InstanceMovePos(MoveData.Rate rate, int playernum, int nowlengthmass, int nowsidemass)
     {
-        moveDataScript.GetMoveData(rate, playernum, massObjects, massStatuses, nowlengthmass, nowsidemass,boardManagerScript.GetMovePosMassObj());
+        moveDataScript.GetMoveData(rate, playernum, massObjects, massStatuses, nowlengthmass, nowsidemass, boardManagerScript.GetMovePosMassObj());
+    }
+
+    public void AddMoveDataList(GameObject target)
+    {
+       bool result = CheckMoveDataList(target);
+        if (result)
+        {
+            movedatalist.Add(target);
+        }
+    }
+
+    public bool CheckMoveDataList(GameObject target)
+    {
+        for (int count = 0; count < movedatalist.Count; count++)
+        {
+            if (movedatalist[count] == target)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void ClearMoveDataList()
+    {
+        movedatalist.Clear();
+    }
+
+    public void AddUpdateMoveAreaList(MassStatus mass)
+    {
+        updateMoveAreaList.Add(mass);
+    }
+
+    public void ClearUpdateMoveAreList()
+    {
+        for (int count = 0; count < updateMoveAreaList.Count; count++)
+        {
+            updateMoveAreaList[count].SetMassStatus(BoardManager.MassMoveStatus.Not);
+        }
+        updateMoveAreaList.Clear();
     }
 }
