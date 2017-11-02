@@ -12,7 +12,8 @@ public class IllustrationStatus : MonoBehaviour {
     int rateNumber;
     [SerializeField]
     int costNumber;
-
+    [SerializeField]
+    MoveData.Rate rate;
     public int GetPlayerNumber()
     {
         return playerNumber;
@@ -38,5 +39,10 @@ public class IllustrationStatus : MonoBehaviour {
     public void SetPlayerNumber(int num)
     {
         playerNumber = num;
+    }
+
+    public MoveData.Rate GetRate()
+    {
+        return rate;
     }
 }

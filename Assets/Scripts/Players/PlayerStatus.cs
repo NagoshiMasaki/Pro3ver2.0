@@ -19,6 +19,16 @@ public class PlayerStatus : MonoBehaviour
     GameObject attachiIlustCard;
     [SerializeField]
     GameObject attachSumonCard;
+    [SerializeField]
+    LayerMask nextphaselayer;
+    [SerializeField]
+    LayerMask moveIconLayer;
+    [SerializeField]
+    LayerMask skillIconLayer;
+    [SerializeField]
+    GameObject attachMass;
+    [SerializeField]
+    LayerMask normalIconLayer;
     public bool GetIsGamePlay()
     {
         return playerManagerScript.GetIsGamePlay();
@@ -85,5 +95,35 @@ public class PlayerStatus : MonoBehaviour
     public void RemoveDeckHand(GameObject target)
     {
 
+    }
+
+    public LayerMask GetNextPhaseLayer()
+    {
+        return nextphaselayer;
+    }
+
+    public LayerMask GetMoveIconLayer()
+    {
+        return moveIconLayer;
+    }
+
+    public LayerMask GetSkillLayer()
+    {
+        return skillIconLayer;
+    }
+
+    public void SetAttachMass(GameObject set)
+    {
+        attachMass = set;
+    }
+
+    public GameObject GetAttachMass()
+    {
+        return attachMass;
+    }
+
+    public LayerMask GetNormalIconLayer()
+    {
+        return normalIconLayer;
     }
 }

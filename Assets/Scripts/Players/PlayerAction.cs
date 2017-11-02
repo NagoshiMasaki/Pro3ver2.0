@@ -19,17 +19,50 @@ public class PlayerAction : MonoBehaviour
     float delayTime;
     float copyDelayTime;
     GameObject attachmassobject;//現在どこのマスを刺しいるのかの確認
+    [SerializeField]
+    float icponPosX;
+    [SerializeField]
+    float icponPosY;
+    [SerializeField]
+    bool isRayAcition;
+    [SerializeField]
+    GameObject normalIcon;
     public enum AttachStatus
     {
         None,
         SummonChoise,
+        IconChose,
+        MoveIcon,
+        SkillIcon,
         Sumon,
         MoveChoose,
         MoveChoosed
     };
+    public enum IconStatus
+    {
+        None,
+        Choose,
+        Normal,
+        Move,
+        Skill
+    }
+
+    public enum ButttonStatus
+    {
+        None,
+        Down,
+        Up,
+        Continuous
+    }
+    ButttonStatus buttonStatus = ButttonStatus.None;
+    [SerializeField]
+    IconStatus iconStatus = IconStatus.None;
     [SerializeField]
     AttachStatus attachStatus = AttachStatus.None;
-
+    [SerializeField]
+    GameObject skillIcon;
+    [SerializeField]
+    GameObject moveIcon;
     void Start()
     {
         copyDelayTime = delayTime;
@@ -47,10 +80,19 @@ public class PlayerAction : MonoBehaviour
         //       {
         if (Input.GetMouseButtonDown(0))
         {
+            buttonStatus = ButttonStatus.Down;
             RayAction();
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            buttonStatus = ButttonStatus.Up;
+            iconStatus = IconStatus.None;
+            isRayAcition = false;
+            RayAction();
+        }
+        else if (isRayAcition)
+        {
+            buttonStatus = ButttonStatus.Continuous;
             RayAction();
         }
         //        }
@@ -64,33 +106,26 @@ public class PlayerAction : MonoBehaviour
             return;
         }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        LayerMask masslayer = playerStatusScript.GetMassLayer();
-        DestroyInstancePosMass();
-        //マスをクリックしたら
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, masslayer))
+        switch (iconStatus)
         {
-            AtachMass(hit.collider.gameObject);
-            return;
+            case IconStatus.Choose:
+            case IconStatus.Normal:
+                IconRay(ray);
+                Debug.Log("hoge");
+                return;
         }
-
-        //デッキをクリックしたら
-        LayerMask decklayer = playerStatusScript.GetDeckLayer();
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, decklayer))
+        if (iconStatus == IconStatus.Move || iconStatus == IconStatus.Skill)
         {
-            AtachDeck(hit.collider.gameObject);
-            return;
+            IconRay(ray);
         }
-
-        //手札のカードをクリックしたら
-        LayerMask illustrationlayer = playerStatusScript.GetIllustrationLayer();
-        RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, illustrationlayer);
-        if (hit2D.collider && playerStatusScript.GetAttachSumonCard() == null)
+        else if (iconStatus == IconStatus.None && isRayAcition == false)
         {
-            AtachIllustration(hit2D.collider.gameObject);
+            Object3DRay(ray);
+            IllustlationRay(ray);
+            ResetDelayCount();
+            playerManagerScript.ClearUpdateMoveList();
+            buttonStatus = ButttonStatus.None;
         }
-        ResetDelayCount();
-        playerManagerScript.ClearUpdateMoveList();
     }
 
     /// <summary>
@@ -115,6 +150,7 @@ public class PlayerAction : MonoBehaviour
                 break;
 
             case AttachStatus.MoveChoosed:
+                Debug.Log("iuuii");
                 MassStatus status = attachobj.GetComponent<MassStatus>();
                 SummonMoveChoosed(attachobj, status);
                 break;
@@ -141,6 +177,14 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    void AttachNextPhase(GameObject attachobj)
+    {
+        if (playerManagerScript.GetPhase() != SituationManager.Phase.Draw)
+        {
+            playerManagerScript.NextPhase();
+        }
+    }
+
     /// <summary>
     /// 手札をタッチした時の処理
     /// </summary>
@@ -148,7 +192,7 @@ public class PlayerAction : MonoBehaviour
     void AtachIllustration(GameObject attachobj)
     {
         playerStatusScript.SetAttachIllustCard(attachobj);
-        if (playerStatusScript.GetPhase() == SituationManager.Phase.Main1 || playerStatusScript.GetPhase() == SituationManager.Phase.Main2)
+        if (playerStatusScript.GetPhase() == SituationManager.Phase.Main1 || playerStatusScript.GetPhase() == SituationManager.Phase.Main2 && playerStatusScript.GetAttachIllustCard() == null)
         {
             int playernum = 0;
             int costnum = 0;
@@ -159,7 +203,8 @@ public class PlayerAction : MonoBehaviour
             if (playernum == playerStatusScript.GetPlayerTurn() && costnum <= playerManagerScript.GetSP(playernum))
             {
                 data.Clear();
-                data = playerManagerScript.GetInstancePos(playernum);
+                IllustrationStatus status = attachobj.GetComponent<IllustrationStatus>();
+                data = playerManagerScript.GetInstancePos(playernum, status);
                 for (int count = 0; count < data.Count; count++)
                 {
                     Vector3 pos = data[count].transform.position;
@@ -175,6 +220,10 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     void Sumon(GameObject attachobj)
     {
+        if (isRayAcition)
+        {
+            return;
+        }
         GameObject character = attachobj.GetComponent<MassStatus>().GetCharacterObj();
         GameObject attachillustcard = playerStatusScript.GetAttachIllustCard();
         int dictionarynum = attachillustcard.GetComponent<IllustrationStatus>().GetDictionaryNumber();
@@ -190,6 +239,7 @@ public class PlayerAction : MonoBehaviour
             playerManagerScript.ReMoveIllustCard(playernumber, attachillustcard);
             playerStatusScript.SetAttachIllustCard(null);
             attachStatus = AttachStatus.None;
+            DestroyInstancePosMass();
         }
     }
 
@@ -216,6 +266,17 @@ public class PlayerAction : MonoBehaviour
         {
             return;
         }
+        if (attachStatus == AttachStatus.None)
+        {
+            iconStatus = IconStatus.Choose;
+            buttonStatus = ButttonStatus.Continuous;
+            playerStatusScript.SetAttachMass(mass);
+            SetActiveIcon(true);
+            isRayAcition = true;
+            playerStatusScript.SetAttachSumonCard(character);
+            IconChoose(character);
+            return;
+        }
         if (result)
         {
             int getplayernum = character.GetComponent<SummonStatus>().GetPlayer();
@@ -239,13 +300,15 @@ public class PlayerAction : MonoBehaviour
     void SummonMoveChoosed(GameObject attachmass, MassStatus attachmassstatus)
     {
         GameObject attachmasscharcter = attachmassstatus.GetCharacterObj();
-        if(attachmasscharcter == playerStatusScript.GetAttachSumonCard())
+        if (attachmasscharcter == playerStatusScript.GetAttachSumonCard())
         {
             playerStatusScript.SetAttachSumonCard(null);
             attachStatus = AttachStatus.None;
             return;
         }
+
         BoardManager.MassMoveStatus status = attachmassstatus.GetMoveStatus();
+
         switch (status)
         {
             case BoardManager.MassMoveStatus.None:
@@ -257,6 +320,8 @@ public class PlayerAction : MonoBehaviour
                 attachStatus = AttachStatus.None;
                 break;
         }
+        playerManagerScript.SetPhase(SituationManager.Phase.Move);
+        isRayAcition = false;
     }
 
     /// <summary>
@@ -288,7 +353,7 @@ public class PlayerAction : MonoBehaviour
         SummonStatus playerstatus = attachcharacter.GetComponent<SummonStatus>();
         SummonStatus enemystatus = attachmassstatus.GetCharacterObj().GetComponent<SummonStatus>();
         BattleStatus.ResultStatus result = playerManagerScript.Battle(playerstatus, enemystatus);
-        BattleResult(result,attachmass,attachmassstatus,playerStatusScript.GetAttachSumonCard(),attachmassstatus.GetCharacterObj());
+        BattleResult(result, attachmass, attachmassstatus, playerStatusScript.GetAttachSumonCard(), attachmassstatus.GetCharacterObj());
         playerManagerScript.DecrementMoveCount();
         playerStatusScript.SetAttachSumonCard(null);
     }
@@ -312,7 +377,7 @@ public class PlayerAction : MonoBehaviour
             case BattleStatus.ResultStatus.Lose:
                 break;
         }
-        if(result != BattleStatus.ResultStatus.Lose)
+        if (result != BattleStatus.ResultStatus.Lose)
         {
             FirstPornChangePorn(playercharacter);
         }
@@ -361,10 +426,115 @@ public class PlayerAction : MonoBehaviour
 
     void FirstPornChangePorn(GameObject playerobj)
     {
-      MoveData.Rate rate =  playerobj.GetComponent<SummonStatus>().GetRate();
-        if(rate == MoveData.Rate.FirstPorn)
+        MoveData.Rate rate = playerobj.GetComponent<SummonStatus>().GetRate();
+        if (rate == MoveData.Rate.FirstPorn)
         {
             playerobj.GetComponent<SummonStatus>().SetRate(MoveData.Rate.Porn);
+        }
+    }
+
+    void IconChoose(GameObject character)
+    {
+        Vector3 pos = character.transform.position;
+        pos.x -= icponPosX;
+        pos.y += icponPosY;
+        moveIcon.transform.position = pos;
+        normalIcon.transform.position = character.transform.position;
+        pos = character.transform.position;
+        pos.x += icponPosX;
+        pos.y -= icponPosY;
+        skillIcon.transform.position = pos;
+    }
+
+    void SetActiveIcon(bool set)
+    {
+        skillIcon.SetActive(set);
+        moveIcon.SetActive(set);
+    }
+
+    void SkillIcon()
+    {
+
+    }
+
+    void NoramlIcon()
+    {
+        iconStatus = IconStatus.Normal;
+        isRayAcition = true;
+        SetActiveIcon(true);
+        DestroyInstancePosMass();
+    }
+
+    void Object2DRay()
+    {
+
+    }
+
+    void Object3DRay(Ray ray)
+    {
+        RaycastHit hit;
+        LayerMask masslayer = playerStatusScript.GetMassLayer();
+        LayerMask decklayer = playerStatusScript.GetDeckLayer();
+        LayerMask nextphaselayer = playerStatusScript.GetNextPhaseLayer();
+        //マスをクリックしたら
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, masslayer))
+        {
+            AtachMass(hit.collider.gameObject);
+            return;
+        }
+
+        //デッキをクリックしたら
+        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, decklayer))
+        {
+            AtachDeck(hit.collider.gameObject);
+            return;
+        }
+
+        //次のフェイズをクリックしたら
+        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, nextphaselayer))
+        {
+            AttachNextPhase(hit.collider.gameObject);
+            return;
+        }
+    }
+
+    void IconRay(Ray ray)
+    {
+        LayerMask moveiconLayer = playerStatusScript.GetMoveIconLayer();
+        RaycastHit2D hit2DmoveIcon = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, moveiconLayer);
+        if (hit2DmoveIcon.collider)
+        {
+            if (hit2DmoveIcon.collider.gameObject.tag == "MoveIcon")
+            {
+                Debug.Log("moveIcon");
+                iconStatus = IconStatus.Move;
+                attachStatus = AttachStatus.MoveChoosed;
+                SetActiveIcon(false);
+                SummonMoveChoose(playerStatusScript.GetAttachSumonCard(), playerStatusScript.GetAttachMass());
+            }
+            else if (hit2DmoveIcon.collider.gameObject.tag == "SkillIcon")
+            {
+                Debug.Log("skillIcon");
+                isRayAcition = true;
+            }
+
+            else if (hit2DmoveIcon.collider.gameObject.tag == "NormalIcon")
+            {
+                Debug.Log("NormalIcon");
+                NoramlIcon();
+            }
+        }
+
+    }
+
+    void IllustlationRay(Ray ray)
+    {
+        //手札のカードをクリックしたら
+        LayerMask illustrationlayer = playerStatusScript.GetIllustrationLayer();
+        RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, illustrationlayer);
+        if (hit2D.collider && playerStatusScript.GetAttachSumonCard() == null)
+        {
+            AtachIllustration(hit2D.collider.gameObject);
         }
     }
 }

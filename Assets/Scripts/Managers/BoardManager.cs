@@ -19,6 +19,12 @@ public class BoardManager : MonoBehaviour {
     List<GameObject> massList = new List<GameObject>();
     [SerializeField]
     GameObject[] movePosMassObj;
+    [SerializeField]
+    CSVRead csvReadScriptDeck1;
+    [SerializeField]
+    CSVRead csvReadScriptDeck2;
+    [SerializeField]
+    DeckHandManager deckHandManagerScript;
     public enum MassMoveStatus
     {
         None,
@@ -42,11 +48,15 @@ public class BoardManager : MonoBehaviour {
         return mathObject;
     }
 
-    public List<GameObject> GetInstancePos(int playernum)
+    public List<GameObject> GetInstancePos(int playernum, IllustrationStatus status)
     {
-        return boardStatusScript.GetInstancePos(playernum);
+        return boardStatusScript.GetInstancePos(playernum, status);
     }
     
+    public void DeckHandIni()
+    {
+        deckHandManagerScript.DeckHandIni();
+    }
     /// <summary>
     /// アタッチしたプレイヤーの移動できる場所の生成
     /// </summary>
@@ -78,5 +88,15 @@ public class BoardManager : MonoBehaviour {
     public void ClearMoveDataList()
     {
         boardStatusScript.ClearMoveDataList();
+    }
+
+    public void DoneBoardMass()
+    {
+        csvReadScriptDeck1.Read();
+        csvReadScriptDeck2.Read();
+    }
+    public GameObject GetMassObject(int length,int side)
+    {
+       return boardStatusScript.GetMass(length,side);
     }
 }

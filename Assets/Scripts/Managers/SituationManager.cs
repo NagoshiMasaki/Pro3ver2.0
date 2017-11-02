@@ -9,6 +9,8 @@ public class SituationManager : MonoBehaviour
     GameMaster gameMasterScript;
     [SerializeField]
     BoardManager boardManagerScript;
+    [SerializeField]
+    UImanager uiManegerScript;
     public enum Phase
     {
         None,
@@ -17,6 +19,10 @@ public class SituationManager : MonoBehaviour
         Move,
         Main2,
         End,
+    }
+    public enum SkillStatus
+    {
+
     }
     [SerializeField]
     int moveCount;
@@ -29,6 +35,7 @@ public class SituationManager : MonoBehaviour
     {
         status = Phase.Draw;//デバック用
         copyMoveCount = moveCount;
+        uiManegerScript.UpdatePhase(status, playerTurn);
     }
 
     public bool GetIsGamePlay()
@@ -50,6 +57,7 @@ public class SituationManager : MonoBehaviour
                 break;
         }
         status = set;
+        UpdatePhase();
     }
 
     public Phase GetStatus()
@@ -73,18 +81,42 @@ public class SituationManager : MonoBehaviour
         moveCount--;
         if(moveCount == 0)
         {
-            switch (playerTurn)
-            {
-                case 1:
-                    SetPlayerTurn(2);
-                    break;
-                case 2:
-                    SetPlayerTurn(1);
-                    break;
-            }
-            boardManagerScript.ClearMoveDataList();
-            moveCount = copyMoveCount;
-            status = Phase.Draw;
+            TurnChange();
         }
+    }
+
+    void TurnChange()
+    {
+        switch (playerTurn)
+        {
+            case 1:
+                SetPlayerTurn(2);
+                break;
+            case 2:
+                SetPlayerTurn(1);
+                break;
+        }
+        boardManagerScript.ClearMoveDataList();
+        moveCount = copyMoveCount;
+        status = Phase.Draw;
+        UpdatePhase();
+    }
+
+    public void NextPhase()
+    {
+        status++;
+        if (status == Phase.End)
+        {
+            TurnChange();
+        }
+        else {
+            UpdatePhase();
+        }
+    }
+
+    public void UpdatePhase()
+    {
+        Debug.Log(status);
+        uiManegerScript.UpdatePhase(status,playerTurn);
     }
 }

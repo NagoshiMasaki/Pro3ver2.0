@@ -8,7 +8,8 @@ public class BoardAction : MonoBehaviour
     [SerializeField]
     BoardStatus boardStatusScript;
     bool isIni = true;
-
+    [SerializeField]
+    BoardManager boardManagerScript;
     void Start()
     {
         Ini();
@@ -16,6 +17,7 @@ public class BoardAction : MonoBehaviour
 
     void Ini()
     {
+        boardManagerScript.DeckHandIni();
         SetInstanceMathObjects();
     }
     public void SetInstanceMathObjects()
@@ -47,6 +49,6 @@ public class BoardAction : MonoBehaviour
             pos.y++;
             pos.x = 0;
         }
+        boardManagerScript.DoneBoardMass();
     }
-
 }

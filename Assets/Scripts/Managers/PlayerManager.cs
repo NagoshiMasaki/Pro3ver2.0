@@ -58,9 +58,9 @@ public class PlayerManager : MonoBehaviour
         return spapManagerScript.GetSP(num);
     }
 
-    public List<GameObject> GetInstancePos(int playernum)
+    public List<GameObject> GetInstancePos(int playernum, IllustrationStatus status)
     {
-        return boardManagerScript.GetInstancePos(playernum);
+        return boardManagerScript.GetInstancePos(playernum,status);
     }
 
     public GameObject GetIllustObj(int dictionarynum)
@@ -107,4 +107,10 @@ public class PlayerManager : MonoBehaviour
     {
         boardManagerScript.ClearUpdateMoveList();
     }
+
+    public void NextPhase()
+    {
+        situationManagerScript.NextPhase();
+    }
+
 }

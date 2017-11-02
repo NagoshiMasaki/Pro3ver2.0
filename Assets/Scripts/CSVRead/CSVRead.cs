@@ -9,14 +9,16 @@ public class CSVRead : MonoBehaviour {
     string fileName;
     [SerializeField]
     DeckClass deckClassScript;
-     void Start()
+    [SerializeField]
+    int playernumber;
+    public void Read()
     {
         StreamReader sr = new StreamReader(Application.dataPath + fileName, Encoding.GetEncoding("shift_jis"));
         while (sr.Peek() >= 0)
         {
             string[] cols = sr.ReadLine().Split(',');
             int col = int.Parse(cols[0]);
-            deckClassScript.SetCharacter(col);
+            deckClassScript.SetCharacter(col,playernumber);
         }
         deckClassScript.IniShaffle();
     }

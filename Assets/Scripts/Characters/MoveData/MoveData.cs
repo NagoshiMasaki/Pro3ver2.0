@@ -18,6 +18,13 @@ public class MoveData : MonoBehaviour
         King,
         FirstPorn
     }
+    public enum Status
+    {
+        None,
+        Enemy,
+        Player,
+        Nothing
+    }
     [SerializeField]
     BoardManager boardManagerscript;
 
@@ -29,19 +36,19 @@ public class MoveData : MonoBehaviour
                 PornMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.Queen:
-                QueenMove();
+                QueenMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.Night:
-                NightMove();
+                NightMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.Luke:
                 LukeMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.Bishop:
-                BishopMove();
+                BishopMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.King:
-                KingMove();
+                KingMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
                 break;
             case Rate.FirstPorn:
                 FirstPornMove(playernum, massobjects, massstatuses, nowlengthmass, nowsidemass, instanceobj);
@@ -62,11 +69,11 @@ public class MoveData : MonoBehaviour
         {
             length--;
         }
-        for(int count =-1; count <= 1;count++)
+        for (int count = -1; count <= 1; count++)
         {
             int sidesum = side + count;
-           bool result = OutSideLength(length,sidesum);
-            if(result)
+            bool result = OutSideLength(length, sidesum);
+            if (result)
             {
                 int num = 0;
                 GameObject character = massstatuses[length, sidesum].GetCharacterObj();
@@ -74,42 +81,173 @@ public class MoveData : MonoBehaviour
                 {
                     num = character.GetComponent<SummonStatus>().GetPlayer();
                 }
-                if(character == null)
+                if (character == null)
                 {
-                    MassOnNotCharacter(length,sidesum,massobjects,massstatuses,instanceobj);
+                    MassOnNotCharacter(length, sidesum, massobjects, massstatuses, instanceobj);
                 }
 
-                else if(playernum != num)
+                else if (playernum != num)
                 {
-                    MassOnEnemyCharacter(length,sidesum,massobjects,massstatuses,instanceobj);
+                    MassOnEnemyCharacter(length, sidesum, massobjects, massstatuses, instanceobj);
                 }
             }
         }
     }
 
-    void NightMove()
+    void NightMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
-
+        for (int lengthcount = -2; lengthcount <= 2; lengthcount++)
+        {
+            for (int sidecount = -2; sidecount <= 2; sidecount++)
+            {
+                switch (lengthcount)
+                {
+                    case -2:
+                    case 2:
+                        if (sidecount == -1 || sidecount == 1)
+                        {
+                            OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+                        }
+                        break;
+                    case -1:
+                    case 1:
+                        if (sidecount == -2 || sidecount == 2)
+                        {
+                            OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+                        }
+                        break;
+                }
+            }
+        }
     }
 
-    void QueenMove()
+    void QueenMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
-
+        LukeMove(playernum,massobjects,massstatuses,length,side,instanceobj);
+        BishopMove(playernum, massobjects, massstatuses, length, side, instanceobj);
     }
-    void KingMove()
+    void KingMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
+        for(int lengthcount = -1;lengthcount <= 1;lengthcount++)
+        {
+            for(int sidecount = -1;sidecount <= 1;sidecount++)
+            {
+                OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+            }
+        }
 
     }
 
     void LukeMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
+        for (int sidecount =　0;sidecount < maxSide; sidecount++)
+        {
+           Status result = OnMassCheck(playernum, massobjects, massstatuses, length, side + sidecount, instanceobj);
+            if(result == Status.Enemy)
+            {
+                break;
+            }
+        }
 
+        for (int sidecount = 0; sidecount > -maxSide; sidecount--)
+        {
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length, side + sidecount, instanceobj);
+            if (result == Status.Enemy)
+            {
+                break;
+            }
+        }
+
+        for (int lengthcount = 0;lengthcount < maxLength;lengthcount++)
+        {
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side, instanceobj);
+            if (result == Status.Enemy)
+            {
+                break;
+            }
+        }
+
+        for (int lengthcount = 0; lengthcount > -maxLength; lengthcount--)
+        {
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side, instanceobj);
+            if (result == Status.Enemy)
+            {
+                break;
+            }
+        }
     }
-    void BishopMove()
+    void BishopMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
+        //左上の検索
+        for(int lengthcount = 0; lengthcount < maxLength;lengthcount++)
+        {
+                int sidecount = -lengthcount;
+                Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+                if (result == Status.Enemy)
+                {
+                    break;
+                }
+        }
 
+        //右上の検索
+        for (int lengthcount = 0; lengthcount < maxLength; lengthcount++)
+        {
+            int sidecount = lengthcount;
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+            if (result == Status.Enemy)
+            {
+                break;
+            }
+        }
+
+        //右下の検索
+        for (int lengthcount = 0; lengthcount > maxLength; lengthcount--)
+        {
+            int sidecount = lengthcount;
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+            if (result == Status.Enemy)
+            {
+                break;
+            }
+        }
+
+        //左下の検索
+        for (int lengthcount = 0; lengthcount > maxLength; lengthcount--)
+        {
+            int sidecount = -lengthcount;
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+            if (result == Status.Enemy)
+            {
+                break;
+            }
+        }
     }
 
+    Status OnMassCheck(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int lengthsum, int sidesum, GameObject[] instanceobj)
+    {
+        bool result = OutSideLength(sidesum, lengthsum);
+        int getplayernumber = 0;
+        if (result)
+        {
+            GameObject character = massstatuses[lengthsum, sidesum].GetCharacterObj();
+            if (character != null)//キャラクターの所属先のプレイヤー番号の取得
+            {
+                getplayernumber = character.GetComponent<SummonStatus>().GetPlayer();
+            }
+            else if (character == null)//マスにキャラクターがいなかった場合
+            {
+                MassOnNotCharacter(lengthsum, sidesum, massobjects, massstatuses, instanceobj);
+                return Status.None;
+            }
+
+            if (getplayernumber != playernum)
+            {
+                MassOnEnemyCharacter(lengthsum, sidesum, massobjects, massstatuses, instanceobj);
+                return Status.Enemy;
+            }
+        }
+        return Status.Nothing;
+    }
     /// <summary>
     /// 最初にポーンを動かす時の処理
     /// </summary>
@@ -222,7 +360,7 @@ public class MoveData : MonoBehaviour
         pos.z -= 0.5f;
         Instantiate(instanceobj[0], pos, Quaternion.identity);
         massstatuses[length, side].SetMassStatus(BoardManager.MassMoveStatus.None);
-        AddUpdateMoveList(massstatuses[length,side]);
+        AddUpdateMoveList(massstatuses[length, side]);
     }
 
     /// <summary>

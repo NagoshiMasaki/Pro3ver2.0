@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Zyazya : SkillBase {
+public class Zyazya : CharacterSkill
+{
 
     public override void MyTurnStart()
     {

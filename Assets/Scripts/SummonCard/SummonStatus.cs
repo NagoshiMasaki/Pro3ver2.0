@@ -10,11 +10,14 @@ public class SummonStatus : MonoBehaviour {
     [SerializeField]
     bool isMove;
     [SerializeField]
-    SkillBase skillobj;
+    CharacterSkill skillobj;
+    [SerializeField]
+    GameObject skillEfect;
     [SerializeField]
     int playerNumber;
     [SerializeField]
     MoveData.Rate rate;
+    bool isSkillActive = false;
     public int GetHp()
     {
         return hp;
@@ -57,5 +60,16 @@ public class SummonStatus : MonoBehaviour {
     public void SetRate(MoveData.Rate set)
     {
         rate = set;
+    }
+
+    public void SetSkillEfeect(bool set)
+    {
+            isSkillActive = set;
+            skillEfect.SetActive(isSkillActive);
+    }
+
+    public bool GetSkillActive()
+    {
+        return isSkillActive;
     }
 }

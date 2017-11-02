@@ -21,6 +21,13 @@ public class DeckHandManager : MonoBehaviour
         return Vector3.zero;
     }
 
+    public void DeckHandIni()
+    {
+        decxHand1Script.Ini();
+        decxHand2Script.Ini();
+    }
+
+
     public void InstanceDrawCard(int num,GameObject drawobj)
     {
         switch (num)

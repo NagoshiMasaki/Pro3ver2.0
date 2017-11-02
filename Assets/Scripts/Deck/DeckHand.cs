@@ -19,7 +19,7 @@ public class DeckHand : MonoBehaviour {
     DeckHandManager deckHandManagerScript;
     Vector3 defaultPos;
 
-    void Start()
+    public void Ini()
     {
         defaultPos = deckHandPos.transform.position;
     }

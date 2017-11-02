@@ -27,6 +27,11 @@ public class BoardStatus : MonoBehaviour
         return massObjects[length, side];
     }
 
+    public MassStatus GetMassStatus(int length, int side)
+    {
+        return massStatuses[length, side];
+    }
+
     public bool GetIsGamePlay()
     {
         return boardManagerScript.GetIsGamePlay();
@@ -53,21 +58,82 @@ public class BoardStatus : MonoBehaviour
         massStatuses[length, side] = setobj.GetComponent<MassStatus>();
     }
 
-    public List<GameObject> GetInstancePos(int playernum)
+    public List<GameObject> GetInstancePos(int playernum,IllustrationStatus status)
     {
         dataList.Clear();
-        for (int length = 0; length < 6; length++)
+        MoveData.Rate rate = status.GetRate();
+        switch(rate)
         {
-            for (int side = 0; side < 6; side++)
-            {
-                int number = massStatuses[length, side].GetMaterialNumber();
-                if (playernum == number && massStatuses[length, side].GetCharacterObj() == null)
-                {
-                    dataList.Add(massObjects[length, side]);
-                }
-            }
+            case MoveData.Rate.FirstPorn:
+            case MoveData.Rate.Porn:
+                SumonPorn(playernum,status);
+                break;
+            case MoveData.Rate.Queen:
+                SumonQueen(playernum,status);
+                break;
+            case MoveData.Rate.Night:
+            case MoveData.Rate.Luke:
+            case MoveData.Rate.Bishop:
+                SumonOther(playernum,status);
+                break;
         }
         return dataList;
+    }
+
+    void DataListAdd(int length,int side,int playernum)
+    {
+        int number = massStatuses[length, side].GetMaterialNumber();
+        if (playernum == number && massStatuses[length, side].GetCharacterObj() == null)
+        {
+            dataList.Add(massObjects[length, side]);
+        }
+    }
+
+    void SumonPorn(int playernum, IllustrationStatus status)
+    {
+        int length = 0;
+        if (status.GetPlayerNumber() == 1)
+        {
+            length = 1;
+        }
+        else if (status.GetPlayerNumber() == 2)
+        {
+            length = 4;
+        }
+        for (int sidecount = 0; sidecount < 6; sidecount++)
+        {
+            DataListAdd(length, sidecount, playernum);
+        }
+    }
+
+    void SumonQueen(int playernum, IllustrationStatus status)
+    {
+        if (status.GetPlayerNumber() == 1)
+        {
+            DataListAdd(0,2,playernum);
+        }
+        else if (status.GetPlayerNumber() == 2)
+        {
+            DataListAdd(5, 3, playernum);
+        }
+
+    }
+
+    void SumonOther(int playernum, IllustrationStatus status)
+    {
+        int length = 0;
+        if (status.GetPlayerNumber() == 1)
+        {
+            length = 0;
+        }
+        else if (status.GetPlayerNumber() == 2)
+        {
+            length = 5;
+        }
+        for (int sidecount = 0; sidecount < 6; sidecount++)
+        {
+            DataListAdd(length, sidecount, playernum);
+        }
     }
 
     public void InstanceMovePos(MoveData.Rate rate, int playernum, int nowlengthmass, int nowsidemass)
