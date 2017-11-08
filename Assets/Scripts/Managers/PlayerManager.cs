@@ -113,4 +113,10 @@ public class PlayerManager : MonoBehaviour
         situationManagerScript.NextPhase();
     }
 
+    public void GameFinish(int playernum)
+    {
+        battleManagerScript.GameFinish(playernum);
+        gameMasterScript.SetIsGamePlay(false);
+    }
+        
 }

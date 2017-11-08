@@ -70,7 +70,10 @@ public class PlayerAction : MonoBehaviour
 
     void Update()
     {
-        Mouse();
+        if (playerManagerScript.GetIsGamePlay())
+        {
+            Mouse();
+        }
     }
 
     void Mouse()
@@ -89,11 +92,13 @@ public class PlayerAction : MonoBehaviour
             iconStatus = IconStatus.None;
             isRayAcition = false;
             RayAction();
+            return;
         }
         else if (isRayAcition)
         {
             buttonStatus = ButttonStatus.Continuous;
             RayAction();
+            return;
         }
         //        }
         DelayCount();
@@ -117,6 +122,7 @@ public class PlayerAction : MonoBehaviour
         if (iconStatus == IconStatus.Move || iconStatus == IconStatus.Skill)
         {
             IconRay(ray);
+            return;
         }
         else if (iconStatus == IconStatus.None && isRayAcition == false)
         {
@@ -125,6 +131,7 @@ public class PlayerAction : MonoBehaviour
             ResetDelayCount();
             playerManagerScript.ClearUpdateMoveList();
             buttonStatus = ButttonStatus.None;
+            return;
         }
     }
 
@@ -240,6 +247,7 @@ public class PlayerAction : MonoBehaviour
             playerStatusScript.SetAttachIllustCard(null);
             attachStatus = AttachStatus.None;
             DestroyInstancePosMass();
+            ResetDelayCount();
         }
     }
 
@@ -397,6 +405,13 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     void BattleWin(GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
     {
+        SummonStatus status = enemycharacter.GetComponent<SummonStatus>();
+        MoveData.Rate rate = status.GetRate();
+        int number = status.GetPlayer();
+        if(rate == MoveData.Rate.King)
+        {
+            playerManagerScript.GameFinish(number);
+        }
         Destroy(enemycharacter);
         Vector3 pos = attachmass.transform.position;
         pos.z--;

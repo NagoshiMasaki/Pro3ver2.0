@@ -10,9 +10,17 @@ public class BattleManager : MonoBehaviour
 {
     [SerializeField]
     BattleStatus battleStatusScript;
-
+    [SerializeField]
+    UImanager uiManagerScirpt;
     public BattleStatus.ResultStatus Battle(SummonStatus player, SummonStatus enemy)
     {
        return battleStatusScript.Battle(player,enemy);
     }
+
+    public void GameFinish(int playernum)
+    {
+       int result = battleStatusScript.GameFinish(playernum);
+        uiManagerScirpt.GameFinish(result);
+    }
+
 }

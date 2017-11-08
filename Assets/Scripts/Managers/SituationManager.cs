@@ -11,6 +11,10 @@ public class SituationManager : MonoBehaviour
     BoardManager boardManagerScript;
     [SerializeField]
     UImanager uiManegerScript;
+    [SerializeField]
+    DeckManager deckManagerScript;
+    [SerializeField]
+    DeckHandManager deckHandManagerScript;
     public enum Phase
     {
         None,
@@ -31,13 +35,11 @@ public class SituationManager : MonoBehaviour
     [SerializeField]
     int playerTurn;
     int copyMoveCount;
-    void Start()
+    public void Ini()
     {
-        status = Phase.Draw;//デバック用
         copyMoveCount = moveCount;
-        uiManegerScript.UpdatePhase(status, playerTurn);
+        DrawAction(playerTurn);
     }
-
     public bool GetIsGamePlay()
     {
         return gameMasterScript.GetIsGamePlay();
@@ -91,14 +93,16 @@ public class SituationManager : MonoBehaviour
         {
             case 1:
                 SetPlayerTurn(2);
+                DrawAction(2);
                 break;
             case 2:
                 SetPlayerTurn(1);
+                DrawAction(1);
                 break;
         }
         boardManagerScript.ClearMoveDataList();
         moveCount = copyMoveCount;
-        status = Phase.Draw;
+        status = Phase.Main1;
         UpdatePhase();
     }
 
@@ -118,5 +122,13 @@ public class SituationManager : MonoBehaviour
     {
         Debug.Log(status);
         uiManegerScript.UpdatePhase(status,playerTurn);
+    }
+
+    void DrawAction(int playernum)
+    {
+        GameObject drawobj = deckManagerScript.GetDrawObj(playernum);
+        deckHandManagerScript.InstanceDrawCard(playernum,drawobj);
+        status = Phase.Main1;
+        UpdatePhase();
     }
 }

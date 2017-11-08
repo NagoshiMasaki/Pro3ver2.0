@@ -11,7 +11,8 @@ public class BattleStatus : MonoBehaviour
         Draw,
         Lose
     }
-
+    [SerializeField]
+    UImanager uiManagerScript;
     public ResultStatus Battle(SummonStatus playercharacter, SummonStatus enemycharcter)
     {
         int enemyhp = enemycharcter.GetHp();
@@ -31,5 +32,17 @@ public class BattleStatus : MonoBehaviour
         playercharacter.SetHp(playerhp);
         enemycharcter.SetHp(enemyhp);
         return ResultStatus.Draw;
+    }
+
+    public int GameFinish(int playernumber)
+    {
+        switch (playernumber)
+        {
+            case 1:
+                return 2;
+            case 2:
+                return 1;
+        }
+        return 0;
     }
 }

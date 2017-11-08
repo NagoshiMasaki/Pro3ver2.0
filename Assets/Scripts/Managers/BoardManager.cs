@@ -25,6 +25,8 @@ public class BoardManager : MonoBehaviour {
     CSVRead csvReadScriptDeck2;
     [SerializeField]
     DeckHandManager deckHandManagerScript;
+    [SerializeField]
+    SituationManager situatitonManagerScript;
     public enum MassMoveStatus
     {
         None,
@@ -94,6 +96,7 @@ public class BoardManager : MonoBehaviour {
     {
         csvReadScriptDeck1.Read();
         csvReadScriptDeck2.Read();
+        situatitonManagerScript.Ini();
     }
     public GameObject GetMassObject(int length,int side)
     {

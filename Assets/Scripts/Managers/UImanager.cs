@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UImanager : MonoBehaviour {
+public class UImanager : MonoBehaviour
+{
 
     [SerializeField]
     PhaseUI phaseUIScript;
-
-    public void  UpdatePhase(SituationManager.Phase phase,int playernum)
+    [SerializeField]
+    GameFinishUI gameFinishScript;
+    public void UpdatePhase(SituationManager.Phase phase, int playernum)
     {
-        phaseUIScript.UpdatePhase(phase,playernum);
+        phaseUIScript.UpdatePhase(phase, playernum);
+    }
+
+
+    public void GameFinish(int winnumber)
+    {
+        gameFinishScript.GameFinish(winnumber);
     }
 }
