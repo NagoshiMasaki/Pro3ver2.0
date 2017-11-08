@@ -12,6 +12,8 @@ public class BattleManager : MonoBehaviour
     BattleStatus battleStatusScript;
     [SerializeField]
     UImanager uiManagerScirpt;
+    GameObject playerSumonCharacter;
+    GameObject enemySumonCharacter;
     public BattleStatus.ResultStatus Battle(SummonStatus player, SummonStatus enemy)
     {
        return battleStatusScript.Battle(player,enemy);
@@ -23,4 +25,19 @@ public class BattleManager : MonoBehaviour
         uiManagerScirpt.GameFinish(result);
     }
 
+    public GameObject GetPlayerSumonCharacter()
+    {
+        return playerSumonCharacter;
+    }
+
+    public GameObject GetEnemySumoncharacter()
+    {
+        return enemySumonCharacter;
+    }
+
+    public void SetSumonCharacters(GameObject player,GameObject enemy)
+    {
+        playerSumonCharacter = player;
+        enemySumonCharacter = enemy;
+    }
 }

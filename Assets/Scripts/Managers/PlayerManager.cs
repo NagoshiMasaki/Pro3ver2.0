@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿//////////////////////////////////
+//制作者　名越大樹
+//クラス　プレイヤーを管理するクラス
+//////////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-
-
     [SerializeField]
     GameMaster gameMasterScript;
     [SerializeField]
@@ -22,7 +25,10 @@ public class PlayerManager : MonoBehaviour
     DictionaryManager dictionaryManagerScript;
     [SerializeField]
     BattleManager battleManagerScript;
-
+    [SerializeField]
+    SkillManager skillManagerScript;
+    [SerializeField]
+    PlayerAction playerActionScript;
     public bool GetIsGamePlay()
     {
         return gameMasterScript.GetIsGamePlay();
@@ -118,5 +124,35 @@ public class PlayerManager : MonoBehaviour
         battleManagerScript.GameFinish(playernum);
         gameMasterScript.SetIsGamePlay(false);
     }
-        
+
+    public SkillManager GetSkillManager()
+    {
+        return skillManagerScript;
+    }
+
+    /// <summary>
+    /// バトル開始のスキル発動
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="enemy"></param>
+    /// <returns></returns>
+    public SkillStatus.Status BattleStart(GameObject player,GameObject enemy)
+    {
+       return skillManagerScript.BattleStart(player,enemy);
+    }
+
+    public void ActiveSkill(GameObject player)
+    {
+       
+    }
+
+    public void SetAttachStatus(PlayerAction.AttachStatus set)
+    {
+        playerActionScript.SetAttachStatus(set);
+    }
+
+    public void AttachSkillTarget(SummonStatus target)
+    {
+        skillManagerScript.AttachSkillTarget(target);
+    }
 }

@@ -8,7 +8,7 @@ public class GameFinishUI : MonoBehaviour {
     Text gameFinishText;
     public void GameFinish(int winnumber)
     {
-        string message = winnumber.ToString() + "Pです";
+        string message = "勝者" + winnumber.ToString() + "Pです";
         gameFinishText.text = message;
     }
 }

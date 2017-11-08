@@ -102,4 +102,16 @@ public class BoardManager : MonoBehaviour {
     {
        return boardStatusScript.GetMass(length,side);
     }
+
+    /// <summary>
+    /// マス上に存在する移動できるマスのオブジェクトの削除
+    /// </summary>
+    public void DestroyInstancePosMass()
+    {
+        var clones = GameObject.FindGameObjectsWithTag("InstancePos");
+        foreach (var clone in clones)
+        {
+            Destroy(clone);
+        }
+    }
 }

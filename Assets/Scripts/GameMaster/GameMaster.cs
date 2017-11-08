@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameMaster : MonoBehaviour {
 
-
-    bool isGamePlay;
+    [SerializeField]
+    bool isGamePlay = true;
     
     public void SetIsGamePlay(bool set)
     {

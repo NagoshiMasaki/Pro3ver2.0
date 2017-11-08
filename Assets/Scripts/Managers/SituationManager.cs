@@ -15,6 +15,8 @@ public class SituationManager : MonoBehaviour
     DeckManager deckManagerScript;
     [SerializeField]
     DeckHandManager deckHandManagerScript;
+    [SerializeField]
+    SkillManager skillManagerScript;
     public enum Phase
     {
         None,
@@ -120,7 +122,6 @@ public class SituationManager : MonoBehaviour
 
     public void UpdatePhase()
     {
-        Debug.Log(status);
         uiManegerScript.UpdatePhase(status,playerTurn);
     }
 
@@ -130,5 +131,10 @@ public class SituationManager : MonoBehaviour
         deckHandManagerScript.InstanceDrawCard(playernum,drawobj);
         status = Phase.Main1;
         UpdatePhase();
+    }
+
+    public SkillManager GetSkillManager()
+    {
+        return skillManagerScript;
     }
 }

@@ -12,7 +12,6 @@ public class DeckManager : MonoBehaviour {
 
     public GameObject GetDrawObj(int number)
     {
-        Debug.Log(number);
         switch (number)
         {
             case 1:

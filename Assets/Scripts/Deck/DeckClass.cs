@@ -67,7 +67,7 @@ public class DeckClass : MonoBehaviour
                 massstatus = mass.GetComponent<MassStatus>();
                 break;
             case 2:
-                mass = boardManagerScritpt.GetMassObject(2, 2);
+                mass = boardManagerScritpt.GetMassObject(3, 2);
                 massstatus = mass.GetComponent<MassStatus>();
                 break;
         }

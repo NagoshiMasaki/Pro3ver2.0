@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿///////////////////////////////////
+//制作者　名越大樹
+//クラス　ユーザが操作さる情報を管理するクラス
+///////////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,6 +34,8 @@ public class PlayerStatus : MonoBehaviour
     GameObject attachMass;
     [SerializeField]
     LayerMask normalIconLayer;
+    [SerializeField]
+    MassStatus copyMass;
     public bool GetIsGamePlay()
     {
         return playerManagerScript.GetIsGamePlay();
@@ -87,6 +94,7 @@ public class PlayerStatus : MonoBehaviour
     {
         return attachSumonCard;
     }
+
     public void SetAttachSumonCard(GameObject set)
     {
         attachSumonCard = set;
@@ -115,6 +123,7 @@ public class PlayerStatus : MonoBehaviour
     public void SetAttachMass(GameObject set)
     {
         attachMass = set;
+        copyMass = set.GetComponent<MassStatus>();
     }
 
     public GameObject GetAttachMass()
@@ -126,4 +135,5 @@ public class PlayerStatus : MonoBehaviour
     {
         return normalIconLayer;
     }
+
 }
