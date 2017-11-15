@@ -1,7 +1,8 @@
 ﻿///////////////////////////////////
 //制作者　名越大樹
-//クラス　フィールド上に生成されたキャラクターのスキル
+//クラス　フィールド上に生成されたキャラクターのステータス
 ///////////////////////////////////
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,10 +26,22 @@ public class SummonStatus : MonoBehaviour {
     [SerializeField]
     SkillManager skillManagerScript;
     MassStatus onAttachMass;
+    MassStatus copyAttachMass;
     [SerializeField]
     int intervalSkll;
     [SerializeField]
     int skillCount;
+    [SerializeField]
+    bool iniSkill;
+    public bool GetIniSkill()
+    {
+        return iniSkill;
+    }
+
+    public void SetIniSkill(bool set)
+    {
+        iniSkill = set;
+    }
 
     public int GetHp()
     {
@@ -95,6 +108,7 @@ public class SummonStatus : MonoBehaviour {
         return skillobj;
     }
 
+
     public void SetSkillManager(SkillManager set)
     {
         skillManagerScript = set;
@@ -112,9 +126,14 @@ public class SummonStatus : MonoBehaviour {
 
     public void SetAttachMass(MassStatus set)
     {
+        copyAttachMass = onAttachMass;
         onAttachMass = set;
     }
 
+    public MassStatus GetCopyAttachMass()
+    {
+        return copyAttachMass;
+    }
     public MassStatus GetAttachMass()
     {
         return onAttachMass;
@@ -151,5 +170,15 @@ public class SummonStatus : MonoBehaviour {
     public int GetSkillCount()
     {
         return skillCount;
+    }
+
+    public void RecoveryHp(int add)
+    {
+        hp += add;
+    }
+
+    public void AddPower(int add)
+    {
+        power += add;
     }
 }

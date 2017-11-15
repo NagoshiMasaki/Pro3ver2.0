@@ -85,7 +85,9 @@ public class SituationManager : MonoBehaviour
         moveCount--;
         if(moveCount == 0)
         {
-            TurnChange();
+            Debug.Log("main2");
+            status = Phase.Main2;
+            UpdatePhase();
         }
     }
 

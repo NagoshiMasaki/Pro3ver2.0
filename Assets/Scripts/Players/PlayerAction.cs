@@ -9,7 +9,6 @@ using UnityEngine;
 
 public class PlayerAction : MonoBehaviour
 {
-
     [SerializeField]
     PlayerStatus playerStatusScript;
     int playerNumber = 1;
@@ -204,9 +203,11 @@ public class PlayerAction : MonoBehaviour
     /// <param name="attachobj"></param>
     void AtachIllustration(GameObject attachobj)
     {
+        Debug.Log("カードをアタッチしました");
         playerStatusScript.SetAttachIllustCard(attachobj);
         if (playerStatusScript.GetPhase() == SituationManager.Phase.Main1 || playerStatusScript.GetPhase() == SituationManager.Phase.Main2 && playerStatusScript.GetAttachIllustCard() == null)
         {
+            Debug.Log("通過しました1");
             int playernum = 0;
             int costnum = 0;
             int ratenum = 0;
@@ -215,6 +216,7 @@ public class PlayerAction : MonoBehaviour
             attachobj.GetComponent<IllustrationStatus>().GetRate_Dictionary_Cost_Player_Number(ref ratenum, ref dictionartnum, ref costnum, ref playernum);
             if (playernum == playerStatusScript.GetPlayerTurn() && costnum <= playerManagerScript.GetSP(playernum))
             {
+                Debug.Log("通過しました2");
                 data.Clear();
                 IllustrationStatus status = attachobj.GetComponent<IllustrationStatus>();
                 data = playerManagerScript.GetInstancePos(playernum, status);
@@ -338,7 +340,15 @@ public class PlayerAction : MonoBehaviour
                 attachStatus = AttachStatus.None;
                 break;
         }
-        playerManagerScript.SetPhase(SituationManager.Phase.Move);
+        if(playerStatusScript.GetAttachSumonCard() != null)
+        {
+            playerManagerScript.MoveEndSkill(playerStatusScript.GetAttachSumonCard());
+        }
+        playerStatusScript.SetAttachSumonCard(null);
+        if (playerManagerScript.GetPhase() == SituationManager.Phase.Main1)
+        {
+            playerManagerScript.SetPhase(SituationManager.Phase.Move);
+        }
         isRayAcition = false;
     }
 
@@ -358,7 +368,6 @@ public class PlayerAction : MonoBehaviour
         playerManagerScript.DecrementMoveCount();
         playerManagerScript.AddMoveList(sumoncard);
         FirstPornChangePorn(playerStatusScript.GetAttachSumonCard());
-        playerStatusScript.SetAttachSumonCard(null);
         attachStatus = AttachStatus.None;
     }
 
@@ -382,8 +391,20 @@ public class PlayerAction : MonoBehaviour
         }
         BattleStatus.ResultStatus result = playerManagerScript.Battle(playerstatus, enemystatus);//戦闘開始
         BattleResult(result, attachmass, attachmassstatus, playerStatusScript.GetAttachSumonCard(), attachmassstatus.GetCharacterObj());
+        if(result == BattleStatus.ResultStatus.Draw)
+        {
+            playerManagerScript.BattaleEnd(player,enemy);
+        }
+        else if(result == BattleStatus.ResultStatus.Lose)
+        {
+            playerManagerScript.BattaleEnd(enemy);
+        }
+        else if(result == BattleStatus.ResultStatus.Win)
+        {
+            playerManagerScript.BattaleEnd(player);
+        }
         playerManagerScript.DecrementMoveCount();
-        playerStatusScript.SetAttachSumonCard(null);
+
     }
     //////////////////////
     /// 戦闘に関する関数開始

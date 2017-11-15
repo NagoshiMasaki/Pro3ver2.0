@@ -60,6 +60,31 @@ public class SkillAction : MonoBehaviour {
         return SkillStatus.Status.None;
     }
 
+    public SkillStatus.Status BattleEnd(GameObject playercharacter, GameObject enemycharacter)
+    {
+        CharacterSkill playerskill = playercharacter.GetComponent<SummonStatus>().GetSkill();
+        CharacterSkill enemyskill = enemycharacter.GetComponent<SummonStatus>().GetSkill();
+        playerskill.BattleEnd();
+        enemyskill.BattleEnd();
+        return SkillStatus.Status.None;
+    }
+
+    public SkillStatus.Status BattleEnd(GameObject wincharacter)
+    {
+        CharacterSkill enemyskill = wincharacter.GetComponent<SummonStatus>().GetSkill();
+        enemyskill.BattleEnd();
+        return SkillStatus.Status.None;
+    }
+
+    public SkillStatus.Status MoveEnd(GameObject playercharacter)
+    {
+        SkillStatus.Status status = skillStatusScript.GetStatus();
+        Debug.Log(playercharacter);
+        CharacterSkill playerskill = playercharacter.GetComponent<SummonStatus>().GetSkill();
+        playerskill.MoveEnd();
+        return SkillStatus.Status.None;
+    }
+
     /// <summary>
     /// 発動の対照のターゲットの処理
     /// </summary>

@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿//////////////////////////////
+//製作者　名越大樹
+//クラス　各プレイヤーにあるデッキを管理するクラス
+//////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +22,8 @@ public class DeckClass : MonoBehaviour
     PlayerStatus playerStatusScript;
     [SerializeField]
     BoardManager boardManagerScritpt;
+
+
     public void SetCharacter(int num,int playernum)
     {
         GameObject character = dictopnaryManagerScript.GetIllustCharacter(num);
@@ -36,6 +43,9 @@ public class DeckClass : MonoBehaviour
         return character;
     }
 
+    /// <summary>
+    /// 読み込んだデッキをシャッフル処理
+    /// </summary>
     public void IniShaffle()
     {
         IniDeckDraw();
@@ -55,6 +65,11 @@ public class DeckClass : MonoBehaviour
         return playerNumber;
     }
 
+    /// <summary>
+    /// キングを読み込んだときにボード上に生成する処理
+    /// </summary>
+    /// <param name="playernum"></param>
+    /// <param name="status"></param>
     void SumonKing(int playernum,IllustrationStatus status)
     {
         GameObject sumonobj = dictopnaryManagerScript.GetSummonCharacter(status.GetDictionaryNumber());

@@ -17,6 +17,7 @@ public class MassStatus : MonoBehaviour
     Material[] playermaterial;
     [SerializeField]
     int materialNumber;
+    int defaultNumber;
     [SerializeField]
     bool isMove = false;
     BoardManager.MassMoveStatus status = BoardManager.MassMoveStatus.Not;
@@ -26,6 +27,7 @@ public class MassStatus : MonoBehaviour
         sideNumber = side;
         massNumber = number;
         materialNumber = materialnum;
+        defaultNumber = materialnum;
         GetComponent<Renderer>().material = playermaterial[materialNumber];
         status = BoardManager.MassMoveStatus.None;
     }
@@ -36,7 +38,15 @@ public class MassStatus : MonoBehaviour
         side = sideNumber;
         number = massNumber;
     }
+    public int GetSideNumber()
+    {
+        return sideNumber;
+    }
 
+    public int GetLengthNumber()
+    {
+        return lengthNumber;
+    }
     public void SetCharacterObj(GameObject obj)
     {
         characterobj = obj;
@@ -49,9 +59,13 @@ public class MassStatus : MonoBehaviour
 
     public void SetMaterial(int number)
     {
+        materialNumber = number;
         GetComponent<Renderer>().material = playermaterial[number];
     }
-
+    public int GetDefaultNumber()
+    {
+        return defaultNumber;
+    }
     public int GetMaterialNumber()
     {
         return materialNumber;

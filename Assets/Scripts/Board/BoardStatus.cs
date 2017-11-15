@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿///////////////////////////////////////////////////
+//製作者　名越大樹
+//クラス　ボード上の状態を管理するクラス
+///////////////////////////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,29 +63,29 @@ public class BoardStatus : MonoBehaviour
         massStatuses[length, side] = setobj.GetComponent<MassStatus>();
     }
 
-    public List<GameObject> GetInstancePos(int playernum,IllustrationStatus status)
+    public List<GameObject> GetInstancePos(int playernum, IllustrationStatus status)
     {
         dataList.Clear();
         MoveData.Rate rate = status.GetRate();
-        switch(rate)
+        switch (rate)
         {
             case MoveData.Rate.FirstPorn:
             case MoveData.Rate.Porn:
-                SumonPorn(playernum,status);
+                SumonPorn(playernum, status);
                 break;
             case MoveData.Rate.Queen:
-                SumonQueen(playernum,status);
+                SumonQueen(playernum, status);
                 break;
             case MoveData.Rate.Night:
             case MoveData.Rate.Luke:
             case MoveData.Rate.Bishop:
-                SumonOther(playernum,status);
+                SumonOther(playernum, status);
                 break;
         }
         return dataList;
     }
 
-    void DataListAdd(int length,int side,int playernum)
+    void DataListAdd(int length, int side, int playernum)
     {
         int number = massStatuses[length, side].GetMaterialNumber();
         if (playernum == number && massStatuses[length, side].GetCharacterObj() == null)
@@ -89,6 +94,11 @@ public class BoardStatus : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// ポーンを召喚できる場所を探す処理
+    /// </summary>
+    /// <param name="playernum"></param>
+    /// <param name="status"></param>
     void SumonPorn(int playernum, IllustrationStatus status)
     {
         int length = 0;
@@ -106,11 +116,16 @@ public class BoardStatus : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// クイーンを召喚する場所を探す処理
+    /// </summary>
+    /// <param name="playernum"></param>
+    /// <param name="status"></param>
     void SumonQueen(int playernum, IllustrationStatus status)
     {
         if (status.GetPlayerNumber() == 1)
         {
-            DataListAdd(0,2,playernum);
+            DataListAdd(0, 2, playernum);
         }
         else if (status.GetPlayerNumber() == 2)
         {
@@ -119,6 +134,11 @@ public class BoardStatus : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// それ以外の種族の召喚場所を生成する処理
+    /// </summary>
+    /// <param name="playernum"></param>
+    /// <param name="status"></param>
     void SumonOther(int playernum, IllustrationStatus status)
     {
         int length = 0;
@@ -141,15 +161,24 @@ public class BoardStatus : MonoBehaviour
         moveDataScript.GetMoveData(rate, playernum, massObjects, massStatuses, nowlengthmass, nowsidemass, boardManagerScript.GetMovePosMassObj());
     }
 
+    /// <summary>
+    /// ボード上で動いた召喚キャラクターを追加する
+    /// </summary>
+    /// <param name="target"></param>
     public void AddMoveDataList(GameObject target)
     {
-       bool result = CheckMoveDataList(target);
+        bool result = CheckMoveDataList(target);
         if (result)
         {
             movedatalist.Add(target);
         }
     }
 
+    /// <summary>
+    /// 同じキャラクターが重複していなかいを確認する処理
+    /// </summary>
+    /// <param name="target"></param>
+    /// <returns></returns>
     public bool CheckMoveDataList(GameObject target)
     {
         for (int count = 0; count < movedatalist.Count; count++)
@@ -160,6 +189,19 @@ public class BoardStatus : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void RemoveMoveDataList(GameObject target)
+    {
+
+        for (int count = 0; count < movedatalist.Count; count++)
+        {
+            if (movedatalist[count] == target)
+            {
+                movedatalist.RemoveAt(count);
+            }
+        }
+
     }
 
     public void ClearMoveDataList()
@@ -179,5 +221,77 @@ public class BoardStatus : MonoBehaviour
             updateMoveAreaList[count].SetMassStatus(BoardManager.MassMoveStatus.Not);
         }
         updateMoveAreaList.Clear();
+    }
+
+    public List<MassStatus> GetSearchMassAround(int length, int side)
+    {
+        List<MassStatus> masslist = new List<MassStatus>();
+        for (int lengthcount = -1; lengthcount <= 1; lengthcount++)
+        {
+            for (int sidecount = -1; sidecount <= 1; sidecount++)
+            {
+                int lengthsum = lengthcount + length;
+                int sidesum = side + sidecount;
+                bool result = OutSideLength(lengthsum, sidesum);
+                if (result)
+                {
+                    masslist.Add(massStatuses[lengthsum, sidesum]);
+                }
+            }
+        }
+        return masslist;
+    }
+
+    /// <summary>
+    /// 縦と横のマスの範囲外ではないかをチェックする処理
+    /// </summary>
+    bool OutSideLength(int length, int side)
+    {
+        if (length >= lengthSize || length < 0)
+        {
+            return false;
+        }
+
+        else if (side >= sideSize || side < 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 自分の属しているマスを探す処理
+    /// </summary>
+    /// <param name="player"></param>
+    /// <returns></returns>
+    public List<MassStatus> SearchPlayerMass(int player)
+    {
+        int startlength = 0;
+        int endlength = 0;
+        int value = 0;
+        switch (player)
+        {
+            case 1:
+                value = 1;
+                break;
+            case 2:
+                value = -1;
+                startlength = lengthSize - 1;
+                endlength = 2;
+                break;
+        }
+
+        List<MassStatus> masslist = new List<MassStatus>();
+        for (int lengthcount = startlength; lengthcount != endlength; lengthcount += value)
+        {
+            for (int sidecount = 0; sidecount < sideSize; sidecount++)
+            {
+                if (massStatuses[lengthcount, sidecount].GetMaterialNumber() == player)
+                {
+                    masslist.Add(massStatuses[lengthcount, sidecount]);
+                }
+            }
+        }
+        return masslist;
     }
 }

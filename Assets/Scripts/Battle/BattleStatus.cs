@@ -13,18 +13,22 @@ public class BattleStatus : MonoBehaviour
     }
     [SerializeField]
     UImanager uiManagerScript;
+    int copyplayerdamage;
+    int copyenemydamage;
     public ResultStatus Battle(SummonStatus playercharacter, SummonStatus enemycharcter)
     {
         int enemyhp = enemycharcter.GetHp();
         int playerhp = playercharacter.GetHp();
         enemyhp -= playercharacter.GetPower();
-        if(enemyhp <= 0)
+        copyenemydamage = playercharacter.GetPower();
+        if (enemyhp <= 0)
         {
             enemycharcter.SetHp(enemyhp);
             return ResultStatus.Win;
         }
         playerhp -= enemycharcter.GetPower();
-        if(playerhp <= 0)
+        copyplayerdamage = enemycharcter.GetPower();
+        if (playerhp <= 0)
         {
             playercharacter.SetHp(playerhp);
             return ResultStatus.Lose;
@@ -44,5 +48,15 @@ public class BattleStatus : MonoBehaviour
                 return 1;
         }
         return 0;
+    }
+
+    public int GetPlayerDamage()
+    {
+        return copyplayerdamage;
+    }
+
+    public int GetEnemyDamage()
+    {
+        return copyenemydamage;
     }
 }

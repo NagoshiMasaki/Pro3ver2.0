@@ -40,4 +40,14 @@ public class BattleManager : MonoBehaviour
         playerSumonCharacter = player;
         enemySumonCharacter = enemy;
     }
+
+    public int GetPlayerDamage()
+    {
+        return battleStatusScript.GetPlayerDamage();
+    }
+
+    public int GetEnemyDamage()
+    {
+        return battleStatusScript.GetEnemyDamage();
+    }
 }

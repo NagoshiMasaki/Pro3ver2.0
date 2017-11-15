@@ -32,11 +32,25 @@ public class SkillManager : MonoBehaviour
         skill.ActiveSkill();
     }
 
-    public void BattleEnd(GameObject playercharacter, GameObject enemycharacter)
+    public SkillStatus.Status BattleEnd(GameObject playercharacter, GameObject enemycharacter)
     {
-
+        return skillActionScript.BattleEnd(playercharacter, enemycharacter);
     }
 
+    public SkillStatus.Status BattleEnd(GameObject wincharacter)
+    {
+        return skillActionScript.BattleEnd(wincharacter);
+    }
+
+    public bool CheckMoveList(GameObject target)
+    {
+        return boardManagerScript.CheckMoveList(target);
+    }
+
+    public void RemoveMoveList(GameObject target)
+    {
+        boardManagerScript.ReMoveMoveList(target);
+    }
     public void AttachSkillTarget(SummonStatus target)
     {
         skillActionScript.AttachSkillTarget(target);
@@ -75,5 +89,29 @@ public class SkillManager : MonoBehaviour
     public BattleManager GetBattleManager()
     {
         return battleManagerScript;
+    }
+
+    public SkillStatus.Status MoveEndSkill(GameObject character)
+    {
+        return skillActionScript.MoveEnd(character);
+    }
+
+    public int GetEnemyDamage()
+    {
+        return battleManagerScript.GetEnemyDamage();
+    }
+
+    public int GetPlayerDamage()
+    {
+        return battleManagerScript.GetPlayerDamage();
+    }
+
+    public List<MassStatus> GetSearchMassAround(int length, int side)
+    {
+        return boardManagerScript.SearchMassAround(length, side);
+    }
+    public List<MassStatus> GetSearchPlayerMass(int player)
+    {
+        return boardManagerScript.SearchPlayerMass(player);
     }
 }

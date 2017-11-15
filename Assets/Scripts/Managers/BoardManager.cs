@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿//////////////////////////////////
+//製作者　名越大樹
+//クラス　ボード全体を監視するクラス
+//////////////////////////////////
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -77,6 +82,11 @@ public class BoardManager : MonoBehaviour {
         return boardStatusScript.CheckMoveDataList(target);
     }
 
+    public void ReMoveMoveList(GameObject target)
+    {
+        boardStatusScript.RemoveMoveDataList(target);
+    }
+
     public void AddUpdateMoveList(MassStatus status)
     {
         boardStatusScript.AddUpdateMoveAreaList(status);
@@ -92,6 +102,9 @@ public class BoardManager : MonoBehaviour {
         boardStatusScript.ClearMoveDataList();
     }
 
+    /// <summary>
+    /// ボードの生成が完了したら
+    /// </summary>
     public void DoneBoardMass()
     {
         csvReadScriptDeck1.Read();
@@ -102,7 +115,7 @@ public class BoardManager : MonoBehaviour {
     {
        return boardStatusScript.GetMass(length,side);
     }
-
+    
     /// <summary>
     /// マス上に存在する移動できるマスのオブジェクトの削除
     /// </summary>
@@ -113,5 +126,14 @@ public class BoardManager : MonoBehaviour {
         {
             Destroy(clone);
         }
+    }
+
+    public List<MassStatus> SearchPlayerMass(int player)
+    {
+        return boardStatusScript.SearchPlayerMass(player);
+    }
+    public List<MassStatus> SearchMassAround(int length,int side)
+    {
+       return boardStatusScript.GetSearchMassAround(length,side);
     }
 }

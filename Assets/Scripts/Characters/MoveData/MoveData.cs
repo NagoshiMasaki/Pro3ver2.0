@@ -1,4 +1,8 @@
-﻿using System.Collections;
+﻿////////////////////////////////////////
+//製作者　名越大樹
+//クラス　各種族の挙動に関するクラス
+////////////////////////////////////////
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

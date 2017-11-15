@@ -141,6 +141,22 @@ public class PlayerManager : MonoBehaviour
        return skillManagerScript.BattleStart(player,enemy);
     }
 
+    public SkillStatus.Status BattaleEnd(GameObject player, GameObject enemy)
+    {
+        return skillManagerScript.BattleEnd(player,enemy);
+    }
+
+    public SkillStatus.Status BattaleEnd(GameObject wincharacter)
+    {
+        return skillManagerScript.BattleEnd(wincharacter);
+    }
+
+    public void MoveEndSkill(GameObject player)
+    {
+        skillManagerScript.MoveEndSkill(player);
+    }
+
+    
     public void ActiveSkill(GameObject player)
     {
        
