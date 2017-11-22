@@ -13,10 +13,6 @@ public class SPAPManager : MonoBehaviour {
     [SerializeField]
     GameObject spObj;
 
-    void Start()
-    {
-        IniInstanceSp(1);
-    }
 
     public int GetSP(int playernum)
     {
@@ -30,6 +26,19 @@ public class SPAPManager : MonoBehaviour {
         return 0;
     }
 
+    public void SetSP(int playernum,int set)
+    {
+        switch (playernum)
+        {
+            case 1:
+                spapStatus1.SetSP(set);
+                break;
+            case 2:
+                spapStatus2.SetSP(set);
+                break;
+        }
+    }
+
     public void IniInstanceSp(int playernum)
     {
         switch (playernum)
@@ -37,12 +46,53 @@ public class SPAPManager : MonoBehaviour {
             case 1:
                 spapStatus1.IniInstanceSP();
                 break;
+            case 2:
+                spapStatus2.IniInstanceSP();
+                break;
         }
     }
 
     public GameObject GetApObj(int playernum)
     {
         return apObj;
+    }
+
+    public int GetAp(int playernum)
+    {
+        switch (playernum)
+        {
+            case 1:
+               return spapStatus1.GetAP();
+            case 2:
+                return spapStatus2.GetAP();
+        }
+        return 0;
+    }
+    public void SetAP(int playernum,int set)
+    {
+        switch (playernum)
+        {
+            case 1:
+                spapStatus1.SetAP(set);
+                break;
+            case 2:
+                spapStatus2.SetAP(set);
+                break;
+        }
+    }
+
+    public void AddSP(int playernum)
+    {
+        switch (playernum)
+        {
+            case 1:
+                spapStatus1.AddSP();
+                break;
+            case 2:
+                spapStatus2.AddSP();
+                break;
+        }
+
     }
 
     public GameObject GetSpObj()

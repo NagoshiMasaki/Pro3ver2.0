@@ -26,10 +26,17 @@ public class TimeGeyserAsta : CharacterSkill
 
     void Recovery()
     {
+
         if (parentObj.GetIsSkillActive() && parentObj.GetSkillCount() <= 0)
         {
-            Debug.Log("タイムゲイザーアスタのスキル発動");
             int playernumber = parentObj.GetPlayer();
+            MassStatus massstatus = parentObj.GetAttachMass();
+            int massnumber = massstatus.GetMaterialNumber();
+            if(massnumber != playernumber)
+            {
+                return;
+            }
+            Debug.Log("タイムゲイザーアスタのスキル発動");
             SkillManager skillmanager = parentObj.GetSkillManager();
             List<MassStatus> masslist = skillmanager.GetSearchPlayerMass(playernumber);
             for (int count = 0; count < masslist.Count; count++)

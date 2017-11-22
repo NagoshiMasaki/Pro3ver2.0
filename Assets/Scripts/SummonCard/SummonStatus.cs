@@ -33,6 +33,8 @@ public class SummonStatus : MonoBehaviour {
     int skillCount;
     [SerializeField]
     bool iniSkill;
+    [SerializeField]
+    int ap;
     public bool GetIniSkill()
     {
         return iniSkill;
@@ -73,6 +75,11 @@ public class SummonStatus : MonoBehaviour {
         playerNumber = set;
     }
 
+    public void Damage(int damage)
+    {
+        hp = hp - damage;
+    }
+
     public void SetHp(int set)
     {
         hp = set;
@@ -82,6 +89,10 @@ public class SummonStatus : MonoBehaviour {
         return rate;
     }
 
+    public int GetAP()
+    {
+        return ap;
+    }
     public void SetRate(MoveData.Rate set)
     {
         rate = set;
@@ -134,6 +145,7 @@ public class SummonStatus : MonoBehaviour {
     {
         return copyAttachMass;
     }
+
     public MassStatus GetAttachMass()
     {
         return onAttachMass;
@@ -152,6 +164,7 @@ public class SummonStatus : MonoBehaviour {
     public void DestoryThisObj()
     {
         onAttachMass.SetMassStatus(BoardManager.MassMoveStatus.None);
+        skillManagerScript.RemoveAtPasshiveSkillList(skillobj);
         onAttachMass.SetCharacterObj(null);
         Destroy(gameObject);
     }

@@ -20,7 +20,17 @@ public class SkillManager : MonoBehaviour
     SkillAction skillActionScript;
     [SerializeField]
     SkillStatus skillStatusScript;
+    [SerializeField]
+    SituationManager situationManagerScript;
 
+    public int GetPlayerTurn()
+    {
+       return situationManagerScript.GetPlayerTurn();
+    }
+    public SituationManager.Phase GetPhase()
+    {
+        return situationManagerScript.GetStatus();
+    }
     public SkillStatus.Status BattleStart(GameObject playercharacter, GameObject enemycharacter)
     {
         return skillActionScript.BattleStart(playercharacter, enemycharacter);
@@ -30,6 +40,15 @@ public class SkillManager : MonoBehaviour
     {
         CharacterSkill skill = invoker.GetComponent<SummonStatus>().GetSkill();
         skill.ActiveSkill();
+    }
+
+    public void AddSkillList(CharacterSkill set)
+    {
+        skillStatusScript.AddSkillList(set);
+    }
+    public void TurnEndSkillList()
+    {
+        skillActionScript.TurnEndSkillList();
     }
 
     public SkillStatus.Status BattleEnd(GameObject playercharacter, GameObject enemycharacter)
@@ -110,8 +129,39 @@ public class SkillManager : MonoBehaviour
     {
         return boardManagerScript.SearchMassAround(length, side);
     }
+
     public List<MassStatus> GetSearchPlayerMass(int player)
     {
         return boardManagerScript.SearchPlayerMass(player);
     }
+
+    public void PasshiveSkill(SummonStatus player)
+    {
+        skillActionScript.InvocationPasshiveSkillList(player);
+    }
+
+    public void RemoveAtPasshiveSkillList(CharacterSkill target)
+    {
+        skillStatusScript.RemoveatPhassiveSkillList(target);
+    }
+
+    public void AddPasshiveSkillList(CharacterSkill set)
+    {
+        skillStatusScript.AddSkillList(set);
+    }
+ 
+    ////////////////////////////////////////////////
+    //キング専用のスキル
+    ////////////////////////////////////////////////
+    public void AllMyArea(int player)
+    {
+        boardManagerScript.AllMyArea(player);
+    }
+
+    public void AllDefaultArea()
+    {
+        boardManagerScript.AllDefaultArea();
+    }
+    /////////////////////////////////////////////
+    //////////////////////////////////////////////
 }

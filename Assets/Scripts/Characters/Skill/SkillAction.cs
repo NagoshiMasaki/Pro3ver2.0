@@ -85,6 +85,7 @@ public class SkillAction : MonoBehaviour {
         return SkillStatus.Status.None;
     }
 
+
     /// <summary>
     /// 発動の対照のターゲットの処理
     /// </summary>
@@ -94,4 +95,23 @@ public class SkillAction : MonoBehaviour {
        CharacterSkill invorker = skillStatusScript.GetInvorker();
         invorker.AttachSkillCharacter(target);
     }
+
+    public void InvocationPasshiveSkillList(SummonStatus enemy)
+    {
+        List<CharacterSkill> skilllist = skillStatusScript.GetSkillList();
+        for (int count = 0; count < skilllist.Count; count++)
+        {
+            skilllist[count].Passhive(enemy);
+        }
+    }
+
+    public void TurnEndSkillList()
+    {
+        List<CharacterSkill> skilllist = skillStatusScript.GetSkillList();
+        for (int count = 0; count < skilllist.Count; count++)
+        {
+            skilllist[count].TurnEnd();
+        }
+    }
+
 }

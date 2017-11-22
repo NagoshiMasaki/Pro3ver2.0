@@ -136,4 +136,14 @@ public class BoardManager : MonoBehaviour {
     {
        return boardStatusScript.GetSearchMassAround(length,side);
     }
+
+    public void AllMyArea(int player)
+    {
+        boardStatusScript.AllMyArea(player);
+    }
+
+    public void AllDefaultArea()
+    {
+        boardStatusScript.AllDefaultArea();
+    }
 }

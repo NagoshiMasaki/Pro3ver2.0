@@ -9,6 +9,7 @@ public class SPAPStatus : MonoBehaviour
     int SP;
     [SerializeField]
     int AP;
+    int copySP;
     [SerializeField]
     GameObject SPObj;
     [SerializeField]
@@ -19,18 +20,30 @@ public class SPAPStatus : MonoBehaviour
     GameObject APPos;
     Vector3 defaultAPPos;
     Vector3 defaultSPPos;
+    [SerializeField]
     List<GameObject> APList = new List<GameObject>();
+    [SerializeField]
     List<GameObject> SPList = new List<GameObject>();
 
     void Start()
     {
+        copySP = SP;
         defaultSPPos = SPPos.transform.position;
         defaultAPPos = APPos.transform.position;
     }
 
     public void AddSP()
     {
+        SP = copySP;
         SP++;
+        copySP = SP;
+        ResetSpInstance();
+    }
+
+    public void SetSP(int set)
+    {
+        SP = set;
+        ResetSpInstance();
     }
 
     public void AddAP()
@@ -105,6 +118,15 @@ public class SPAPStatus : MonoBehaviour
         APList.Clear();
     }
 
+    public void AllDestroySP()
+    {
+        for (int count = 0; count < SPList.Count; count++)
+        {
+            Destroy(SPList[count]);
+        }
+        SPList.Clear();
+    }
+
     public void SubtractionAP(int num)
     {
         for (int count = num; count >0;count--)
@@ -149,11 +171,20 @@ public class SPAPStatus : MonoBehaviour
 
     public void ResetSpInstance()
     {
-        AllDestroyAP();
-        ResetAPPos();
+        AllDestroySP();
+        ResetSPPos();
         for (int count = 0; count < SP; count++)
         {
             InstanceSP();
         }
+    }
+
+    public void Ini()
+    {
+        InstanceSP();
+    }
+    public void SetAP(int set)
+    {
+        AP = set;
     }
 }

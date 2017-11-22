@@ -9,7 +9,8 @@ using UnityEngine;
 
 public class DeckClass : MonoBehaviour
 {
-
+    [SerializeField]
+    SkillManager skillmanager;
     [SerializeField]
     DictionaryManager dictopnaryManagerScript;
     [SerializeField]
@@ -82,7 +83,7 @@ public class DeckClass : MonoBehaviour
                 massstatus = mass.GetComponent<MassStatus>();
                 break;
             case 2:
-                mass = boardManagerScritpt.GetMassObject(3, 2);
+                mass = boardManagerScritpt.GetMassObject(5, 2);
                 massstatus = mass.GetComponent<MassStatus>();
                 break;
         }
@@ -90,7 +91,13 @@ public class DeckClass : MonoBehaviour
         massstatus = mass.GetComponent<MassStatus>();
         instancepos.z--;
         GameObject instance = Instantiate(sumonobj, instancepos, Quaternion.identity);
+
         instance.GetComponent<SummonStatus>().SetPlayerNumber(playernum);
+        instance.GetComponent<SummonStatus>().SetAttachMass(massstatus);
+        instance.GetComponent<SummonStatus>().SetSkillManager(skillmanager);
+        SkillManager skillmamnager = instance.GetComponent<SummonStatus>().GetSkillManager();
+        CharacterSkill skill = instance.GetComponent<SummonStatus>().GetSkill();
+        skillmamnager.AddSkillList(skill);
         massstatus.SetMassStatus(BoardManager.MassMoveStatus.Not);
         massstatus.SetCharacterObj(instance);
     }

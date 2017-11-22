@@ -41,6 +41,10 @@ public class IllustrationStatus : MonoBehaviour {
         playerNumber = num;
     }
 
+    public int GetCost()
+    {
+        return costNumber;
+    }
     public MoveData.Rate GetRate()
     {
         return rate;

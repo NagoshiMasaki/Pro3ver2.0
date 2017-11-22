@@ -43,6 +43,7 @@ public class PlayerManager : MonoBehaviour
     {
         situationManagerScript.SetPhase(set);
     }
+
     public SituationManager.Phase GetPhase()
     {
         return situationManagerScript.GetStatus();
@@ -161,7 +162,15 @@ public class PlayerManager : MonoBehaviour
     {
        
     }
+    public void SetAP(int player,int set)
+    {
+        spapManagerScript.SetAP(player,set);
+    }
 
+    public void SetSP(int playernum,int set)
+    {
+        spapManagerScript.SetSP(playernum, set);
+    }
     public void SetAttachStatus(PlayerAction.AttachStatus set)
     {
         playerActionScript.SetAttachStatus(set);
@@ -170,5 +179,20 @@ public class PlayerManager : MonoBehaviour
     public void AttachSkillTarget(SummonStatus target)
     {
         skillManagerScript.AttachSkillTarget(target);
+    }
+
+    public void PasshiveSkill(SummonStatus player)
+    {
+        skillManagerScript.PasshiveSkill(player);
+    }
+
+    public void AddSkillList(CharacterSkill set)
+    {
+        skillManagerScript.AddPasshiveSkillList(set);
+    }
+
+    public int GetAP(int playernumber)
+    {
+        return spapManagerScript.GetAp(playernumber);
     }
 }

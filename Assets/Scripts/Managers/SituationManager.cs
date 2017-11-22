@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class SituationManager : MonoBehaviour
 {
-
+    [SerializeField]
+    SPAPManager spapManagerScript;
     [SerializeField]
     GameMaster gameMasterScript;
     [SerializeField]
@@ -37,10 +38,12 @@ public class SituationManager : MonoBehaviour
     [SerializeField]
     int playerTurn;
     int copyMoveCount;
+
     public void Ini()
     {
         copyMoveCount = moveCount;
         DrawAction(playerTurn);
+        spapManagerScript.IniInstanceSp(playerTurn);
     }
     public bool GetIsGamePlay()
     {
@@ -49,17 +52,6 @@ public class SituationManager : MonoBehaviour
 
     public void SetPhase(Phase set)
     {
-        switch (set)
-        {
-            case Phase.Main1:
-                break;
-            case Phase.Main2:
-                break;
-            case Phase.Move:
-                break;
-            case Phase.End:
-                break;
-        }
         status = set;
         UpdatePhase();
     }
@@ -93,14 +85,17 @@ public class SituationManager : MonoBehaviour
 
     void TurnChange()
     {
+        skillManagerScript.TurnEndSkillList();
         switch (playerTurn)
         {
             case 1:
                 SetPlayerTurn(2);
+                spapManagerScript.AddSP(2);
                 DrawAction(2);
                 break;
             case 2:
                 SetPlayerTurn(1);
+                spapManagerScript.AddSP(1);
                 DrawAction(1);
                 break;
         }

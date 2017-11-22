@@ -294,4 +294,29 @@ public class BoardStatus : MonoBehaviour
         }
         return masslist;
     }
+
+    public void AllMyArea(int playernumber)
+    {
+        int startlength = 2;
+        int endlength = 4;
+        for (int countlength = startlength; countlength < endlength; countlength++)
+        {
+            for (int countside = 0; countside < sideSize; countside++)
+            {
+                massStatuses[countlength, countside].SetMaterial(playernumber);
+            }
+        }
+    }
+
+    public void AllDefaultArea()
+    {
+        int startlength = 2;
+        for (int countlength = startlength; countlength < lengthSize; countlength++)
+        {
+            for (int countside = 0; countside < sideSize; countside++)
+            {
+                massStatuses[countlength, countside].SetMaterial(massStatuses[countlength,countside].GetDefaultNumber());
+            }
+        }
+    }
 }
