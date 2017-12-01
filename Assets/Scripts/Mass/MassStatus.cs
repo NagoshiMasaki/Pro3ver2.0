@@ -20,7 +20,11 @@ public class MassStatus : MonoBehaviour
     int defaultNumber;
     [SerializeField]
     bool isMove = false;
+    [SerializeField]
     BoardManager.MassMoveStatus status = BoardManager.MassMoveStatus.Not;
+
+    [SerializeField]
+    SpriteRenderer sprite;
     public void SetNumber(int length, int side, int number, int materialnum)
     {
         lengthNumber = length;
@@ -28,8 +32,8 @@ public class MassStatus : MonoBehaviour
         massNumber = number;
         materialNumber = materialnum;
         defaultNumber = materialnum;
-        GetComponent<Renderer>().material = playermaterial[materialNumber];
         status = BoardManager.MassMoveStatus.None;
+        SetMaterial(materialnum);
     }
 
     public void GetNumbers(ref int length, ref int side, ref int number)
@@ -60,7 +64,18 @@ public class MassStatus : MonoBehaviour
     public void SetMaterial(int number)
     {
         materialNumber = number;
-        GetComponent<Renderer>().material = playermaterial[number];
+        switch (number)
+        {
+            case 0:
+                sprite.color = Color.white;
+                break;
+            case 1:
+                sprite.color = Color.red;
+                break;
+            case 2:
+                sprite.color = Color.blue;
+                break;
+        }
     }
     public int GetDefaultNumber()
     {

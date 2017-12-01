@@ -25,7 +25,7 @@ public class DeckClass : MonoBehaviour
     BoardManager boardManagerScritpt;
 
 
-    public void SetCharacter(int num,int playernum)
+    public void SetCharacter(int num, int playernum)
     {
         GameObject character = dictopnaryManagerScript.GetIllustCharacter(num);
         IllustrationStatus status = character.GetComponent<IllustrationStatus>();
@@ -71,7 +71,7 @@ public class DeckClass : MonoBehaviour
     /// </summary>
     /// <param name="playernum"></param>
     /// <param name="status"></param>
-    void SumonKing(int playernum,IllustrationStatus status)
+    void SumonKing(int playernum, IllustrationStatus status)
     {
         GameObject sumonobj = dictopnaryManagerScript.GetSummonCharacter(status.GetDictionaryNumber());
         GameObject mass = null;

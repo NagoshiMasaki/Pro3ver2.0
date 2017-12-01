@@ -7,7 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SummonStatus : MonoBehaviour {
+public class SummonStatus : MonoBehaviour
+{
     [SerializeField]
     int hp;
     [SerializeField]
@@ -35,6 +36,32 @@ public class SummonStatus : MonoBehaviour {
     bool iniSkill;
     [SerializeField]
     int ap;
+    [SerializeField]
+    SpriteRenderer hpNumber;
+    [SerializeField]
+    SpriteRenderer attackNumber;
+    [SerializeField]
+    SpriteRenderer mysprite;
+
+    public void SetColor(bool color)
+    {
+        if (color)
+        {
+            mysprite.color = Color.white;
+        }
+        else
+        {
+            mysprite.color = Color.gray;
+        }
+    }
+
+
+    public void Ini()
+    {
+        SetSpriteAttack();
+        SetSpriteHp();
+    }
+
     public bool GetIniSkill()
     {
         return iniSkill;
@@ -78,11 +105,13 @@ public class SummonStatus : MonoBehaviour {
     public void Damage(int damage)
     {
         hp = hp - damage;
+        SetSpriteHp();
     }
 
     public void SetHp(int set)
     {
         hp = set;
+        SetSpriteHp();
     }
     public MoveData.Rate GetRate()
     {
@@ -100,8 +129,8 @@ public class SummonStatus : MonoBehaviour {
 
     public void SetSkillEfeect(bool set)
     {
-            isSkillActive = set;
-            skillEfect.SetActive(isSkillActive);
+        isSkillActive = set;
+        skillEfect.SetActive(isSkillActive);
     }
 
     public void SetSkillEfeect()
@@ -188,10 +217,24 @@ public class SummonStatus : MonoBehaviour {
     public void RecoveryHp(int add)
     {
         hp += add;
+        SetSpriteHp();
     }
 
     public void AddPower(int add)
     {
         power += add;
+        SetSpriteAttack();
+    }
+
+    void SetSpriteAttack()
+    {
+        Sprite sprite = skillManagerScript.GetSpriteNumber(power);
+        attackNumber.sprite = sprite;
+    }
+
+    void SetSpriteHp()
+    {
+        Sprite sprite = skillManagerScript.GetSpriteNumber(hp);
+        hpNumber.sprite = sprite;
     }
 }

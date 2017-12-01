@@ -7,7 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardManager : MonoBehaviour {
+public class BoardManager : MonoBehaviour
+{
 
     [SerializeField]
     MoveData movedataScript;
@@ -32,6 +33,8 @@ public class BoardManager : MonoBehaviour {
     DeckHandManager deckHandManagerScript;
     [SerializeField]
     SituationManager situatitonManagerScript;
+    [SerializeField]
+    SPAPManager spapManagerScript;
     public enum MassMoveStatus
     {
         None,
@@ -59,7 +62,12 @@ public class BoardManager : MonoBehaviour {
     {
         return boardStatusScript.GetInstancePos(playernum, status);
     }
-    
+
+    public void AddSummonCharacter(SummonStatus set)
+    {
+        boardStatusScript.AddSummonCharacterList(set);
+    }
+
     public void DeckHandIni()
     {
         deckHandManagerScript.DeckHandIni();
@@ -69,7 +77,7 @@ public class BoardManager : MonoBehaviour {
     /// </summary>
     public void InstanceMoveData(MoveData.Rate rate, int playernum, int nowlengthmass, int nowsidemass)
     {
-        boardStatusScript.InstanceMovePos(rate,playernum,nowlengthmass,nowsidemass);
+        boardStatusScript.InstanceMovePos(rate, playernum, nowlengthmass, nowsidemass);
     }
 
     public void AddMoveList(GameObject target)
@@ -77,7 +85,7 @@ public class BoardManager : MonoBehaviour {
         boardStatusScript.AddMoveDataList(target);
     }
 
-    public bool CheckMoveList(GameObject　target)
+    public bool CheckMoveList(GameObject target)
     {
         return boardStatusScript.CheckMoveDataList(target);
     }
@@ -107,15 +115,16 @@ public class BoardManager : MonoBehaviour {
     /// </summary>
     public void DoneBoardMass()
     {
-        csvReadScriptDeck1.Read();
-        csvReadScriptDeck2.Read();
+        csvReadScriptDeck1.ResourcesRead();
+        csvReadScriptDeck2.ResourcesRead();
         situatitonManagerScript.Ini();
+        spapManagerScript.Ini();
     }
-    public GameObject GetMassObject(int length,int side)
+    public GameObject GetMassObject(int length, int side)
     {
-       return boardStatusScript.GetMass(length,side);
+        return boardStatusScript.GetMass(length, side);
     }
-    
+
     /// <summary>
     /// マス上に存在する移動できるマスのオブジェクトの削除
     /// </summary>
@@ -132,9 +141,9 @@ public class BoardManager : MonoBehaviour {
     {
         return boardStatusScript.SearchPlayerMass(player);
     }
-    public List<MassStatus> SearchMassAround(int length,int side)
+    public List<MassStatus> SearchMassAround(int length, int side)
     {
-       return boardStatusScript.GetSearchMassAround(length,side);
+        return boardStatusScript.GetSearchMassAround(length, side);
     }
 
     public void AllMyArea(int player)
@@ -145,5 +154,15 @@ public class BoardManager : MonoBehaviour {
     public void AllDefaultArea()
     {
         boardStatusScript.AllDefaultArea();
+    }
+
+    public List<MassStatus> GetMoveList()
+    {
+       return boardStatusScript.GetUpdateMoveAreaList();
+    }
+
+    public void SummonCharacterListColorClear()
+    {
+        boardStatusScript.SummonCharacterClear();
     }
 }

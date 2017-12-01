@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IllustrationStatus : MonoBehaviour {
+public class IllustrationStatus : MonoBehaviour
+{
 
     [SerializeField]
     int playerNumber;
@@ -14,11 +15,33 @@ public class IllustrationStatus : MonoBehaviour {
     int costNumber;
     [SerializeField]
     MoveData.Rate rate;
+    [SerializeField]
+    float zoomValue;
+    [SerializeField]
+    Vector3 defaultScale;
+
+    void Start()
+    {
+        defaultScale = transform.localScale;
+    }
+
     public int GetPlayerNumber()
     {
         return playerNumber;
     }
 
+
+    public void ZoomUp()
+    {
+        Vector3 zoom = transform.localScale;
+        zoom.x *= zoomValue;
+        zoom.y *= zoomValue;
+        transform.localScale = zoom;
+    }
+    public void ResetScale()
+    {
+        transform.localScale = defaultScale;
+    }
     public int GetDictionaryNumber()
     {
         return dictionaryNumber;
@@ -29,7 +52,7 @@ public class IllustrationStatus : MonoBehaviour {
         return rateNumber;
     }
 
-    public void GetRate_Dictionary_Cost_Player_Number(ref int ratenum ,ref int dictionarynum,ref int costnum,ref int playernum)
+    public void GetRate_Dictionary_Cost_Player_Number(ref int ratenum, ref int dictionarynum, ref int costnum, ref int playernum)
     {
         ratenum = rateNumber;
         dictionarynum = dictionaryNumber;

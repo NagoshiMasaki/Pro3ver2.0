@@ -21,7 +21,8 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField]
     int iniDeckHandCount;
     [SerializeField]
-    GameObject attachiIlustCard;
+    GameObject 
+        IlustCard;
     [SerializeField]
     GameObject attachSumonCard;
     [SerializeField]
@@ -36,6 +37,13 @@ public class PlayerStatus : MonoBehaviour
     LayerMask normalIconLayer;
     [SerializeField]
     MassStatus copyMass;
+    GameObject attachiIlustCard;
+
+    List<MassStatus> moveList = new List<MassStatus>();
+    public void AddmoveList(MassStatus set)
+    {
+        moveList.Add(set);
+    }
     public bool GetIsGamePlay()
     {
         return playerManagerScript.GetIsGamePlay();

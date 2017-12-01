@@ -26,12 +26,12 @@ public class Sofia : CharacterSkill
         SkillManager skillManager = parentObj.GetSkillManager();
         skillManager.AllMyArea(parentObj.GetPlayer());
         isSkill = true;
-       
+
     }
 
     void AllDefaultMass()
     {
-        if(!isSkill)
+        if (!isSkill)
         {
             return;
         }
@@ -42,7 +42,7 @@ public class Sofia : CharacterSkill
         {
             return;
         }
-            if (phase != SituationManager.Phase.End)
+        if (phase != SituationManager.Phase.End)
         {
             return;
         }

@@ -21,6 +21,11 @@ public class Zyazya : CharacterSkill
         if (ParentStatus.GetIsSkillActive()) {
             SkillManager skillmanager = ParentStatus.GetSkillManager();
             GameObject target = skillmanager.GetEnemy();
+            SummonStatus targetstatus = target.GetComponent<SummonStatus>();
+            if(targetstatus.GetRate() == MoveData.Rate.King)
+            {
+                return;
+            }
             skillmanager.DestoryInstancePos();
             target.GetComponent<SummonStatus>().DestoryThisObj();
             skillmanager.SetStatus(SkillStatus.Status.Finish);

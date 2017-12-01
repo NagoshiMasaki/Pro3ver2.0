@@ -26,6 +26,22 @@ public class BoardStatus : MonoBehaviour
     List<GameObject> movedatalist = new List<GameObject>();
     [SerializeField]
     List<MassStatus> updateMoveAreaList = new List<MassStatus>();
+    [SerializeField]
+    GameObject[] massObjectArray;
+    List<SummonStatus> summonCharacterList = new List<SummonStatus>();
+
+    public void AddSummonCharacterList(SummonStatus set)
+    {
+        summonCharacterList.Add(set);
+    }
+
+    public void SummonCharacterClear()
+    {
+        for (int count = 0;count < summonCharacterList.Count;count++)
+        {
+            summonCharacterList[count].SetColor(true);
+        }
+    }
 
     public GameObject GetMass(int length, int side)
     {
@@ -52,9 +68,9 @@ public class BoardStatus : MonoBehaviour
         return lengthSize;
     }
 
-    public GameObject GetInstanceMathObj()
+    public GameObject[] GetInstanceMathObj()
     {
-        return boardManagerScript.GetInstanceMathObj();
+        return massObjectArray;
     }
 
     public void SetMathObjects(int length, int side, GameObject setobj)
@@ -212,6 +228,11 @@ public class BoardStatus : MonoBehaviour
     public void AddUpdateMoveAreaList(MassStatus mass)
     {
         updateMoveAreaList.Add(mass);
+    }
+
+    public List<MassStatus> GetUpdateMoveAreaList()
+    {
+        return updateMoveAreaList;
     }
 
     public void ClearUpdateMoveAreList()

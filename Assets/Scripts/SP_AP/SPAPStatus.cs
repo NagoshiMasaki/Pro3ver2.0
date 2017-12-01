@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class SPAPStatus : MonoBehaviour
 {
-
+    [SerializeField]
+    GameObject leverObj;
+    [SerializeField]
+    int maxSP;
+    [SerializeField]
+    List<SpSprite> spList = new List<SpSprite>();
+    [SerializeField]
+    int iniSP;
+    [SerializeField]
+    SPAPAction spapActionScript;
     [SerializeField]
     int SP;
     [SerializeField]
@@ -21,17 +30,95 @@ public class SPAPStatus : MonoBehaviour
     Vector3 defaultAPPos;
     Vector3 defaultSPPos;
     [SerializeField]
-    List<GameObject> APList = new List<GameObject>();
-    [SerializeField]
-    List<GameObject> SPList = new List<GameObject>();
+    SpriteRenderer SPNumber;
+    SPAPManager spapManagerScript;
 
-    void Start()
+    public void SetSPAPManager(SPAPManager set)
     {
-        copySP = SP;
-        defaultSPPos = SPPos.transform.position;
-        defaultAPPos = APPos.transform.position;
+        spapManagerScript = set;
     }
 
+    public int GetIniSp()
+    {
+        return iniSP;
+    }
+    public void spListAdd(SpSprite set)
+    {
+        spList.Add(set);
+    }
+    public GameObject GetLeverObj()
+    {
+        return leverObj;
+    }
+
+    public int GetMaxSP()
+    {
+        return maxSP;
+    }
+
+    public int GetSP()
+    {
+        return SP;
+    }
+
+    public void SetSP(int set,int usecount)
+    {
+        spapActionScript.UpdateSPSprite(usecount);
+        SPNumber.sprite = spapManagerScript.GetNumberSprte(SP);
+        SP = set;
+    }
+
+    public void SetSP()
+    {
+        SPNumber.sprite = spapManagerScript.GetNumberSprte(SP);
+    }
+
+    public GameObject GetAPObj()
+    {
+        return APObj;
+    }
+
+    public GameObject GetSPObj()
+    {
+        return SPObj;
+    }
+
+    public List<SpSprite> GetSPSpriteList()
+    {
+        return spList;
+    }
+
+    public void SetAP(int set)
+    {
+        AP = set;
+    }
+
+    public int GetAP()
+    {
+        return AP;
+    }
+
+    public void AddSP()
+    {
+        if (maxSP >= SP + 1)
+        {
+            SP++;
+            copySP = SP;
+        }
+
+        else
+        {
+            SP = maxSP;
+        }
+
+        if (spapActionScript != null)
+        {
+            SPNumber.sprite = spapManagerScript.GetNumberSprte(SP);
+            spapActionScript.ResetSP();
+        }
+    }
+
+    /*
     public void AddSP()
     {
         SP = copySP;
@@ -61,15 +148,7 @@ public class SPAPStatus : MonoBehaviour
         return SP;
     }
 
-    public GameObject GetAPObj()
-    {
-        return APObj;
-    }
 
-    public GameObject GetSPObj()
-    {
-        return SPObj;
-    }
 
     public void InstanceAP()
     {
@@ -129,9 +208,9 @@ public class SPAPStatus : MonoBehaviour
 
     public void SubtractionAP(int num)
     {
-        for (int count = num; count >0;count--)
+        for (int count = num; count > 0; count--)
         {
-            Destroy(APList[APList.Count-1]);
+            Destroy(APList[APList.Count - 1]);
             APList.RemoveAt(APList.Count);
             Vector3 pos = APPos.transform.position;
             pos.x--;
@@ -153,7 +232,7 @@ public class SPAPStatus : MonoBehaviour
 
     public void IniInstanceSP()
     {
-        for(int count = 0; count < SP;count++)
+        for (int count = 0; count < SP; count++)
         {
             InstanceSP();
         }
@@ -163,7 +242,7 @@ public class SPAPStatus : MonoBehaviour
     {
         AllDestroyAP();
         ResetAPPos();
-        for(int count = 0;count < AP;count++)
+        for (int count = 0; count < AP; count++)
         {
             InstanceAP();
         }
@@ -187,4 +266,5 @@ public class SPAPStatus : MonoBehaviour
     {
         AP = set;
     }
+    */
 }

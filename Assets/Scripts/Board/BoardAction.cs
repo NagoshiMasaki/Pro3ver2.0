@@ -10,6 +10,12 @@ public class BoardAction : MonoBehaviour
     bool isIni = true;
     [SerializeField]
     BoardManager boardManagerScript;
+    [SerializeField]
+    float massSpaceX;
+    [SerializeField]
+    float massSpaceY;
+    [SerializeField]
+    GameObject instancePos;
     void Start()
     {
         Ini();
@@ -20,18 +26,21 @@ public class BoardAction : MonoBehaviour
         boardManagerScript.DeckHandIni();
         SetInstanceMathObjects();
     }
+
     public void SetInstanceMathObjects()
     {
-        GameObject mathobject = boardStatusScript.GetInstanceMathObj();
+        GameObject[] mathobjectarray = boardStatusScript.GetInstanceMathObj();
         int lengthsize = boardStatusScript.GetLengthSize();
         int sidesize = boardStatusScript.GetSideSize();
-        Vector3 pos = Vector3.zero;
+        Vector3 pos = instancePos.transform.position;
         int number = 0;
+        bool isindex = false;
         for (int length = 0; length < lengthsize; length++)
         {
             for (int side = 0; side < sidesize; side++)
             {
                 int materialnum = 0;
+                int index = 0;
                 if(length < 2)
                 {
                     materialnum = 1;
@@ -40,14 +49,37 @@ public class BoardAction : MonoBehaviour
                 {
                     materialnum = 2;
                 }
-                GameObject instanceobj = Instantiate(mathobject, pos, Quaternion.identity);
+                if (isindex)
+                {
+                    if (number % 2 == 0)
+                    {
+                        index = 1;
+                    }
+                    else
+                    {
+                        index = 0;
+                    }
+                }
+                else
+                {
+                    if (number % 2 == 0)
+                    {
+                        index = 0;
+                    }
+                    else
+                    {
+                        index = 1;
+                    }
+                }
+                GameObject instanceobj = Instantiate(mathobjectarray[index], pos, Quaternion.identity);
                 instanceobj.GetComponent<MassStatus>().SetNumber(length,side,number,materialnum);
                 boardStatusScript.SetMathObjects(length,side,instanceobj);
-                pos.x++;
+                pos.x+= massSpaceX;
                 number++;
             }
-            pos.y++;
-            pos.x = 0;
+            isindex = !isindex;
+            pos.y += massSpaceY;
+            pos.x = instancePos.transform.position.x;
         }
         boardManagerScript.DoneBoardMass();
     }

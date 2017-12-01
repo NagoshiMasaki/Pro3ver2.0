@@ -18,6 +18,11 @@ public class SituationManager : MonoBehaviour
     DeckHandManager deckHandManagerScript;
     [SerializeField]
     SkillManager skillManagerScript;
+    [SerializeField]
+    GameObject P1Obj;
+    [SerializeField]
+    GameObject P2Obj;
+
     public enum Phase
     {
         None,
@@ -44,6 +49,7 @@ public class SituationManager : MonoBehaviour
         copyMoveCount = moveCount;
         DrawAction(playerTurn);
         spapManagerScript.IniInstanceSp(playerTurn);
+        TurnChange();
     }
     public bool GetIsGamePlay()
     {
@@ -75,7 +81,7 @@ public class SituationManager : MonoBehaviour
     public void DecrementMoveCount()
     {
         moveCount--;
-        if(moveCount == 0)
+        if (moveCount == 0)
         {
             Debug.Log("main2");
             status = Phase.Main2;
@@ -92,13 +98,18 @@ public class SituationManager : MonoBehaviour
                 SetPlayerTurn(2);
                 spapManagerScript.AddSP(2);
                 DrawAction(2);
+                P1Obj.SetActive(false);
+                P2Obj.SetActive(true);
                 break;
             case 2:
                 SetPlayerTurn(1);
                 spapManagerScript.AddSP(1);
                 DrawAction(1);
+                P1Obj.SetActive(true);
+                P2Obj.SetActive(false);
                 break;
         }
+        boardManagerScript.SummonCharacterListColorClear();
         boardManagerScript.ClearMoveDataList();
         moveCount = copyMoveCount;
         status = Phase.Main1;
@@ -119,13 +130,13 @@ public class SituationManager : MonoBehaviour
 
     public void UpdatePhase()
     {
-        uiManegerScript.UpdatePhase(status,playerTurn);
+        uiManegerScript.UpdatePhase(status, playerTurn);
     }
 
     void DrawAction(int playernum)
     {
         GameObject drawobj = deckManagerScript.GetDrawObj(playernum);
-        deckHandManagerScript.InstanceDrawCard(playernum,drawobj);
+        deckHandManagerScript.InstanceDrawCard(playernum, drawobj);
         status = Phase.Main1;
         UpdatePhase();
     }

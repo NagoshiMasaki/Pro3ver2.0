@@ -29,6 +29,8 @@ public class PlayerManager : MonoBehaviour
     SkillManager skillManagerScript;
     [SerializeField]
     PlayerAction playerActionScript;
+    [SerializeField]
+    PlayerStatus playerStatusScript;
     public bool GetIsGamePlay()
     {
         return gameMasterScript.GetIsGamePlay();
@@ -151,7 +153,10 @@ public class PlayerManager : MonoBehaviour
     {
         return skillManagerScript.BattleEnd(wincharacter);
     }
-
+    public void AddSummonCharacter(SummonStatus set)
+    {
+        boardManagerScript.AddSummonCharacter(set);
+    }
     public void MoveEndSkill(GameObject player)
     {
         skillManagerScript.MoveEndSkill(player);
@@ -167,9 +172,9 @@ public class PlayerManager : MonoBehaviour
         spapManagerScript.SetAP(player,set);
     }
 
-    public void SetSP(int playernum,int set)
+    public void SetSP(int playernum,int set,int usecount)
     {
-        spapManagerScript.SetSP(playernum, set);
+        spapManagerScript.SetSP(playernum, set, usecount);
     }
     public void SetAttachStatus(PlayerAction.AttachStatus set)
     {
@@ -194,5 +199,11 @@ public class PlayerManager : MonoBehaviour
     public int GetAP(int playernumber)
     {
         return spapManagerScript.GetAp(playernumber);
+    }
+
+    public List<MassStatus> GetMoveList()
+    {
+
+        return boardManagerScript.GetMoveList();
     }
 }

@@ -22,10 +22,17 @@ public class SkillManager : MonoBehaviour
     SkillStatus skillStatusScript;
     [SerializeField]
     SituationManager situationManagerScript;
+    [SerializeField]
+    SpriteManager spriteManagerScript;
+
+    public Sprite GetSpriteNumber(int number)
+    {
+       return spriteManagerScript.GetNumberList(number);
+    }
 
     public int GetPlayerTurn()
     {
-       return situationManagerScript.GetPlayerTurn();
+        return situationManagerScript.GetPlayerTurn();
     }
     public SituationManager.Phase GetPhase()
     {
@@ -149,7 +156,7 @@ public class SkillManager : MonoBehaviour
     {
         skillStatusScript.AddSkillList(set);
     }
- 
+
     ////////////////////////////////////////////////
     //キング専用のスキル
     ////////////////////////////////////////////////

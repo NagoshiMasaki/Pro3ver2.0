@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
-public class CSVRead : MonoBehaviour {
-
+public class CSVRead : MonoBehaviour
+{
     [SerializeField]
     string fileName;
     [SerializeField]
     DeckClass deckClassScript;
     [SerializeField]
     int playernumber;
+
     public void Read()
     {
         StreamReader sr = new StreamReader(Application.dataPath + fileName, Encoding.GetEncoding("shift_jis"));
@@ -18,7 +19,22 @@ public class CSVRead : MonoBehaviour {
         {
             string[] cols = sr.ReadLine().Split(',');
             int col = int.Parse(cols[0]);
-            deckClassScript.SetCharacter(col,playernumber);
+            deckClassScript.SetCharacter(col, playernumber);
+        }
+        deckClassScript.IniShaffle();
+    }
+
+
+    public void ResourcesRead()
+    {
+       var csv = Resources.Load(fileName) as TextAsset;
+        Debug.Log(csv.text);
+        StringReader read = new StringReader(csv.text);
+        while (read.Peek() >= 0)
+        {
+            string[] cols = read.ReadLine().Split(',');
+            int col = int.Parse(cols[0]);
+            deckClassScript.SetCharacter(col, playernumber);
         }
         deckClassScript.IniShaffle();
     }

@@ -12,6 +12,10 @@ public class MoveData : MonoBehaviour
     int maxLength;
     [SerializeField]
     int maxSide;
+    [SerializeField]
+    PlayerManager playerManagerScript;
+
+
     public enum Rate
     {
         Porn,
@@ -85,7 +89,7 @@ public class MoveData : MonoBehaviour
                 {
                     num = character.GetComponent<SummonStatus>().GetPlayer();
                 }
-                if (character == null)
+                if (character == null && count == 0)
                 {
                     MassOnNotCharacter(length, sidesum, massobjects, massstatuses, instanceobj);
                 }
@@ -127,14 +131,14 @@ public class MoveData : MonoBehaviour
 
     void QueenMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
-        LukeMove(playernum,massobjects,massstatuses,length,side,instanceobj);
+        LukeMove(playernum, massobjects, massstatuses, length, side, instanceobj);
         BishopMove(playernum, massobjects, massstatuses, length, side, instanceobj);
     }
     void KingMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
-        for(int lengthcount = -1;lengthcount <= 1;lengthcount++)
+        for (int lengthcount = -1; lengthcount <= 1; lengthcount++)
         {
-            for(int sidecount = -1;sidecount <= 1;sidecount++)
+            for (int sidecount = -1; sidecount <= 1; sidecount++)
             {
                 OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
             }
@@ -144,10 +148,10 @@ public class MoveData : MonoBehaviour
 
     void LukeMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
-        for (int sidecount =　0;sidecount < maxSide; sidecount++)
+        for (int sidecount = 0; sidecount < maxSide; sidecount++)
         {
-           Status result = OnMassCheck(playernum, massobjects, massstatuses, length, side + sidecount, instanceobj);
-            if(result == Status.Enemy)
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length, side + sidecount, instanceobj);
+            if (result == Status.Enemy)
             {
                 break;
             }
@@ -162,7 +166,7 @@ public class MoveData : MonoBehaviour
             }
         }
 
-        for (int lengthcount = 0;lengthcount < maxLength;lengthcount++)
+        for (int lengthcount = 0; lengthcount < maxLength; lengthcount++)
         {
             Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side, instanceobj);
             if (result == Status.Enemy)
@@ -183,14 +187,14 @@ public class MoveData : MonoBehaviour
     void BishopMove(int playernum, GameObject[,] massobjects, MassStatus[,] massstatuses, int length, int side, GameObject[] instanceobj)
     {
         //左上の検索
-        for(int lengthcount = 0; lengthcount < maxLength;lengthcount++)
+        for (int lengthcount = 0; lengthcount < maxLength; lengthcount++)
         {
-                int sidecount = -lengthcount;
-                Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
-                if (result == Status.Enemy)
-                {
-                    break;
-                }
+            int sidecount = -lengthcount;
+            Status result = OnMassCheck(playernum, massobjects, massstatuses, length + lengthcount, side + sidecount, instanceobj);
+            if (result == Status.Enemy)
+            {
+                break;
+            }
         }
 
         //右上の検索
@@ -270,7 +274,7 @@ public class MoveData : MonoBehaviour
         }
         if (value == 1)
         {
-            for (int count = 1; count <= 2; count += value)
+            for (int count = 0; count <= 2; count += value)
             {
                 lengthsum = count + length;
                 bool result = OutSideLength(lengthsum, side);

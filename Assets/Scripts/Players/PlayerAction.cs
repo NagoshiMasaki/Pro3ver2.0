@@ -97,9 +97,7 @@ public class PlayerAction : MonoBehaviour
             iconStatus = IconStatus.None;
             isRayAcition = false;
             RayAction();
-            DestroyInstancePosMass();
-            attachStatus = AttachStatus.None;
-            SetActiveIcon(false);
+            ButtonUpSetting();
             return;
         }
         else if (isRayAcition)
@@ -111,6 +109,16 @@ public class PlayerAction : MonoBehaviour
         DelayCount();
     }
 
+    void ButtonUpSetting()
+    {
+        DestroyInstancePosMass();
+        attachStatus = AttachStatus.None;
+        SetActiveIcon(false);
+        if (playerStatusScript.GetAttachIllustCard() != null)
+        {
+            ResetScale(playerStatusScript.GetAttachIllustCard());
+        }
+    }
     void RayAction()
     {
         if (delayTime >= 0.0f)
@@ -206,23 +214,35 @@ public class PlayerAction : MonoBehaviour
     void AtachIllustration(GameObject attachobj)
     {
         Debug.Log("カードをアタッチしました");
-        playerStatusScript.SetAttachIllustCard(attachobj);
+        if (playerStatusScript.GetAttachIllustCard() != null)
+        {
+            GameObject card = playerStatusScript.GetAttachIllustCard();
+            ResetScale(card);
+        }
         if (playerStatusScript.GetPhase() == SituationManager.Phase.Main1 || playerStatusScript.GetPhase() == SituationManager.Phase.Main2 && playerStatusScript.GetAttachIllustCard() == null)
         {
+
             int playernum = 0;
             int costnum = 0;
             int ratenum = 0;
             int dictionartnum = 0;
             attachStatus = AttachStatus.SummonChoise;
             IllustrationStatus status = attachobj.GetComponent<IllustrationStatus>();
+            if (status.GetPlayerNumber() != playerManagerScript.GetPlayerTurn())
+            {
+                playerStatusScript.SetAttachIllustCard(null);
+                return;
+            }
+            playerStatusScript.SetAttachIllustCard(attachobj);
             status.GetRate_Dictionary_Cost_Player_Number(ref ratenum, ref dictionartnum, ref costnum, ref playernum);
             int spcost = playerManagerScript.GetSP(status.GetPlayerNumber());
-            if (spcost - costnum <= 0)
+            if (spcost - costnum < 0)
             {
                 return;
             }
             if (playernum == playerStatusScript.GetPlayerTurn() && costnum <= playerManagerScript.GetSP(playernum))
             {
+                status.ZoomUp();
                 data.Clear();
                 data = playerManagerScript.GetInstancePos(playernum, status);
                 for (int count = 0; count < data.Count; count++)
@@ -242,6 +262,7 @@ public class PlayerAction : MonoBehaviour
     {
         MassStatus massstatus = attachobj.GetComponent<MassStatus>();
         GameObject character = massstatus.GetCharacterObj();
+        GameObject instanceobj = null;
         GameObject attachillustcard = playerStatusScript.GetAttachIllustCard();
         if (isRayAcition)
         {
@@ -249,7 +270,7 @@ public class PlayerAction : MonoBehaviour
         }
         int cost = attachillustcard.GetComponent<IllustrationStatus>().GetCost();
         int sp = playerManagerScript.GetSP(playerManagerScript.GetPlayerTurn());
-        playerManagerScript.SetSP(playerManagerScript.GetPlayerTurn(),sp - cost);
+        playerManagerScript.SetSP(playerManagerScript.GetPlayerTurn(), sp - cost,cost);
         int dictionarynum = attachillustcard.GetComponent<IllustrationStatus>().GetDictionaryNumber();
         int playernumber = attachillustcard.GetComponent<IllustrationStatus>().GetPlayerNumber();
 
@@ -258,16 +279,29 @@ public class PlayerAction : MonoBehaviour
             GameObject sumonobj = playerManagerScript.GetSummonObj(dictionarynum);
             Vector3 pos = attachobj.transform.position;
             pos.z--;
-            GameObject instanceobj = Instantiate(sumonobj, pos, Quaternion.identity);
+            switch (playerManagerScript.GetPlayerTurn())
+            {
+                case 1:
+                     instanceobj = Instantiate(sumonobj, pos, Quaternion.identity);
+                    break;
+                case 2:
+                    Quaternion rot = Quaternion.Euler(0, 0, 180);
+                     instanceobj = Instantiate(sumonobj, pos, rot);
+                    break;
+            }
             instanceobj.GetComponent<SummonStatus>().SetPlayerNumber(playernumber);
             massstatus.GetComponent<MassStatus>().SetCharacterObj(instanceobj);
             massstatus.GetComponent<MassStatus>().SetMassStatus(BoardManager.MassMoveStatus.Not);
             playerManagerScript.ReMoveIllustCard(playernumber, attachillustcard);
+            GameObject status = playerStatusScript.GetAttachIllustCard();
+            ResetScale(status);
+            status.GetComponent<IllustrationStatus>().ResetScale();
             playerStatusScript.SetAttachIllustCard(null);
             instanceobj.GetComponent<SummonStatus>().SetSkillManager(playerManagerScript.GetSkillManager());
             instanceobj.GetComponent<SummonStatus>().SetAttachMass(massstatus);
             CharacterSkill skill = instanceobj.GetComponent<SummonStatus>().GetSkill();
             playerManagerScript.AddSkillList(skill);
+            playerManagerScript.AddSummonCharacter(instanceobj.GetComponent<SummonStatus>());
             attachStatus = AttachStatus.None;
             DestroyInstancePosMass();
         }
@@ -302,7 +336,7 @@ public class PlayerAction : MonoBehaviour
             buttonStatus = ButttonStatus.Continuous;
             playerStatusScript.SetAttachMass(mass);
             int playernum = character.GetComponent<SummonStatus>().GetPlayer();
-            if(playernum != playerManagerScript.GetPlayerTurn())
+            if (playernum != playerManagerScript.GetPlayerTurn())
             {
                 return;
             }
@@ -334,6 +368,26 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     void SummonMoveChoosed(GameObject attachmass, MassStatus attachmassstatus)
     {
+        bool result = false;
+        List<MassStatus> masslist = playerManagerScript.GetMoveList();
+        if (attachmassstatus.GetCharacterObj() == playerStatusScript.GetAttachSumonCard())
+        {
+            playerStatusScript.SetAttachMass(null);
+            playerStatusScript.SetAttachSumonCard(null);
+            return;
+        }
+        for (int count = 0; count < masslist.Count; count++)
+        {
+            if (attachmassstatus == masslist[count])
+            {
+                result = true;
+            }
+        }
+        if (!result)
+        {
+            return;
+        }
+
         GameObject attachmasscharcter = attachmassstatus.GetCharacterObj();
         if (attachmasscharcter == playerStatusScript.GetAttachSumonCard())
         {
@@ -355,10 +409,11 @@ public class PlayerAction : MonoBehaviour
                 attachStatus = AttachStatus.None;
                 break;
         }
-        if (playerStatusScript.GetAttachSumonCard() != null)
+        if (playerStatusScript.GetAttachSumonCard() != null && attachmassstatus.GetMoveStatus() == BoardManager.MassMoveStatus.None)
         {
             SummonStatus playerstatus = playerStatusScript.GetAttachSumonCard().GetComponent<SummonStatus>();
             playerManagerScript.PasshiveSkill(playerstatus);
+            playerstatus.SetColor(false);
             playerManagerScript.MoveEndSkill(playerStatusScript.GetAttachSumonCard());
         }
 
@@ -509,6 +564,10 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    void ResetScale(GameObject obj)
+    {
+        obj.GetComponent<IllustrationStatus>().ResetScale();
+    }
     void IconChoose(GameObject character)
     {
         Vector3 pos = character.transform.position;
@@ -553,9 +612,10 @@ public class PlayerAction : MonoBehaviour
         LayerMask decklayer = playerStatusScript.GetDeckLayer();
         LayerMask nextphaselayer = playerStatusScript.GetNextPhaseLayer();
         //マスをクリックしたら
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, masslayer))
+        RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, masslayer);
+        if (hit2D.collider)
         {
-            AtachMass(hit.collider.gameObject);
+            AtachMass(hit2D.collider.gameObject);
             return;
         }
 
@@ -599,6 +659,11 @@ public class PlayerAction : MonoBehaviour
                     KingSkill(status);
                     SetActiveIcon(false);
                     isRayAcition = false;
+                    if (playerStatusScript.GetAttachIllustCard() != null)
+                    {
+                        GameObject card = playerStatusScript.GetAttachIllustCard();
+                        ResetScale(card);
+                    }
                     playerStatusScript.SetAttachIllustCard(null);
                     return;
                 }

@@ -18,7 +18,8 @@ public class DeckHand : MonoBehaviour {
     [SerializeField]
     DeckHandManager deckHandManagerScript;
     Vector3 defaultPos;
-
+    [SerializeField]
+    float spaceX;
     public void Ini()
     {
         defaultPos = deckHandPos.transform.position;
@@ -69,7 +70,7 @@ public class DeckHand : MonoBehaviour {
     void MoveDeckHandPos()
     {
         Vector3 pos = deckHandPos.transform.position;
-        pos.x++;
+        pos.x+= spaceX;
         deckHandPos.transform.position = pos;
     }
 

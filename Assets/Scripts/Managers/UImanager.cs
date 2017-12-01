@@ -13,9 +13,16 @@ public class UImanager : MonoBehaviour
     PhaseUI phaseUIScript;
     [SerializeField]
     GameFinishUI gameFinishScript;
+    [SerializeField]
+    PlayerUI playerUIScript;
+    public void ChangerTurn(int num)
+    {
+        playerUIScript.ChangerTurn(num);
+    }
 
     public void UpdatePhase(SituationManager.Phase phase, int playernum)
     {
+        phaseUIScript.enabled = true;
         phaseUIScript.UpdatePhase(phase, playernum);
     }
 
