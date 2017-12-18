@@ -21,7 +21,7 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField]
     int iniDeckHandCount;
     [SerializeField]
-    GameObject 
+    GameObject
         IlustCard;
     [SerializeField]
     GameObject attachSumonCard;
@@ -38,7 +38,7 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField]
     MassStatus copyMass;
     GameObject attachiIlustCard;
-
+    int sp;
     List<MassStatus> moveList = new List<MassStatus>();
     public void AddmoveList(MassStatus set)
     {
@@ -48,7 +48,14 @@ public class PlayerStatus : MonoBehaviour
     {
         return playerManagerScript.GetIsGamePlay();
     }
-
+    public int GetSP()
+    {
+        return sp;
+    }
+    public void SetSP(int set)
+    {
+        sp = set;
+    }
     public int GetPlayerTurn()
     {
         return playerManagerScript.GetPlayerTurn();
@@ -131,7 +138,10 @@ public class PlayerStatus : MonoBehaviour
     public void SetAttachMass(GameObject set)
     {
         attachMass = set;
-        copyMass = set.GetComponent<MassStatus>();
+        if (set.GetComponent<MassStatus>() != null)
+        {
+            copyMass = set.GetComponent<MassStatus>();
+        }
     }
 
     public GameObject GetAttachMass()

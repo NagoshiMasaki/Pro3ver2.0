@@ -59,6 +59,33 @@ public class SPAPManager : MonoBehaviour
         }
     }
 
+    public void SetisAnimation(int player,int usecount)
+    {
+        switch (player)
+        {
+            case 1:
+                spapapActionScriptP1.SetIsAnimation(usecount);
+                break;
+            case 2:
+                spapapActionScriptP2.SetIsAnimation(usecount);
+                break;
+        }
+    }
+
+    public void ResetisAnimation(int player, int usecount)
+    {
+        switch (player)
+        {
+            case 1:
+                spapapActionScriptP1.ResetIsAnimation(usecount);
+                break;
+            case 2:
+                spapapActionScriptP2.ResetIsAnimation(usecount);
+                break;
+        }
+    }
+
+
     public int GetSP(int playernum)
     {
         switch (playernum)

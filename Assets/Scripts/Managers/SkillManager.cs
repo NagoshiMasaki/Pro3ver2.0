@@ -27,6 +27,14 @@ public class SkillManager : MonoBehaviour
 
     public Sprite GetSpriteNumber(int number)
     {
+        if(number == 9999)
+        {
+            
+        }
+        else if(number <= 0)
+        {
+            number = 0;
+        }
        return spriteManagerScript.GetNumberList(number);
     }
 

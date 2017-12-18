@@ -25,7 +25,7 @@ public class PhaseUI : MonoBehaviour {
                 colortag = "<color=blue>";
                 break;
         }
-        phaseText.text = colortag + phase.ToString() + colortagfinishtag;
+        phaseText.text = colortag + phase.ToString() + "フェイズ" +colortagfinishtag;
     }
 
     void Update()

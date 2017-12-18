@@ -15,9 +15,25 @@ public class UImanager : MonoBehaviour
     GameFinishUI gameFinishScript;
     [SerializeField]
     PlayerUI playerUIScript;
+    [SerializeField]
+    LogUI logUIScript;
+    [SerializeField]
+    Timer timerScript;
+    [SerializeField]
+    SituationManager situationManagerScript;
+    public void Reset()
+    {
+        timerScript.Reset();
+    }
+
     public void ChangerTurn(int num)
     {
         playerUIScript.ChangerTurn(num);
+    }
+
+    public void TurnChange()
+    {
+        situationManagerScript.TurnChange();
     }
 
     public void UpdatePhase(SituationManager.Phase phase, int playernum)
@@ -29,5 +45,10 @@ public class UImanager : MonoBehaviour
     public void GameFinish(int winnumber)
     {
         gameFinishScript.GameFinish(winnumber);
+    }
+
+    public void LogUpdate(string log)
+    {
+        logUIScript.LogUpdate(log);
     }
 }

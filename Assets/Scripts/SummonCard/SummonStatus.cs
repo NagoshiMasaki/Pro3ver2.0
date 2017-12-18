@@ -42,7 +42,20 @@ public class SummonStatus : MonoBehaviour
     SpriteRenderer attackNumber;
     [SerializeField]
     SpriteRenderer mysprite;
+    [SerializeField]
+    GameObject frameObj;
+    [SerializeField]
+    string summonName;
 
+    public string GetName()
+    {
+        return summonName;
+    }
+
+    public GameObject GetFrame()
+    {
+        return frameObj;
+    }
     public void SetColor(bool color)
     {
         if (color)

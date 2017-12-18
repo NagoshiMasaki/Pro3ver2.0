@@ -29,6 +29,23 @@ public class BoardStatus : MonoBehaviour
     [SerializeField]
     GameObject[] massObjectArray;
     List<SummonStatus> summonCharacterList = new List<SummonStatus>();
+    [SerializeField]
+    List<MassStatus> summonMassList = new List<MassStatus>();
+
+    public void AddSumonnMassList(MassStatus set)
+    {
+        summonMassList.Add(set);
+    }
+
+    public List<MassStatus> GetSummonMassList()
+    {
+        return summonMassList;
+    }
+
+    public void ClearSummonMassList()
+    {
+        summonMassList.Clear();
+    }
 
     public void AddSummonCharacterList(SummonStatus set)
     {

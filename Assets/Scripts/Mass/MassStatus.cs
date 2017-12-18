@@ -75,6 +75,12 @@ public class MassStatus : MonoBehaviour
             case 2:
                 sprite.color = Color.blue;
                 break;
+            case 3:
+                sprite.color = Color.yellow;
+                break;
+            case 4:
+                sprite.color = Color.green;
+                break;
         }
     }
     public int GetDefaultNumber()
@@ -104,5 +110,10 @@ public class MassStatus : MonoBehaviour
     public BoardManager.MassMoveStatus GetMoveStatus()
     {
         return status;
+    }
+
+    public void SetDefaultMaterial()
+    {
+        SetMaterial(defaultNumber);
     }
 }

@@ -31,6 +31,25 @@ public class PlayerManager : MonoBehaviour
     PlayerAction playerActionScript;
     [SerializeField]
     PlayerStatus playerStatusScript;
+    [SerializeField]
+    UImanager uiManagerScript;
+    [SerializeField]
+    AttachCard attachCardScript;
+
+    public void SetSprite(Sprite set)
+    {
+        attachCardScript.SetSprite(set);
+    }
+
+    public void ResetIsAnimation(int player, int usecount)
+    {
+        spapManagerScript.ResetisAnimation(player,usecount);
+    }
+
+    public void SetisAnimation(int player,int usecount)
+    {
+        spapManagerScript.SetisAnimation(player,usecount);
+    }
     public bool GetIsGamePlay()
     {
         return gameMasterScript.GetIsGamePlay();
@@ -205,5 +224,35 @@ public class PlayerManager : MonoBehaviour
     {
 
         return boardManagerScript.GetMoveList();
+    }
+
+    public void AddSummonMassList(MassStatus set)
+    {
+        boardManagerScript.AddSummonMassList(set);
+    }
+
+    public List<MassStatus> GetSummonMassList()
+    {
+        return boardManagerScript.GetSummonMassList();
+    }
+
+    public void ClearSummonMassList()
+    {
+        boardManagerScript.ClearSummonMassList();
+    }
+
+    public void ClearColorSummonMassList()
+    {
+        boardManagerScript.ClearColorSummonMassList();
+    }
+
+    public void ClearColorUpdateMoveAreaList()
+    {
+        boardManagerScript.ClearColorUpdateMoveAreaList();
+    }
+
+    public void LogUpdate(string log)
+    {
+        uiManagerScript.LogUpdate(log);
     }
 }

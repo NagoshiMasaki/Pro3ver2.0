@@ -33,9 +33,10 @@ public class SPAPStatus : MonoBehaviour
     SpriteRenderer SPNumber;
     SPAPManager spapManagerScript;
 
-    public void SetSPAPManager(SPAPManager set)
+    public void Ini(SPAPManager set)
     {
         spapManagerScript = set;
+        copySP = SP;
     }
 
     public int GetIniSp()
@@ -64,8 +65,8 @@ public class SPAPStatus : MonoBehaviour
     public void SetSP(int set,int usecount)
     {
         spapActionScript.UpdateSPSprite(usecount);
-        SPNumber.sprite = spapManagerScript.GetNumberSprte(SP);
         SP = set;
+        SPNumber.sprite = spapManagerScript.GetNumberSprte(SP);
     }
 
     public void SetSP()
@@ -100,8 +101,9 @@ public class SPAPStatus : MonoBehaviour
 
     public void AddSP()
     {
-        if (maxSP >= SP + 1)
+        if (maxSP >= copySP + 1)
         {
+            SP = copySP;
             SP++;
             copySP = SP;
         }
@@ -113,158 +115,10 @@ public class SPAPStatus : MonoBehaviour
 
         if (spapActionScript != null)
         {
+            Debug.Log(SP);
             SPNumber.sprite = spapManagerScript.GetNumberSprte(SP);
             spapActionScript.ResetSP();
         }
     }
 
-    /*
-    public void AddSP()
-    {
-        SP = copySP;
-        SP++;
-        copySP = SP;
-        ResetSpInstance();
-    }
-
-    public void SetSP(int set)
-    {
-        SP = set;
-        ResetSpInstance();
-    }
-
-    public void AddAP()
-    {
-        AP++;
-    }
-
-    public int GetAP()
-    {
-        return AP;
-    }
-
-    public int GetSP()
-    {
-        return SP;
-    }
-
-
-
-    public void InstanceAP()
-    {
-        GameObject instanceobj = Instantiate(APObj, APPos.transform.position, Quaternion.identity);
-        APList.Add(instanceobj);
-        MoveAP();
-    }
-
-    public void InstanceSP()
-    {
-        GameObject instanceobj = Instantiate(SPObj, SPPos.transform.position, Quaternion.identity);
-        SPList.Add(instanceobj);
-        MoveSP();
-    }
-
-    void MoveAP()
-    {
-        Vector3 pos = APPos.transform.position;
-        pos.x++;
-        APPos.transform.position = pos;
-    }
-
-    void MoveSP()
-    {
-        Vector3 pos = SPPos.transform.position;
-        pos.x++;
-        SPPos.transform.position = pos;
-    }
-
-    void ResetAPPos()
-    {
-        APPos.transform.position = defaultAPPos;
-    }
-
-    void ResetSPPos()
-    {
-        SPPos.transform.position = defaultSPPos;
-    }
-
-    public void AllDestroyAP()
-    {
-        for (int count = 0; count < APList.Count; count++)
-        {
-            Destroy(APList[count]);
-        }
-        APList.Clear();
-    }
-
-    public void AllDestroySP()
-    {
-        for (int count = 0; count < SPList.Count; count++)
-        {
-            Destroy(SPList[count]);
-        }
-        SPList.Clear();
-    }
-
-    public void SubtractionAP(int num)
-    {
-        for (int count = num; count > 0; count--)
-        {
-            Destroy(APList[APList.Count - 1]);
-            APList.RemoveAt(APList.Count);
-            Vector3 pos = APPos.transform.position;
-            pos.x--;
-            APPos.transform.position = pos;
-        }
-    }
-
-    public void SubtractionSP(int num)
-    {
-        for (int count = num; count > 0; count--)
-        {
-            Destroy(SPList[SPList.Count - 1]);
-            SPList.RemoveAt(SPList.Count);
-            Vector3 pos = SPPos.transform.position;
-            pos.x--;
-            SPPos.transform.position = pos;
-        }
-    }
-
-    public void IniInstanceSP()
-    {
-        for (int count = 0; count < SP; count++)
-        {
-            InstanceSP();
-        }
-    }
-
-    public void ResetApInstance()
-    {
-        AllDestroyAP();
-        ResetAPPos();
-        for (int count = 0; count < AP; count++)
-        {
-            InstanceAP();
-        }
-    }
-
-    public void ResetSpInstance()
-    {
-        AllDestroySP();
-        ResetSPPos();
-        for (int count = 0; count < SP; count++)
-        {
-            InstanceSP();
-        }
-    }
-
-    public void Ini()
-    {
-        InstanceSP();
-    }
-    public void SetAP(int set)
-    {
-        AP = set;
-    }
-    */
 }

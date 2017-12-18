@@ -35,6 +35,8 @@ public class BoardManager : MonoBehaviour
     SituationManager situatitonManagerScript;
     [SerializeField]
     SPAPManager spapManagerScript;
+    [SerializeField]
+    BoardAction boardActionScript;
     public enum MassMoveStatus
     {
         None,
@@ -72,6 +74,22 @@ public class BoardManager : MonoBehaviour
     {
         deckHandManagerScript.DeckHandIni();
     }
+
+    public void AddSummonMassList(MassStatus set)
+    {
+        boardStatusScript.AddSumonnMassList(set);
+    }
+
+    public List<MassStatus> GetSummonMassList()
+    {
+        return boardStatusScript.GetSummonMassList();
+    }
+
+    public void ClearSummonMassList()
+    {
+        boardStatusScript.ClearSummonMassList();
+    }
+
     /// <summary>
     /// アタッチしたプレイヤーの移動できる場所の生成
     /// </summary>
@@ -164,5 +182,15 @@ public class BoardManager : MonoBehaviour
     public void SummonCharacterListColorClear()
     {
         boardStatusScript.SummonCharacterClear();
+    }
+
+    public void ClearColorSummonMassList()
+    {
+        boardActionScript.ClearColorSummonList();
+    }
+
+    public void ClearColorUpdateMoveAreaList()
+    {
+        boardActionScript.ClearColorUpdateMoveAreaList();
     }
 }

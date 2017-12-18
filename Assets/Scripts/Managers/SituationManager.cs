@@ -27,9 +27,8 @@ public class SituationManager : MonoBehaviour
     {
         None,
         Draw,
-        Main1,
-        Move,
-        Main2,
+        Summon,
+        Battle,
         End,
     }
     public enum SkillStatus
@@ -83,13 +82,12 @@ public class SituationManager : MonoBehaviour
         moveCount--;
         if (moveCount == 0)
         {
-            Debug.Log("main2");
-            status = Phase.Main2;
+            status = Phase.End;
             UpdatePhase();
         }
     }
 
-    void TurnChange()
+    public void TurnChange()
     {
         skillManagerScript.TurnEndSkillList();
         switch (playerTurn)
@@ -109,10 +107,11 @@ public class SituationManager : MonoBehaviour
                 P2Obj.SetActive(false);
                 break;
         }
+        uiManegerScript.Reset();
         boardManagerScript.SummonCharacterListColorClear();
         boardManagerScript.ClearMoveDataList();
         moveCount = copyMoveCount;
-        status = Phase.Main1;
+        status = Phase.Summon;
         UpdatePhase();
     }
 
@@ -137,7 +136,7 @@ public class SituationManager : MonoBehaviour
     {
         GameObject drawobj = deckManagerScript.GetDrawObj(playernum);
         deckHandManagerScript.InstanceDrawCard(playernum, drawobj);
-        status = Phase.Main1;
+        status = Phase.Summon;
         UpdatePhase();
     }
 

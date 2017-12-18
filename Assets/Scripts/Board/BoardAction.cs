@@ -83,4 +83,23 @@ public class BoardAction : MonoBehaviour
         }
         boardManagerScript.DoneBoardMass();
     }
+
+    public void ClearColorUpdateMoveAreaList()
+    {
+        List<MassStatus> masslist = boardStatusScript.GetUpdateMoveAreaList();
+        for (int count = 0; count < masslist.Count; count++)
+        {
+            masslist[count].SetDefaultMaterial();
+        }
+    }
+
+
+    public void ClearColorSummonList()
+    {
+       List<MassStatus> masslist = boardStatusScript.GetSummonMassList();
+        for (int count = 0;count < masslist.Count;count++)
+        {
+            masslist[count].SetDefaultMaterial();
+        }
+    }
 }

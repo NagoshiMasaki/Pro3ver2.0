@@ -18,7 +18,7 @@ public class Saint : CharacterSkill {
     {
         SkillManager skillmanager = parentObj.GetSkillManager();
         SituationManager.Phase phase = skillmanager.GetPhase();
-        if(phase != SituationManager.Phase.Move)
+        if(phase != SituationManager.Phase.Battle)
         {
             return;
         }

@@ -51,7 +51,6 @@ public class PlayerAction : MonoBehaviour
         Move,
         Skill
     }
-
     public enum ButttonStatus
     {
         None,
@@ -68,6 +67,7 @@ public class PlayerAction : MonoBehaviour
     GameObject skillIcon;
     [SerializeField]
     GameObject moveIcon;
+
     void Start()
     {
         copyDelayTime = delayTime;
@@ -83,9 +83,6 @@ public class PlayerAction : MonoBehaviour
 
     void Mouse()
     {
-        //int turn = playerStatusScript.GetPlayerTurn();
-        //        if (turn == playerNumber)
-        //       {
         if (Input.GetMouseButtonDown(0))
         {
             buttonStatus = ButttonStatus.Down;
@@ -105,15 +102,17 @@ public class PlayerAction : MonoBehaviour
             buttonStatus = ButttonStatus.Continuous;
             RayAction();
         }
-        //        }
         DelayCount();
     }
 
     void ButtonUpSetting()
     {
+        playerManagerScript.ClearColorSummonMassList();
         DestroyInstancePosMass();
         attachStatus = AttachStatus.None;
         SetActiveIcon(false);
+        int playerturn = playerManagerScript.GetPlayerTurn();
+        playerManagerScript.ResetIsAnimation(playerturn,playerManagerScript.GetSP(playerturn));
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
             ResetScale(playerStatusScript.GetAttachIllustCard());
@@ -194,7 +193,7 @@ public class PlayerAction : MonoBehaviour
             {
                 GameObject drawobj = playerStatusScript.GetDrawObj(decknum);
                 playerManagerScript.InstanceDrawCard(decknum, drawobj);
-                playerStatusScript.SetPhase(SituationManager.Phase.Main1);
+                playerStatusScript.SetPhase(SituationManager.Phase.Summon);
             }
         }
     }
@@ -214,12 +213,13 @@ public class PlayerAction : MonoBehaviour
     void AtachIllustration(GameObject attachobj)
     {
         Debug.Log("カードをアタッチしました");
+        playerManagerScript.SetSprite(attachobj.GetComponent<SpriteRenderer>().sprite);
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
             GameObject card = playerStatusScript.GetAttachIllustCard();
             ResetScale(card);
         }
-        if (playerStatusScript.GetPhase() == SituationManager.Phase.Main1 || playerStatusScript.GetPhase() == SituationManager.Phase.Main2 && playerStatusScript.GetAttachIllustCard() == null)
+        if (playerStatusScript.GetPhase() == SituationManager.Phase.Summon && playerStatusScript.GetAttachIllustCard() == null)
         {
 
             int playernum = 0;
@@ -245,11 +245,14 @@ public class PlayerAction : MonoBehaviour
                 status.ZoomUp();
                 data.Clear();
                 data = playerManagerScript.GetInstancePos(playernum, status);
+                playerManagerScript.SetisAnimation(playerManagerScript.GetPlayerTurn(), costnum);
                 for (int count = 0; count < data.Count; count++)
                 {
                     Vector3 pos = data[count].transform.position;
                     pos.z--;
-                    Instantiate(InstanceMass, pos, Quaternion.identity);
+                    MassStatus massstatus = data[count].GetComponent<MassStatus>();
+                    massstatus.SetMaterial(3);
+                    playerManagerScript.AddSummonMassList(massstatus);
                 }
             }
         }
@@ -260,6 +263,7 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     void Sumon(GameObject attachobj)
     {
+        string log = "";
         MassStatus massstatus = attachobj.GetComponent<MassStatus>();
         GameObject character = massstatus.GetCharacterObj();
         GameObject instanceobj = null;
@@ -270,9 +274,28 @@ public class PlayerAction : MonoBehaviour
         }
         int cost = attachillustcard.GetComponent<IllustrationStatus>().GetCost();
         int sp = playerManagerScript.GetSP(playerManagerScript.GetPlayerTurn());
-        playerManagerScript.SetSP(playerManagerScript.GetPlayerTurn(), sp - cost,cost);
+        playerManagerScript.SetSP(playerManagerScript.GetPlayerTurn(), sp - cost, cost);
         int dictionarynum = attachillustcard.GetComponent<IllustrationStatus>().GetDictionaryNumber();
         int playernumber = attachillustcard.GetComponent<IllustrationStatus>().GetPlayerNumber();
+        bool checkresult = false;
+        List<MassStatus> masslist = playerManagerScript.GetSummonMassList();
+        for (int count = 0; count < masslist.Count; count++)
+        {
+            if (masslist[count] == massstatus)
+            {
+                checkresult = true;
+                break;
+            }
+        }
+        for (int count = 0; count < masslist.Count; count++)
+        {
+            masslist[count].SetDefaultMaterial();
+        }
+        playerManagerScript.ClearSummonMassList();
+        if (!checkresult)
+        {
+            return;
+        }
 
         if (character == null)
         {
@@ -282,13 +305,17 @@ public class PlayerAction : MonoBehaviour
             switch (playerManagerScript.GetPlayerTurn())
             {
                 case 1:
-                     instanceobj = Instantiate(sumonobj, pos, Quaternion.identity);
+                    instanceobj = Instantiate(sumonobj, pos, Quaternion.identity);
                     break;
                 case 2:
-                    Quaternion rot = Quaternion.Euler(0, 0, 180);
-                     instanceobj = Instantiate(sumonobj, pos, rot);
+                    instanceobj = Instantiate(sumonobj, pos, Quaternion.identity);
+                    GameObject frame = instanceobj.GetComponent<SummonStatus>().GetFrame();
+                    frame.transform.rotation = Quaternion.Euler(0, 0, 180);
+
                     break;
             }
+            SummonLog(instanceobj);
+            playerManagerScript.ResetIsAnimation(playerManagerScript.GetPlayerTurn(), sp - cost);
             instanceobj.GetComponent<SummonStatus>().SetPlayerNumber(playernumber);
             massstatus.GetComponent<MassStatus>().SetCharacterObj(instanceobj);
             massstatus.GetComponent<MassStatus>().SetMassStatus(BoardManager.MassMoveStatus.Not);
@@ -317,6 +344,7 @@ public class PlayerAction : MonoBehaviour
         {
             Destroy(clone);
         }
+
     }
 
     /// <summary>
@@ -326,6 +354,11 @@ public class PlayerAction : MonoBehaviour
     void SummonMoveChoose(GameObject character, GameObject mass)
     {
         bool result = playerManagerScript.CheckMoveList(character);
+        if (character.GetComponent<SpriteRenderer>() != null)
+        {
+            playerManagerScript.SetSprite(character.GetComponent<SpriteRenderer>().sprite);
+        }
+
         if (character == null)
         {
             return;
@@ -397,7 +430,10 @@ public class PlayerAction : MonoBehaviour
         }
 
         BoardManager.MassMoveStatus status = attachmassstatus.GetMoveStatus();
-
+        for (int count = 0; count < masslist.Count; count++)
+        {
+            masslist[count].SetDefaultMaterial();
+        }
         switch (status)
         {
             case BoardManager.MassMoveStatus.None:
@@ -418,9 +454,9 @@ public class PlayerAction : MonoBehaviour
         }
 
         playerStatusScript.SetAttachSumonCard(null);
-        if (playerManagerScript.GetPhase() == SituationManager.Phase.Main1)
+        if (playerManagerScript.GetPhase() == SituationManager.Phase.Summon)
         {
-            playerManagerScript.SetPhase(SituationManager.Phase.Move);
+            playerManagerScript.SetPhase(SituationManager.Phase.Battle);
         }
         isRayAcition = false;
     }
@@ -441,6 +477,7 @@ public class PlayerAction : MonoBehaviour
         playerManagerScript.DecrementMoveCount();
         playerManagerScript.AddMoveList(sumoncard);
         FirstPornChangePorn(playerStatusScript.GetAttachSumonCard());
+        MoveLog(sumoncard.GetComponent<SummonStatus>());
         attachStatus = AttachStatus.None;
     }
 
@@ -451,9 +488,23 @@ public class PlayerAction : MonoBehaviour
     /// <param name="attachmassstatus"></param>
     void MoveMassEnemyCharacter(GameObject attachmass, MassStatus attachmassstatus)
     {
+        string log = "「";
         GameObject attachcharacter = playerStatusScript.GetAttachSumonCard();
         SummonStatus playerstatus = attachcharacter.GetComponent<SummonStatus>();
         SummonStatus enemystatus = attachmassstatus.GetCharacterObj().GetComponent<SummonStatus>();
+        ///////////////////////////////////
+        //戦闘開始のログの開始
+        ///////////////////////////////////
+        log += playerstatus.GetName();
+        log += "」";
+        log += "VS";
+        log += "「";
+        log += "」";
+        log += enemystatus.GetName();
+        ///////////////////////////////////
+        //戦闘開始のログの終了
+        ///////////////////////////////////
+
         GameObject enemy = enemystatus.GetSumonObj();
         GameObject player = playerstatus.GetSumonObj();
         SkillStatus.Status skillresult = playerManagerScript.BattleStart(player, enemy);
@@ -497,6 +548,7 @@ public class PlayerAction : MonoBehaviour
                 BattleDraw();
                 break;
             case BattleStatus.ResultStatus.Lose:
+                BattleLose(attachmass, attachmassstatus, playercharacter, enemycharacter);
                 break;
         }
         if (result != BattleStatus.ResultStatus.Lose)
@@ -538,7 +590,8 @@ public class PlayerAction : MonoBehaviour
 
     void BattleLose(GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
     {
-        Destroy(playercharacter);
+        SummonStatus status = enemycharacter.GetComponent<SummonStatus>();
+        status.DestoryThisObj();
         attachmassstatus.SetMassStatus(BoardManager.MassMoveStatus.None);
     }
     /////////////////////////
@@ -596,6 +649,7 @@ public class PlayerAction : MonoBehaviour
     {
         iconStatus = IconStatus.Normal;
         isRayAcition = true;
+        playerManagerScript.ClearColorUpdateMoveAreaList();
         SetActiveIcon(true);
         DestroyInstancePosMass();
     }
@@ -697,6 +751,14 @@ public class PlayerAction : MonoBehaviour
         attachStatus = set;
     }
 
+    void SummonLog(GameObject instanceobj)
+    {
+        string log = "P";
+        log += playerManagerScript.GetPlayerTurn() + ": 「";
+        log += instanceobj.GetComponent<SummonStatus>().GetName();
+        log += "」を召喚";
+        playerManagerScript.LogUpdate(log);
+    }
 
     void KingSkill(SummonStatus status)
     {
@@ -710,5 +772,15 @@ public class PlayerAction : MonoBehaviour
         playerManagerScript.SetAP(status.GetPlayer(), sum);
         CharacterSkill skill = status.GetSkill();
         skill.KingSkill();
+    }
+
+    void MoveLog(SummonStatus character)
+    {
+        string log = "";
+        log += "「";
+        log += character.GetName();
+        log += "」";
+        log += "が移動しました";
+        playerManagerScript.LogUpdate(log);
     }
 }

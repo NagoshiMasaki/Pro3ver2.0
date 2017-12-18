@@ -8,6 +8,16 @@ public class SpSprite : MonoBehaviour
     [SerializeField]
     SpriteRenderer spSprite;
     SPAPManager spapManagerScript;
+    [SerializeField]
+    bool isAnimation;
+    [SerializeField]
+    bool isAddValue;
+    [SerializeField]
+    float colorValue;
+    [SerializeField]
+    float addValue;
+    [SerializeField]
+    int addSpeed;
     public enum Status
     {
         None,
@@ -15,6 +25,26 @@ public class SpSprite : MonoBehaviour
         Used
     }
     Status status;
+
+
+    void Update()
+    {
+        if (isAnimation)
+        {
+            ColorAnimation();
+        }
+    }
+
+    void ColorAnimation()
+    {
+
+        colorValue += addValue * Time.deltaTime * addSpeed;
+        if(colorValue <=0.0f || colorValue >= 1.0f)
+        {
+            addValue = -addValue;
+        }
+        spSprite.color = new Color(colorValue, colorValue, colorValue, 1.0f);
+    }
 
     public void Ini(SPAPManager set, Status statusset)
     {
@@ -34,6 +64,19 @@ public class SpSprite : MonoBehaviour
         Spriteupdate();
     }
 
+    public void SetIsAnimation(bool set)
+    {
+        isAnimation = set;
+        if (!set)
+        {
+            ClearColor();
+        }
+    }
+
+    void ClearColor()
+    {
+        spSprite.color = Color.white;
+    }
     void Spriteupdate()
     {
         Sprite sprite = spapManagerScript.GetSPSpriteList((int)status);

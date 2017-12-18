@@ -17,7 +17,7 @@ public class SPAPAction : MonoBehaviour
     public void Ini(SPAPStatus spapStatusScript, int number, SPAPManager spapmanager)
     {
         spapStatus = spapStatusScript;
-        spapStatus.SetSPAPManager(spapmanager);
+        spapStatus.Ini(spapmanager);
         spapStatus.SetSP();
         if (number == 2)
         {
@@ -66,10 +66,34 @@ public class SPAPAction : MonoBehaviour
     {
         List<SpSprite> list = spapStatus.GetSPSpriteList();
         int sp = spapStatus.GetSP();
+        Debug.Log(sp);
         for (int count = 0; count < sp; count++)
         {
-            Debug.Log(count);
             list[count].SetStatsu(SpSprite.Status.Use);
+        }
+    }
+
+    public void SetIsAnimation(int usecount)
+    {
+        int sp = spapStatus.GetSP();
+        int max = spapStatus.GetMaxSP();
+        List<SpSprite> list = spapStatus.GetSPSpriteList();
+        int index = sp - 1;
+        for (int count = 0; count < usecount; count++)
+        {
+            list[index].SetIsAnimation(true);
+            index--;
+        }
+    }
+
+    public void ResetIsAnimation(int usecount)
+    {
+        int sp = spapStatus.GetSP();
+        int max = spapStatus.GetMaxSP();
+        List<SpSprite> list = spapStatus.GetSPSpriteList();
+        for (int count = 0; count < list.Count; count++)
+        {
+            list[count].SetIsAnimation(false);
         }
     }
 }

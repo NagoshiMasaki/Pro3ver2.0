@@ -91,10 +91,15 @@ public class DeckClass : MonoBehaviour
         massstatus = mass.GetComponent<MassStatus>();
         instancepos.z--;
         GameObject instance = Instantiate(sumonobj, instancepos, Quaternion.identity);
-
+        if(playernum == 2)
+        {
+            GameObject frame = instance.GetComponent<SummonStatus>().GetFrame();
+            frame.transform.rotation = Quaternion.Euler(0, 0, 180);
+        }
         instance.GetComponent<SummonStatus>().SetPlayerNumber(playernum);
         instance.GetComponent<SummonStatus>().SetAttachMass(massstatus);
         instance.GetComponent<SummonStatus>().SetSkillManager(skillmanager);
+        boardManagerScritpt.AddSummonCharacter(instance.GetComponent<SummonStatus>());
         SkillManager skillmamnager = instance.GetComponent<SummonStatus>().GetSkillManager();
         CharacterSkill skill = instance.GetComponent<SummonStatus>().GetSkill();
         skillmamnager.AddSkillList(skill);
