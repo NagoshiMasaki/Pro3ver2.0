@@ -19,12 +19,17 @@ public class IllustrationStatus : MonoBehaviour
     float zoomValue;
     [SerializeField]
     Vector3 defaultScale;
-
+    [SerializeField]
+    Sprite infomationSprite;    
     void Start()
     {
         defaultScale = transform.localScale;
     }
 
+    public Sprite GetInfomationSprite()
+    {
+        return infomationSprite;
+    }
     public int GetPlayerNumber()
     {
         return playerNumber;

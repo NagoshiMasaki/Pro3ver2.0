@@ -112,7 +112,7 @@ public class PlayerAction : MonoBehaviour
         attachStatus = AttachStatus.None;
         SetActiveIcon(false);
         int playerturn = playerManagerScript.GetPlayerTurn();
-        playerManagerScript.ResetIsAnimation(playerturn,playerManagerScript.GetSP(playerturn));
+        playerManagerScript.ResetIsAnimation(playerturn, playerManagerScript.GetSP(playerturn));
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
             ResetScale(playerStatusScript.GetAttachIllustCard());
@@ -213,7 +213,7 @@ public class PlayerAction : MonoBehaviour
     void AtachIllustration(GameObject attachobj)
     {
         Debug.Log("カードをアタッチしました");
-        playerManagerScript.SetSprite(attachobj.GetComponent<SpriteRenderer>().sprite);
+        playerManagerScript.SetSprite(attachobj.GetComponent<IllustrationStatus>().GetInfomationSprite());
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
             GameObject card = playerStatusScript.GetAttachIllustCard();
@@ -356,14 +356,18 @@ public class PlayerAction : MonoBehaviour
         bool result = playerManagerScript.CheckMoveList(character);
         if (character.GetComponent<SpriteRenderer>() != null)
         {
-            playerManagerScript.SetSprite(character.GetComponent<SpriteRenderer>().sprite);
+            playerManagerScript.SetSprite(character.GetComponent<SummonStatus>().GetInfomationSptite());
         }
 
         if (character == null)
         {
             return;
         }
-        if (attachStatus == AttachStatus.None && result)
+        if (playerManagerScript.GetPhase() != SituationManager.Phase.Battle)
+        {
+            return;
+        }
+            if (attachStatus == AttachStatus.None && result)
         {
             iconStatus = IconStatus.Choose;
             buttonStatus = ButttonStatus.Continuous;

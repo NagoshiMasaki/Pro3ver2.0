@@ -46,6 +46,13 @@ public class SummonStatus : MonoBehaviour
     GameObject frameObj;
     [SerializeField]
     string summonName;
+    [SerializeField]
+    Sprite infomationSprite;
+
+    public Sprite GetInfomationSptite()
+    {
+        return infomationSprite;
+    }
 
     public string GetName()
     {
