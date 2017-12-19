@@ -16,10 +16,8 @@ public class DeckManager : MonoBehaviour {
         {
             case 1:
                 return player1Deck.GetCharacter();
-                break;
             case 2:
                 return player2Deck.GetCharacter();
-                break;
         }
         return null; 
     }

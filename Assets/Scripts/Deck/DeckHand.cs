@@ -63,6 +63,10 @@ public class DeckHand : MonoBehaviour {
         Vector3 pos = deckHandManagerScript.GetInstancePos(playerNumber);
         GameObject instanceobj = Instantiate(obj,pos,Quaternion.identity);
         instanceobj.GetComponent<IllustrationStatus>().SetPlayerNumber(playerNumber);
+        if(playerNumber == 2)
+        {
+            instanceobj.GetComponent<SpriteRenderer>().sprite = deckHandManagerScript.BackIllustlation();
+        }
         deckHandList.Add(instanceobj);
         MoveDeckHandPos();
     }

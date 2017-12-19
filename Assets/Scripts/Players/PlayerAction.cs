@@ -87,6 +87,7 @@ public class PlayerAction : MonoBehaviour
         {
             buttonStatus = ButttonStatus.Down;
             RayAction();
+            ButtonDownSetting();
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -105,6 +106,11 @@ public class PlayerAction : MonoBehaviour
         DelayCount();
     }
 
+    void ButtonDownSetting()
+    {
+        playerStatusScript.SetIsButtonDown(true);
+    }
+
     void ButtonUpSetting()
     {
         playerManagerScript.ClearColorSummonMassList();
@@ -116,6 +122,13 @@ public class PlayerAction : MonoBehaviour
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
             ResetScale(playerStatusScript.GetAttachIllustCard());
+        }
+        playerStatusScript.SetIsButtonDown(false);
+        playerStatusScript.ResetButtonCount();
+        float buttontimer = playerStatusScript.GetButtonCount();
+        if (buttontimer <= 0.0f)
+        {
+            playerManagerScript.SetSprite(null);
         }
     }
     void RayAction()
@@ -213,13 +226,14 @@ public class PlayerAction : MonoBehaviour
     void AtachIllustration(GameObject attachobj)
     {
         Debug.Log("カードをアタッチしました");
+        Debug.Log("カード名:"+ attachobj);
         playerManagerScript.SetSprite(attachobj.GetComponent<IllustrationStatus>().GetInfomationSprite());
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
             GameObject card = playerStatusScript.GetAttachIllustCard();
             ResetScale(card);
         }
-        if (playerStatusScript.GetPhase() == SituationManager.Phase.Summon && playerStatusScript.GetAttachIllustCard() == null)
+        if (playerStatusScript.GetPhase() == SituationManager.Phase.Summon)
         {
 
             int playernum = 0;
@@ -228,6 +242,7 @@ public class PlayerAction : MonoBehaviour
             int dictionartnum = 0;
             attachStatus = AttachStatus.SummonChoise;
             IllustrationStatus status = attachobj.GetComponent<IllustrationStatus>();
+            playerManagerScript.SetSprite(status.GetInfomationSprite());
             if (status.GetPlayerNumber() != playerManagerScript.GetPlayerTurn())
             {
                 playerStatusScript.SetAttachIllustCard(null);
@@ -354,7 +369,7 @@ public class PlayerAction : MonoBehaviour
     void SummonMoveChoose(GameObject character, GameObject mass)
     {
         bool result = playerManagerScript.CheckMoveList(character);
-        if (character.GetComponent<SpriteRenderer>() != null)
+        if (character != null && character.GetComponent<SpriteRenderer>() != null)
         {
             playerManagerScript.SetSprite(character.GetComponent<SummonStatus>().GetInfomationSptite());
         }
@@ -367,7 +382,7 @@ public class PlayerAction : MonoBehaviour
         {
             return;
         }
-            if (attachStatus == AttachStatus.None && result)
+        if (attachStatus == AttachStatus.None && result)
         {
             iconStatus = IconStatus.Choose;
             buttonStatus = ButttonStatus.Continuous;
@@ -605,6 +620,7 @@ public class PlayerAction : MonoBehaviour
     void DelayCount()
     {
         delayTime -= Time.deltaTime;
+        playerStatusScript.TimeCountButtonCount();
     }
 
     void ResetDelayCount()
@@ -744,7 +760,7 @@ public class PlayerAction : MonoBehaviour
         //手札のカードをクリックしたら
         LayerMask illustrationlayer = playerStatusScript.GetIllustrationLayer();
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, illustrationlayer);
-        if (hit2D.collider && playerStatusScript.GetAttachSumonCard() == null)
+        if (hit2D.collider)
         {
             AtachIllustration(hit2D.collider.gameObject);
         }

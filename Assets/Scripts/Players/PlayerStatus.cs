@@ -21,8 +21,7 @@ public class PlayerStatus : MonoBehaviour
     [SerializeField]
     int iniDeckHandCount;
     [SerializeField]
-    GameObject
-        IlustCard;
+    GameObject IlustCard;
     [SerializeField]
     GameObject attachSumonCard;
     [SerializeField]
@@ -40,6 +39,42 @@ public class PlayerStatus : MonoBehaviour
     GameObject attachiIlustCard;
     int sp;
     List<MassStatus> moveList = new List<MassStatus>();
+    bool isbuttonDown = false;
+    [SerializeField]
+    float buttonCount;
+    float copyButtonCount;
+
+    void Start()
+    {
+        copyButtonCount = buttonCount;
+    }
+    public float GetButtonCount()
+    {
+        return buttonCount;
+    }
+    public void SetIsButtonDown(bool set)
+    {
+        isbuttonDown = set;
+    }
+    public void ResetButtonCount()
+    {
+
+        buttonCount = copyButtonCount;
+    }
+
+    public void TimeCountButtonCount()
+    {
+        if (isbuttonDown)
+        {
+            buttonCount -= Time.deltaTime;
+        }
+
+        if (buttonCount <= 0.0f)
+        {
+            playerManagerScript.SetSprite(null);
+        }
+    }
+
     public void AddmoveList(MassStatus set)
     {
         moveList.Add(set);

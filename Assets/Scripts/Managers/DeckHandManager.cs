@@ -8,6 +8,13 @@ public class DeckHandManager : MonoBehaviour
     DeckHand decxHand1Script;
     [SerializeField]
     DeckHand decxHand2Script;
+    [SerializeField]
+    Sprite backillustlation;
+
+    public Sprite BackIllustlation()
+    {
+        return backillustlation;
+    }
 
     public Vector3 GetInstancePos(int num)
     {
