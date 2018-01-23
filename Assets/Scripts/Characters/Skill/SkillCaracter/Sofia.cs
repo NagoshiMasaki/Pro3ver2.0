@@ -7,10 +7,16 @@ public class Sofia : CharacterSkill
 
     [SerializeField]
     SummonStatus parentObj;
+
     bool isSkill = false;
     public override void KingSkill()
     {
         AllMyAreaMass();
+    }
+
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
     }
 
     public override void TurnEnd()

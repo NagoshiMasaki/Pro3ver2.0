@@ -18,7 +18,10 @@ public class Behemoth : CharacterSkill
     {
         GroupRecovery();
     }
-
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
+    }
     void GroupRecovery()
     {
         Debug.Log("ベヒーモスのスキル発動");

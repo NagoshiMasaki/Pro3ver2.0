@@ -32,6 +32,11 @@ public class BoardStatus : MonoBehaviour
     [SerializeField]
     List<MassStatus> summonMassList = new List<MassStatus>();
 
+    public List<SummonStatus> GetSummonCharacterList()
+    {
+        return summonCharacterList;
+    }
+
     public void AddSumonnMassList(MassStatus set)
     {
         summonMassList.Add(set);
@@ -226,11 +231,12 @@ public class BoardStatus : MonoBehaviour
 
     public void RemoveMoveDataList(GameObject target)
     {
-
+        Debug.Log("hdiahiohdihodshiso");
         for (int count = 0; count < movedatalist.Count; count++)
         {
             if (movedatalist[count] == target)
             {
+                Debug.Log("ヒット" + target);
                 movedatalist.RemoveAt(count);
             }
         }

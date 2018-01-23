@@ -6,9 +6,14 @@ public class Galahat : CharacterSkill {
 
     [SerializeField]
     SummonStatus parentObj;
-    public override void BattleEnd()
+    public override void BattleStart()
     {
         AddPower();
+    }
+
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
     }
 
     void AddPower()

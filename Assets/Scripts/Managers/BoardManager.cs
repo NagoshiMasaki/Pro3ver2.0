@@ -193,4 +193,13 @@ public class BoardManager : MonoBehaviour
     {
         boardActionScript.ClearColorUpdateMoveAreaList();
     }
+
+    public int GetPlayerTurn()
+    {
+        return situatitonManagerScript.GetPlayerTurn();
+    }
+    public void EnemyMoveEndSkill(SummonStatus character)
+    {
+        boardActionScript.EnemyMoveEndSkill(character);
+    }
 }

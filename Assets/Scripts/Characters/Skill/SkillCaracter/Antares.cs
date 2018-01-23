@@ -11,6 +11,11 @@ public class Antares : CharacterSkill {
         AntaresSkill();
     }
 
+    public override SummonStatus GetCharacter()
+    {
+        return Parent;
+    }
+
     void AntaresSkill()
     {
         if (!Parent.GetIsSkillActive())

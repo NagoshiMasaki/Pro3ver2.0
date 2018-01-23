@@ -16,6 +16,7 @@ public class BoardAction : MonoBehaviour
     float massSpaceY;
     [SerializeField]
     GameObject instancePos;
+
     void Start()
     {
         Ini();
@@ -93,6 +94,18 @@ public class BoardAction : MonoBehaviour
         }
     }
 
+    public void EnemyMoveEndSkill(SummonStatus character)
+    {
+         List<SummonStatus> summonlist = boardStatusScript.GetSummonCharacterList();
+        for(int count = 0; count < summonlist.Count; count++)
+        {
+            if(boardManagerScript.GetPlayerTurn() != summonlist[count].GetPlayer())
+            {
+                CharacterSkill skill = summonlist[count].GetSkill();
+                skill.EnemyMoveEndSkill(character);
+            }
+        }
+    }
 
     public void ClearColorSummonList()
     {

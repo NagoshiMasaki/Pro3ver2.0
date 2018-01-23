@@ -4,37 +4,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PhaseUI : MonoBehaviour {
-
+public class PhaseUI : MonoBehaviour
+{
     [SerializeField]
     Text phaseText;
     [SerializeField]
     float showTime;
     [SerializeField]
     float copyShowTime;
-    public void UpdatePhase(SituationManager.Phase phase,int playernum)
+    [SerializeField]
+    PhaseUIAnimation phauseUIAnimationScript;
+    [SerializeField]
+    float alphaAddValue;
+    int bgmNumber;
+    [SerializeField]
+    UImanager uiManagerScript;
+    [SerializeField]
+    int nextPhaseNumber;
+    public void UpdatePhase(SituationManager.Phase phase,int playernum,int bgmnumber)
     {
-        string colortag = "";
-        string colortagfinishtag = "</color>";
         switch (playernum)
         {
             case 1:
-                colortag = "<color=red>";
+                phaseText.color = Color.red;
                 break;
             case 2:
-                colortag = "<color=blue>";
+                phaseText.color = Color.blue;
                 break;
         }
-        phaseText.text = colortag + phase.ToString() + "フェイズ" +colortagfinishtag;
+        bgmNumber = bgmnumber;
+        phauseUIAnimationScript.StartAnimation();
+        uiManagerScript.SetNextPhase(0);
+        phaseText.text = phase.ToString() + "フェイズ" ;
+        Color copycolor = phaseText.color;
+        copycolor.a = 1.0f;
+        phaseText.color = copycolor;
     }
 
     void Update()
     {
         showTime -= Time.deltaTime;
-        if (showTime <= 0.0f)
+        Color copycolor = phaseText.color;
+        copycolor.a -= Time.deltaTime * alphaAddValue;
+        phaseText.color = copycolor;
+        if (phaseText.color.a <= 0.0f)
         {
+            uiManagerScript.SetNextPhase(nextPhaseNumber);
+            uiManagerScript.BgmPlay(bgmNumber);
             phaseText.text = "";
             enabled = false;
+            phauseUIAnimationScript.enabled = false;
             showTime = copyShowTime;
         }
     }

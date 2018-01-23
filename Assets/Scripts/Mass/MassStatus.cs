@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class MassStatus : MonoBehaviour
 {
-
     [SerializeField]
     int lengthNumber;
     [SerializeField]
@@ -22,9 +21,11 @@ public class MassStatus : MonoBehaviour
     bool isMove = false;
     [SerializeField]
     BoardManager.MassMoveStatus status = BoardManager.MassMoveStatus.Not;
-
+    Color copyColor;
     [SerializeField]
     SpriteRenderer sprite;
+    bool isSetColor;
+
     public void SetNumber(int length, int side, int number, int materialnum)
     {
         lengthNumber = length;
@@ -34,6 +35,12 @@ public class MassStatus : MonoBehaviour
         defaultNumber = materialnum;
         status = BoardManager.MassMoveStatus.None;
         SetMaterial(materialnum);
+    }
+
+
+    public bool GetIsSetColor()
+    {
+        return isSetColor;
     }
 
     public void GetNumbers(ref int length, ref int side, ref int number)
@@ -68,21 +75,41 @@ public class MassStatus : MonoBehaviour
         {
             case 0:
                 sprite.color = Color.white;
+                SetIsSetColor(false);
+                copyColor = Color.white;
                 break;
             case 1:
                 sprite.color = Color.red;
+                SetIsSetColor(false);
+                copyColor = Color.red;
                 break;
             case 2:
                 sprite.color = Color.blue;
+                SetIsSetColor(false);
+
+                copyColor = Color.blue;
                 break;
             case 3:
                 sprite.color = Color.yellow;
+                SetIsSetColor(true);
+                copyColor = Color.yellow;
                 break;
             case 4:
                 sprite.color = Color.green;
+                SetIsSetColor(true);
+                copyColor = Color.green;
+                break;
+            case 5:
+                sprite.color = Color.black;
                 break;
         }
     }
+
+    public void SetIsSetColor(bool set)
+    {
+        isSetColor = set;
+    }
+
     public int GetDefaultNumber()
     {
         return defaultNumber;
@@ -115,5 +142,10 @@ public class MassStatus : MonoBehaviour
     public void SetDefaultMaterial()
     {
         SetMaterial(defaultNumber);
+    }
+
+    public void SetCopyColor()
+    {
+        sprite.color = copyColor;
     }
 }

@@ -60,6 +60,7 @@ public class DeckClass : MonoBehaviour
             deckHandScript.SetDrawObj(characterList[0]);//デッキの一番先頭のカード
             characterList.RemoveAt(0);//デッキの一番最初のカードを削除
         }
+        deckHandScript.SetIsIniDraw(true);
     }
     public int GetPlayerNumber()
     {
@@ -94,7 +95,11 @@ public class DeckClass : MonoBehaviour
         if(playernum == 2)
         {
             GameObject frame = instance.GetComponent<SummonStatus>().GetFrame();
+            GameObject hpnumberobj = null, attacknumberobj = null;
+            instance.GetComponent<SummonStatus>().GetIconObjects(ref hpnumberobj,ref attacknumberobj);
             frame.transform.rotation = Quaternion.Euler(0, 0, 180);
+            hpnumberobj.transform.rotation = Quaternion.Euler(0, 0, -180);
+            attacknumberobj.transform.rotation = Quaternion.Euler(0, 0, -180);
         }
         instance.GetComponent<SummonStatus>().SetPlayerNumber(playernum);
         instance.GetComponent<SummonStatus>().SetAttachMass(massstatus);

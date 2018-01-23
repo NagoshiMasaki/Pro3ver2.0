@@ -21,6 +21,24 @@ public class UImanager : MonoBehaviour
     Timer timerScript;
     [SerializeField]
     SituationManager situationManagerScript;
+    [SerializeField]
+    BgmSeManager bgmSeScript;
+    [SerializeField]
+    GameObject nextPhase;
+    public void SePlay(int number)
+    {
+        bgmSeScript.SePlay(number);
+    }
+
+    /// <summary>
+    /// デバック用
+    /// </summary>
+    /// <param name="set"></param>
+    public void SetNextPhase(int number)
+    {
+        nextPhase.layer = number;
+    }
+
     public void Reset()
     {
         timerScript.Reset();
@@ -36,10 +54,15 @@ public class UImanager : MonoBehaviour
         situationManagerScript.TurnChange();
     }
 
-    public void UpdatePhase(SituationManager.Phase phase, int playernum)
+    public void BgmPlay(int number)
+    {
+        bgmSeScript.BgmPlay(number);
+    }
+
+    public void UpdatePhase(SituationManager.Phase phase, int playernum,int bgmnumber)
     {
         phaseUIScript.enabled = true;
-        phaseUIScript.UpdatePhase(phase, playernum);
+        phaseUIScript.UpdatePhase(phase, playernum,bgmnumber);
     }
 
     public void GameFinish(int winnumber)

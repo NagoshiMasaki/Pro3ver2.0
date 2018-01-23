@@ -39,40 +39,23 @@ public class PlayerStatus : MonoBehaviour
     GameObject attachiIlustCard;
     int sp;
     List<MassStatus> moveList = new List<MassStatus>();
-    bool isbuttonDown = false;
-    [SerializeField]
-    float buttonCount;
-    float copyButtonCount;
+    MassStatus lockOnAttachMass;
+    MassStatus copyLockOnAttachMass = null;
 
-    void Start()
+    public void SetLockOnAttachMass(MassStatus set)
     {
-        copyButtonCount = buttonCount;
-    }
-    public float GetButtonCount()
-    {
-        return buttonCount;
-    }
-    public void SetIsButtonDown(bool set)
-    {
-        isbuttonDown = set;
-    }
-    public void ResetButtonCount()
-    {
-
-        buttonCount = copyButtonCount;
+        copyLockOnAttachMass = lockOnAttachMass;
+        lockOnAttachMass = set;
     }
 
-    public void TimeCountButtonCount()
+    public MassStatus GetLockOnAttachMass()
     {
-        if (isbuttonDown)
-        {
-            buttonCount -= Time.deltaTime;
-        }
+        return lockOnAttachMass;
+    }
 
-        if (buttonCount <= 0.0f)
-        {
-            playerManagerScript.SetSprite(null);
-        }
+    public MassStatus GetCopyLockOnAttachMass()
+    {
+        return copyLockOnAttachMass;
     }
 
     public void AddmoveList(MassStatus set)
@@ -172,8 +155,11 @@ public class PlayerStatus : MonoBehaviour
 
     public void SetAttachMass(GameObject set)
     {
-        attachMass = set;
-        if (set.GetComponent<MassStatus>() != null)
+        if(attachMass == null)
+        {
+            attachMass = set;
+        }
+        if (set.GetComponent<MassStatus>() != attachMass.GetComponent<MassStatus>())
         {
             copyMass = set.GetComponent<MassStatus>();
         }

@@ -378,6 +378,7 @@ public class MoveData : MonoBehaviour
     {
         Vector3 pos = massobjects[length, side].transform.position;
         pos.z -= 0.5f;
+        massstatuses[length, side].SetMaterial(3);
         massstatuses[length, side].SetMassStatus(BoardManager.MassMoveStatus.Enemy);
         AddUpdateMoveList(massstatuses[length, side]);
     }

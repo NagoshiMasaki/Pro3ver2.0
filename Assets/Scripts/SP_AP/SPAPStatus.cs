@@ -115,7 +115,6 @@ public class SPAPStatus : MonoBehaviour
 
         if (spapActionScript != null)
         {
-            Debug.Log(SP);
             SPNumber.sprite = spapManagerScript.GetNumberSprte(SP);
             spapActionScript.ResetSP();
         }

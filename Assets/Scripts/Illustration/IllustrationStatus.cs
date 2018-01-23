@@ -20,12 +20,13 @@ public class IllustrationStatus : MonoBehaviour
     [SerializeField]
     Vector3 defaultScale;
     [SerializeField]
-    Sprite infomationSprite;    
-    void Start()
-    {
-        defaultScale = transform.localScale;
-    }
+    Sprite infomationSprite;
 
+
+    public void SetDefaultScale( Vector3 set)
+    {
+        defaultScale = set;
+    }
     public Sprite GetInfomationSprite()
     {
         return infomationSprite;

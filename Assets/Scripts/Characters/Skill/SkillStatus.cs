@@ -7,7 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillStatus : MonoBehaviour {
+public class SkillStatus : MonoBehaviour
+{
 
     [SerializeField]
     List<CharacterSkill> invokerList = new List<CharacterSkill>();

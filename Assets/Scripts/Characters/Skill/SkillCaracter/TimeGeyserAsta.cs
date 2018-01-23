@@ -24,6 +24,10 @@ public class TimeGeyserAsta : CharacterSkill
         Recovery();
     }
 
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
+    }
     void Recovery()
     {
 

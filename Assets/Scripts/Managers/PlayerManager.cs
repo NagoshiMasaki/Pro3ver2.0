@@ -35,10 +35,29 @@ public class PlayerManager : MonoBehaviour
     UImanager uiManagerScript;
     [SerializeField]
     AttachCard attachCardScript;
+    [SerializeField]
+    AnimationManager animationManagerScript;
+    [SerializeField]
+    BgmSeManager bgmSeManagerScript;
+
+    public void SePlay(int number)
+    {
+        bgmSeManagerScript.SePlay(number);
+    }
+
+    public void SummonAnimation(SummonStatus summon, MassStatus mass, IllustrationStatus illust, int playernumber)
+    {
+        animationManagerScript.SummonAnimation(summon,mass,illust,playernumber);
+    }
 
     public void SetSprite(Sprite set)
     {
         attachCardScript.SetSprite(set);
+    }
+
+    public void MoveAnimation(GameObject target, Vector3 targetPoint)
+    {
+        animationManagerScript.MoveAnimation(target, targetPoint);
     }
 
     public void ResetIsAnimation(int player, int usecount)
@@ -254,5 +273,10 @@ public class PlayerManager : MonoBehaviour
     public void LogUpdate(string log)
     {
         uiManagerScript.LogUpdate(log);
+    }
+
+    public void EnemyMoveEndSkill(SummonStatus character)
+    {
+        boardManagerScript.EnemyMoveEndSkill(character);
     }
 }

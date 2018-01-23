@@ -10,6 +10,13 @@ public class DeckHandManager : MonoBehaviour
     DeckHand decxHand2Script;
     [SerializeField]
     Sprite backillustlation;
+    [SerializeField]
+    AnimationManager animationManagerScript;
+    
+    public void DrawcardAnimation(GameObject drawobj,Vector3 target,GameObject deckobj)
+    {
+        animationManagerScript.DrawCardAnimation(drawobj,target,deckobj);
+    }
 
     public Sprite BackIllustlation()
     {

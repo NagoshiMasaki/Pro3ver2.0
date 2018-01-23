@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class CharacterSkill : MonoBehaviour {
 
+    SummonStatus summonstatus;
     public virtual void MyTurnStart() { }
     public virtual void MyTurnEnd() { }
     public virtual void BattleStart() { }
@@ -22,4 +23,7 @@ public class CharacterSkill : MonoBehaviour {
     public virtual void AttachSkillCharacter(SummonStatus target) {}
     public virtual void KingSkill() { }
     public virtual void TurnEnd() { }
+    public virtual void AntecedentAttack() { }//先行攻撃
+    public virtual void EnemyMoveEndSkill(SummonStatus character) {}
+    public virtual SummonStatus GetCharacter() { return summonstatus; }
 }

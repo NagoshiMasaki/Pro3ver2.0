@@ -48,6 +48,16 @@ public class SummonStatus : MonoBehaviour
     string summonName;
     [SerializeField]
     Sprite infomationSprite;
+    [SerializeField]
+    GameObject hpNumberObj;
+    [SerializeField]
+    GameObject attackNumberObj;
+
+    public void GetIconObjects(ref GameObject hpnumberobj, ref GameObject attacknumberobj)
+    {
+        hpnumberobj = hpNumberObj;
+        attacknumberobj = attackNumberObj;
+    }
 
     public Sprite GetInfomationSptite()
     {

@@ -16,6 +16,11 @@ public class Formalhout : CharacterSkill {
         MassColorChange();
     }
 
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
+    }
+
     void MassColorChange()
     {
         Debug.Log("フォーマルハウトのスキル発動");

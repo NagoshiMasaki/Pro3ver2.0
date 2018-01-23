@@ -10,18 +10,23 @@ using UnityEngine;
 public class Lancelot : CharacterSkill
 {
     [SerializeField]
-    SummonStatus ParentObj;
+    SummonStatus parentObj;
     public override void BattleEnd()
     {
         Recovery();
     }
 
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
+    }
+
     void Recovery()
     {
         Debug.Log("ランスロットのスキル発動");
-        SkillManager skillmanager = ParentObj.GetSkillManager();
+        SkillManager skillmanager = parentObj.GetSkillManager();
         int damage = skillmanager.GetEnemyDamage();
         int recovery = damage / 2;
-        ParentObj.RecoveryHp(recovery);
+        parentObj.RecoveryHp(recovery);
     }
 }

@@ -22,7 +22,13 @@ public class SituationManager : MonoBehaviour
     GameObject P1Obj;
     [SerializeField]
     GameObject P2Obj;
-
+    [SerializeField]
+    AttachCard attachCardScript;
+    [SerializeField]
+    float timer;
+    [SerializeField]
+    BgmSeManager bgmSeManagerScript;
+    float copyTimer;
     public enum Phase
     {
         None,
@@ -35,6 +41,7 @@ public class SituationManager : MonoBehaviour
     {
 
     }
+
     [SerializeField]
     int moveCount;
     [SerializeField]
@@ -43,6 +50,15 @@ public class SituationManager : MonoBehaviour
     int playerTurn;
     int copyMoveCount;
 
+
+    void Start()
+    {
+        copyTimer = timer;
+    }
+    void Update()
+    {
+        timer -= Time.deltaTime;
+    }
     public void Ini()
     {
         copyMoveCount = moveCount;
@@ -107,6 +123,7 @@ public class SituationManager : MonoBehaviour
                 P2Obj.SetActive(false);
                 break;
         }
+        attachCardScript.SetSprite(null);
         uiManegerScript.Reset();
         boardManagerScript.SummonCharacterListColorClear();
         boardManagerScript.ClearMoveDataList();
@@ -117,8 +134,13 @@ public class SituationManager : MonoBehaviour
 
     public void NextPhase()
     {
+        if(timer > 0.0f)
+        {
+            return;
+        }
         status++;
-        if (status == Phase.End)
+        timer = copyTimer;
+        if (status >= Phase.End)
         {
             TurnChange();
         }
@@ -129,7 +151,25 @@ public class SituationManager : MonoBehaviour
 
     public void UpdatePhase()
     {
-        uiManegerScript.UpdatePhase(status, playerTurn);
+        if (status == Phase.End)
+        {
+            TurnChange();
+        }
+        int bgmnumber = 0;
+        bgmSeManagerScript.BgmStop();
+        switch (status)
+        {
+            case Phase.Summon:
+                bgmnumber = 2;
+                bgmSeManagerScript.SePlay(1);
+                
+                break;
+            case Phase.Battle:
+                bgmnumber = 3;
+                bgmSeManagerScript.SePlay(2);
+                break;
+        }
+        uiManegerScript.UpdatePhase(status, playerTurn,bgmnumber);
     }
 
     void DrawAction(int playernum)

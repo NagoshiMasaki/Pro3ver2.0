@@ -8,10 +8,15 @@ public class Saint : CharacterSkill {
     SummonStatus parentObj;
     [SerializeField]
     int skillDamage;
-    
-    public override void Passhive(SummonStatus character)
+
+    public override void EnemyMoveEndSkill(SummonStatus character)
     {
         SaintSkill(character);
+    }
+
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
     }
 
     void SaintSkill(SummonStatus character)

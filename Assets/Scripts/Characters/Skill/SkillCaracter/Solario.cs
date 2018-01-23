@@ -2,26 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Solario : CharacterSkill {
+public class Solario : CharacterSkill
+{
 
     [SerializeField]
-    SummonStatus ParentObj;
+    SummonStatus parentObj;
 
-    public override void MoveEnd()
+    public override void BattleEnd()
     {
         MoveRecovery();
     }
 
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
+    }
     void MoveRecovery()
     {
-        Debug.Log("ソラリオのスキル");
-        SkillManager skillmanager = ParentObj.GetSkillManager();
-        if (ParentObj.GetIsSkillActive() && ParentObj.GetIniSkill() && !skillmanager.CheckMoveList(ParentObj.GetSumonObj()) && ParentObj)
-        {
-            Debug.Log("ソラリオのスキルを発動しました");
-            skillmanager.RemoveMoveList(ParentObj.GetSumonObj());
-            ParentObj.SetIniSkill(false);
-            ParentObj.SetSkillEfeect(false);
-        }
+        SkillManager skillmanager = parentObj.GetSkillManager();
+        Debug.Log("ソラリオのスキルを発動しました");
+        skillmanager.RemoveMoveList(parentObj.GetSumonObj());
+        parentObj.SetIniSkill(false);
+        parentObj.SetSkillEfeect(false);
     }
 }

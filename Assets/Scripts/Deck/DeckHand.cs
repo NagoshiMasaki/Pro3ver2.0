@@ -20,6 +20,17 @@ public class DeckHand : MonoBehaviour {
     Vector3 defaultPos;
     [SerializeField]
     float spaceX;
+    [SerializeField]
+    Vector3 illsutlationScale;
+    [SerializeField]
+    GameObject instanceDrawPosObj;
+    bool isIniDraw = false;
+
+    public void SetIsIniDraw(bool set)
+    {
+        isIniDraw = set;
+    }
+
     public void Ini()
     {
         defaultPos = deckHandPos.transform.position;
@@ -61,14 +72,33 @@ public class DeckHand : MonoBehaviour {
     void InstanceDraw(GameObject obj)
     {
         Vector3 pos = deckHandManagerScript.GetInstancePos(playerNumber);
-        GameObject instanceobj = Instantiate(obj,pos,Quaternion.identity);
-        instanceobj.GetComponent<IllustrationStatus>().SetPlayerNumber(playerNumber);
-        if(playerNumber == 2)
+        Vector3 copypos = pos;
+        GameObject instsnceobj = null;
+        if (isIniDraw)
         {
-            instanceobj.GetComponent<SpriteRenderer>().sprite = deckHandManagerScript.BackIllustlation();
+            instsnceobj = Instantiate(obj, instanceDrawPosObj.transform.position, Quaternion.identity);//カードの生成
         }
-        deckHandList.Add(instanceobj);
+        else
+        {
+            instsnceobj = Instantiate(obj,pos, Quaternion.identity);//カードの生成
+        }
+
+        instsnceobj.GetComponent<IllustrationStatus>().SetPlayerNumber(playerNumber);
+        instsnceobj.GetComponent<IllustrationStatus>().SetDefaultScale(illsutlationScale);
+        if (playerNumber == 2)
+        {
+            instsnceobj.GetComponent<SpriteRenderer>().sprite = deckHandManagerScript.BackIllustlation();
+        }
+        deckHandList.Add(instsnceobj);
         MoveDeckHandPos();
+        if (isIniDraw)
+        {
+            deckHandManagerScript.DrawcardAnimation(instsnceobj,copypos,instanceDrawPosObj);
+        }
+        else
+        {
+            instsnceobj.GetComponent<IllustrationStatus>().ResetScale();
+        }
     }
 
     void MoveDeckHandPos()

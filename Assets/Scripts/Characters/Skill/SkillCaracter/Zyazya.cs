@@ -10,16 +10,22 @@ using UnityEngine;
 public class Zyazya : CharacterSkill
 {
     [SerializeField]
-    SummonStatus ParentStatus;
+    SummonStatus parentObj;
     public override void BattleStart()
     {
         Debug.Log("ジャジャスキル発動");
         DestroyTarget();
     }
+
+    public override SummonStatus GetCharacter()
+    {
+        return parentObj;
+    }
+
     void DestroyTarget()
     {
-        if (ParentStatus.GetIsSkillActive()) {
-            SkillManager skillmanager = ParentStatus.GetSkillManager();
+        if (parentObj.GetIsSkillActive()) {
+            SkillManager skillmanager = parentObj.GetSkillManager();
             GameObject target = skillmanager.GetEnemy();
             SummonStatus targetstatus = target.GetComponent<SummonStatus>();
             if(targetstatus.GetRate() == MoveData.Rate.King)

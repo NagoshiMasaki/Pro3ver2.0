@@ -24,33 +24,20 @@ public class PlayerAction : MonoBehaviour
     float copyDelayTime;
     GameObject attachmassobject;//現在どこのマスを刺しいるのかの確認
     [SerializeField]
-    float icponPosX;
-    [SerializeField]
-    float icponPosY;
-    [SerializeField]
     bool isRayAcition;
+    bool isLockOnRay = false;
     [SerializeField]
-    GameObject normalIcon;
+    float mouseCorrection;
     public enum AttachStatus
     {
         None,
         SummonChoise,
-        IconChose,
-        MoveIcon,
-        SkillIcon,
         Sumon,
         MoveChoose,
         MoveChoosed,
         SkillActive
     };
-    public enum IconStatus
-    {
-        None,
-        Choose,
-        Normal,
-        Move,
-        Skill
-    }
+
     public enum ButttonStatus
     {
         None,
@@ -60,14 +47,13 @@ public class PlayerAction : MonoBehaviour
     }
     ButttonStatus buttonStatus = ButttonStatus.None;
     [SerializeField]
-    IconStatus iconStatus = IconStatus.None;
-    [SerializeField]
     AttachStatus attachStatus = AttachStatus.None;
     [SerializeField]
     GameObject skillIcon;
     [SerializeField]
     GameObject moveIcon;
-
+    Vector3 buttonDownPosition;
+    bool isButtonDown;
     void Start()
     {
         copyDelayTime = delayTime;
@@ -85,52 +71,77 @@ public class PlayerAction : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            isLockOnRay = true;
+            playerManagerScript.SePlay(SeNumbers.CLICK_DOWN);
             buttonStatus = ButttonStatus.Down;
-            RayAction();
             ButtonDownSetting();
+            RayAction();
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            isLockOnRay = false;
             buttonStatus = ButttonStatus.Up;
-            iconStatus = IconStatus.None;
             isRayAcition = false;
-            RayAction();
             ButtonUpSetting();
+            RayAction();
+            attachStatus = AttachStatus.None;
+            if (playerStatusScript.GetLockOnAttachMass() != null)
+            {
+                playerStatusScript.GetLockOnAttachMass().SetDefaultMaterial();
+            }
             return;
         }
-        else if (isRayAcition)
+
+        if (Input.GetMouseButton(0))
         {
-            buttonStatus = ButttonStatus.Continuous;
-            RayAction();
+            Vector3 mouseposition = Input.mousePosition;
+            if (buttonDownPosition.x + mouseCorrection <= mouseposition.x || buttonDownPosition.x - mouseCorrection >= mouseposition.x)
+            {
+                playerManagerScript.SetSprite(null);
+            }
+            else if (buttonDownPosition.y + mouseCorrection <= mouseposition.y || buttonDownPosition.y - mouseCorrection >= mouseposition.y)
+            {
+                playerManagerScript.SetSprite(null);
+            }
+        }
+        if(isLockOnRay && attachStatus != AttachStatus.None)
+        {
+            LockOnRay();
         }
         DelayCount();
     }
 
     void ButtonDownSetting()
     {
-        playerStatusScript.SetIsButtonDown(true);
+        playerManagerScript.SetSprite(null);
+        isButtonDown = true;
+        buttonDownPosition = Input.mousePosition;
     }
 
     void ButtonUpSetting()
     {
         playerManagerScript.ClearColorSummonMassList();
         DestroyInstancePosMass();
-        attachStatus = AttachStatus.None;
-        SetActiveIcon(false);
+
         int playerturn = playerManagerScript.GetPlayerTurn();
-        playerManagerScript.ResetIsAnimation(playerturn, playerManagerScript.GetSP(playerturn));
+        int sp = playerManagerScript.GetSP(playerturn);
+        if (sp > 0)
+        {
+            playerManagerScript.ResetIsAnimation(playerturn, playerManagerScript.GetSP(playerturn));
+        }
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
             ResetScale(playerStatusScript.GetAttachIllustCard());
         }
-        playerStatusScript.SetIsButtonDown(false);
-        playerStatusScript.ResetButtonCount();
-        float buttontimer = playerStatusScript.GetButtonCount();
-        if (buttontimer <= 0.0f)
+        if (playerStatusScript.GetAttachSumonCard() != null)
         {
-            playerManagerScript.SetSprite(null);
+            GameObject attachObj = playerStatusScript.GetAttachSumonCard();
+            GameObject frame = attachObj.GetComponent<SummonStatus>().GetFrame();
+            frame.GetComponent<SpriteRenderer>().color = Color.white;
         }
+        isButtonDown = false;
     }
+
     void RayAction()
     {
         if (delayTime >= 0.0f)
@@ -138,27 +149,14 @@ public class PlayerAction : MonoBehaviour
             return;
         }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        switch (iconStatus)
-        {
-            case IconStatus.Choose:
-            case IconStatus.Normal:
-                IconRay(ray);
-                break;
-        }
-        if (iconStatus == IconStatus.Move || iconStatus == IconStatus.Skill)
-        {
-            IconRay(ray);
-            return;
-        }
-        else if (iconStatus == IconStatus.None && isRayAcition == false)
-        {
-            Object3DRay(ray);
-            IllustlationRay(ray);
-            ResetDelayCount();
-            playerManagerScript.ClearUpdateMoveList();
-            buttonStatus = ButttonStatus.None;
-            return;
-        }
+
+        Object3DRay(ray);
+        IllustlationRay(ray);
+        ResetDelayCount();
+        //        playerManagerScript.ClearUpdateMoveList();
+        buttonStatus = ButttonStatus.None;
+        return;
+
     }
 
     /// <summary>
@@ -167,6 +165,7 @@ public class PlayerAction : MonoBehaviour
     void AtachMass(GameObject attachobj)
     {
         int length = 0, side = 0, number = 0;
+        Debug.Log(attachStatus);
         GameObject summoncharacter = attachobj.GetComponent<MassStatus>().GetCharacterObj();
         switch (attachStatus)
         {
@@ -226,7 +225,7 @@ public class PlayerAction : MonoBehaviour
     void AtachIllustration(GameObject attachobj)
     {
         Debug.Log("カードをアタッチしました");
-        Debug.Log("カード名:"+ attachobj);
+        Debug.Log("カード名:" + attachobj);
         playerManagerScript.SetSprite(attachobj.GetComponent<IllustrationStatus>().GetInfomationSprite());
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
@@ -242,7 +241,6 @@ public class PlayerAction : MonoBehaviour
             int dictionartnum = 0;
             attachStatus = AttachStatus.SummonChoise;
             IllustrationStatus status = attachobj.GetComponent<IllustrationStatus>();
-            playerManagerScript.SetSprite(status.GetInfomationSprite());
             if (status.GetPlayerNumber() != playerManagerScript.GetPlayerTurn())
             {
                 playerStatusScript.SetAttachIllustCard(null);
@@ -289,9 +287,14 @@ public class PlayerAction : MonoBehaviour
         }
         int cost = attachillustcard.GetComponent<IllustrationStatus>().GetCost();
         int sp = playerManagerScript.GetSP(playerManagerScript.GetPlayerTurn());
+        if (sp - cost < 0)
+        {
+            return;
+        }
         playerManagerScript.SetSP(playerManagerScript.GetPlayerTurn(), sp - cost, cost);
-        int dictionarynum = attachillustcard.GetComponent<IllustrationStatus>().GetDictionaryNumber();
-        int playernumber = attachillustcard.GetComponent<IllustrationStatus>().GetPlayerNumber();
+        IllustrationStatus illuststatus = attachillustcard.GetComponent<IllustrationStatus>();
+        int dictionarynum = illuststatus.GetDictionaryNumber();
+        int playernumber = illuststatus.GetPlayerNumber();
         bool checkresult = false;
         List<MassStatus> masslist = playerManagerScript.GetSummonMassList();
         for (int count = 0; count < masslist.Count; count++)
@@ -325,8 +328,11 @@ public class PlayerAction : MonoBehaviour
                 case 2:
                     instanceobj = Instantiate(sumonobj, pos, Quaternion.identity);
                     GameObject frame = instanceobj.GetComponent<SummonStatus>().GetFrame();
+                    GameObject hpnumber = null, attacknumber = null;
+                    instanceobj.GetComponent<SummonStatus>().GetIconObjects(ref hpnumber,ref attacknumber);
+                    hpnumber.transform.rotation = Quaternion.Euler(0, 0, 180);
+                    attacknumber.transform.rotation = Quaternion.Euler(0, 0, 180);
                     frame.transform.rotation = Quaternion.Euler(0, 0, 180);
-
                     break;
             }
             SummonLog(instanceobj);
@@ -334,17 +340,19 @@ public class PlayerAction : MonoBehaviour
             instanceobj.GetComponent<SummonStatus>().SetPlayerNumber(playernumber);
             massstatus.GetComponent<MassStatus>().SetCharacterObj(instanceobj);
             massstatus.GetComponent<MassStatus>().SetMassStatus(BoardManager.MassMoveStatus.Not);
-            playerManagerScript.ReMoveIllustCard(playernumber, attachillustcard);
+            //playerManagerScript.ReMoveIllustCard(playernumber, attachillustcard);
             GameObject status = playerStatusScript.GetAttachIllustCard();
             ResetScale(status);
             status.GetComponent<IllustrationStatus>().ResetScale();
             playerStatusScript.SetAttachIllustCard(null);
-            instanceobj.GetComponent<SummonStatus>().SetSkillManager(playerManagerScript.GetSkillManager());
-            instanceobj.GetComponent<SummonStatus>().SetAttachMass(massstatus);
+            SummonStatus summonstatus = instanceobj.GetComponent<SummonStatus>();
+            summonstatus.SetSkillManager(playerManagerScript.GetSkillManager());
+            summonstatus.SetAttachMass(massstatus);
             CharacterSkill skill = instanceobj.GetComponent<SummonStatus>().GetSkill();
             playerManagerScript.AddSkillList(skill);
             playerManagerScript.AddSummonCharacter(instanceobj.GetComponent<SummonStatus>());
             attachStatus = AttachStatus.None;
+            playerManagerScript.SummonAnimation(summonstatus,massstatus,illuststatus,playernumber);
             DestroyInstancePosMass();
         }
     }
@@ -369,7 +377,7 @@ public class PlayerAction : MonoBehaviour
     void SummonMoveChoose(GameObject character, GameObject mass)
     {
         bool result = playerManagerScript.CheckMoveList(character);
-        if (character != null && character.GetComponent<SpriteRenderer>() != null)
+        if (character != null)
         {
             playerManagerScript.SetSprite(character.GetComponent<SummonStatus>().GetInfomationSptite());
         }
@@ -378,31 +386,18 @@ public class PlayerAction : MonoBehaviour
         {
             return;
         }
-        if (playerManagerScript.GetPhase() != SituationManager.Phase.Battle)
+        else if (playerManagerScript.GetPhase() != SituationManager.Phase.Battle)
         {
             return;
         }
-        if (attachStatus == AttachStatus.None && result)
-        {
-            iconStatus = IconStatus.Choose;
-            buttonStatus = ButttonStatus.Continuous;
-            playerStatusScript.SetAttachMass(mass);
-            int playernum = character.GetComponent<SummonStatus>().GetPlayer();
-            if (playernum != playerManagerScript.GetPlayerTurn())
-            {
-                return;
-            }
-            SetActiveIcon(true);
-            isRayAcition = true;
-            playerStatusScript.SetAttachSumonCard(character);
-            IconChoose(character);
-            return;
-        }
+
         if (result)
         {
-            int getplayernum = character.GetComponent<SummonStatus>().GetPlayer();
+            SummonStatus sumoncharacter = character.GetComponent<SummonStatus>();
+            int getplayernum = sumoncharacter.GetPlayer();
             playerStatusScript.SetAttachSumonCard(character);
-            MoveData.Rate getrate = character.GetComponent<SummonStatus>().GetRate();
+            playerManagerScript.SetSprite(sumoncharacter.GetInfomationSptite());
+            MoveData.Rate getrate = sumoncharacter.GetRate();
             int length = 0;
             int side = 0;
             int massnum = 0;
@@ -411,6 +406,8 @@ public class PlayerAction : MonoBehaviour
             {
                 playerManagerScript.InstanceMovePos(getrate, getplayernum, length, side);
             }
+            GameObject frame = sumoncharacter.GetFrame();
+            frame.GetComponent<SpriteRenderer>().color = Color.green;
             attachStatus = AttachStatus.MoveChoosed;
         }
     }
@@ -426,17 +423,20 @@ public class PlayerAction : MonoBehaviour
         {
             playerStatusScript.SetAttachMass(null);
             playerStatusScript.SetAttachSumonCard(null);
+            playerManagerScript.ClearColorUpdateMoveAreaList();
             return;
         }
         for (int count = 0; count < masslist.Count; count++)
         {
             if (attachmassstatus == masslist[count])
             {
+                Debug.Log(masslist[count].gameObject);
                 result = true;
             }
         }
         if (!result)
         {
+            playerManagerScript.ClearColorUpdateMoveAreaList();
             return;
         }
 
@@ -445,9 +445,9 @@ public class PlayerAction : MonoBehaviour
         {
             playerStatusScript.SetAttachSumonCard(null);
             attachStatus = AttachStatus.None;
+            playerManagerScript.ClearColorUpdateMoveAreaList();
             return;
         }
-
         BoardManager.MassMoveStatus status = attachmassstatus.GetMoveStatus();
         for (int count = 0; count < masslist.Count; count++)
         {
@@ -470,6 +470,7 @@ public class PlayerAction : MonoBehaviour
             playerManagerScript.PasshiveSkill(playerstatus);
             playerstatus.SetColor(false);
             playerManagerScript.MoveEndSkill(playerStatusScript.GetAttachSumonCard());
+            playerManagerScript.EnemyMoveEndSkill(playerstatus);
         }
 
         playerStatusScript.SetAttachSumonCard(null);
@@ -488,7 +489,8 @@ public class PlayerAction : MonoBehaviour
         GameObject sumoncard = playerStatusScript.GetAttachSumonCard();
         Vector3 pos = attachmass.transform.position;
         pos.z = -1;
-        sumoncard.transform.position = pos;
+        //        sumoncard.transform.position = pos;
+        playerManagerScript.MoveAnimation(sumoncard,pos);
         attachmassstatus.SetCharacterObj(sumoncard);
         sumoncard.GetComponent<SummonStatus>().SetMassNull();
         sumoncard.GetComponent<SummonStatus>().SetAttachMass(attachmassstatus);
@@ -526,8 +528,8 @@ public class PlayerAction : MonoBehaviour
 
         GameObject enemy = enemystatus.GetSumonObj();
         GameObject player = playerstatus.GetSumonObj();
+        playerManagerScript.AddMoveList(player);
         SkillStatus.Status skillresult = playerManagerScript.BattleStart(player, enemy);
-        Debug.Log(skillresult);
         if (skillresult == SkillStatus.Status.Finish)
         {
             return;
@@ -574,7 +576,7 @@ public class PlayerAction : MonoBehaviour
         {
             FirstPornChangePorn(playercharacter);
         }
-        playerManagerScript.AddMoveList(playercharacter);
+
     }
 
     /// <summary>
@@ -590,6 +592,7 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     void BattleWin(GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
     {
+
         SummonStatus status = enemycharacter.GetComponent<SummonStatus>();
         MoveData.Rate rate = status.GetRate();
         int number = status.GetPlayer();
@@ -620,7 +623,6 @@ public class PlayerAction : MonoBehaviour
     void DelayCount()
     {
         delayTime -= Time.deltaTime;
-        playerStatusScript.TimeCountButtonCount();
     }
 
     void ResetDelayCount()
@@ -641,37 +643,10 @@ public class PlayerAction : MonoBehaviour
     {
         obj.GetComponent<IllustrationStatus>().ResetScale();
     }
-    void IconChoose(GameObject character)
-    {
-        Vector3 pos = character.transform.position;
-        pos.x -= icponPosX;
-        pos.y += icponPosY;
-        moveIcon.transform.position = pos;
-        normalIcon.transform.position = character.transform.position;
-        pos = character.transform.position;
-        pos.x += icponPosX;
-        pos.y -= icponPosY;
-        skillIcon.transform.position = pos;
-    }
-
-    void SetActiveIcon(bool set)
-    {
-        skillIcon.SetActive(set);
-        moveIcon.SetActive(set);
-    }
 
     void SkillIcon()
     {
 
-    }
-
-    void NoramlIcon()
-    {
-        iconStatus = IconStatus.Normal;
-        isRayAcition = true;
-        playerManagerScript.ClearColorUpdateMoveAreaList();
-        SetActiveIcon(true);
-        DestroyInstancePosMass();
     }
 
     void Object2DRay()
@@ -708,56 +683,13 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
-    void IconRay(Ray ray)
-    {
-        LayerMask moveiconLayer = playerStatusScript.GetMoveIconLayer();
-        RaycastHit2D hit2DmoveIcon = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, moveiconLayer);
-        if (hit2DmoveIcon.collider)
-        {
-            if (hit2DmoveIcon.collider.gameObject.tag == "MoveIcon")
-            {
-
-                Debug.Log("moveIcon");
-                iconStatus = IconStatus.Move;
-                attachStatus = AttachStatus.MoveChoosed;
-                SetActiveIcon(false);
-                SummonMoveChoose(playerStatusScript.GetAttachSumonCard(), playerStatusScript.GetAttachMass());
-            }
-            else if (hit2DmoveIcon.collider.gameObject.tag == "SkillIcon")
-            {
-                Debug.Log("skillIcon");
-                SummonStatus status = playerStatusScript.GetAttachSumonCard().GetComponent<SummonStatus>();
-                MoveData.Rate rate = status.GetRate();
-                if (rate == MoveData.Rate.King)
-                {
-                    KingSkill(status);
-                    SetActiveIcon(false);
-                    isRayAcition = false;
-                    if (playerStatusScript.GetAttachIllustCard() != null)
-                    {
-                        GameObject card = playerStatusScript.GetAttachIllustCard();
-                        ResetScale(card);
-                    }
-                    playerStatusScript.SetAttachIllustCard(null);
-                    return;
-                }
-                status.SetSkillEfeect();
-                SetActiveIcon(false);
-                isRayAcition = false;
-            }
-
-            else if (hit2DmoveIcon.collider.gameObject.tag == "NormalIcon")
-            {
-                Debug.Log("NormalIcon");
-                NoramlIcon();
-            }
-        }
-
-    }
-
     void IllustlationRay(Ray ray)
     {
         //手札のカードをクリックしたら
+        if (!isButtonDown)
+        {
+            return;
+        }
         LayerMask illustrationlayer = playerStatusScript.GetIllustrationLayer();
         RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, illustrationlayer);
         if (hit2D.collider)
@@ -802,5 +734,37 @@ public class PlayerAction : MonoBehaviour
         log += "」";
         log += "が移動しました";
         playerManagerScript.LogUpdate(log);
+    }
+
+    void LockOnRay()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        LayerMask masslayer = playerStatusScript.GetMassLayer();
+        RaycastHit2D hit2D = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, masslayer);
+        if (hit2D.collider)
+        {
+            LockOnMass(hit2D.collider.gameObject);
+        }
+    }
+
+    void LockOnMass(GameObject hitobj)
+    {
+        MassStatus status = hitobj.GetComponent<MassStatus>();
+        MassStatus copystatus = playerStatusScript.GetCopyLockOnAttachMass();
+        if (copystatus != null)
+        {
+            copystatus.SetCopyColor();
+        }
+        if (status.GetIsSetColor())
+        {
+            if(status == playerStatusScript.GetLockOnAttachMass())
+            {
+                return;
+            }
+            playerManagerScript.SePlay(SeNumbers.LOCK_ON);
+            status.SetMaterial(5);
+            copystatus = status;
+            playerStatusScript.SetLockOnAttachMass(status);
+        }
     }
 }
