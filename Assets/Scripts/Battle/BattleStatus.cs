@@ -9,47 +9,76 @@ public class BattleStatus : MonoBehaviour
     {
         Win,
         Draw,
-        Lose
+        Lose,
+        Next,
     }
     [SerializeField]
     UImanager uiManagerScript;
     int copyplayerdamage;
     int copyenemydamage;
-    public ResultStatus Battle(SummonStatus playercharacter, SummonStatus enemycharcter)
+    [SerializeField]
+    SummonStatus playerCharacter;
+    [SerializeField]
+    SummonStatus enemyCharacter;
+    public void Battle(SummonStatus playercharacter, SummonStatus enemycharcter)
     {
+        playerCharacter = playercharacter;
+        enemyCharacter = enemycharcter;
+ 
+    }
+
+    public ResultStatus BattlePreeme(ref int hp)
+    {
+        /////////////////////
+        //ログ開始
+        /////////////////////
         string log = "";
-        int enemyhp = enemycharcter.GetHp();
-        int playerhp = playercharacter.GetHp();
+        int enemyhp = enemyCharacter.GetHp();
+        int playerhp = playerCharacter.GetHp();
         log += "「";
-        log += playercharacter.GetName();
+        log += playerCharacter.GetName();
         log += "」";
         log += "の攻撃";
         uiManagerScript.LogUpdate(log);
         log = "";
-        enemyhp -= playercharacter.GetPower();
+        enemyhp -= playerCharacter.GetPower();
         log += "「";
-        log += playercharacter.GetName();
+        log += playerCharacter.GetName();
         log += "」";
-        log += "に" + playercharacter.GetPower().ToString() + "のダメージ";
+        log += "に" + playerCharacter.GetPower().ToString() + "のダメージ";
         uiManagerScript.LogUpdate(log);
-        copyenemydamage = playercharacter.GetPower();
+        copyenemydamage = playerCharacter.GetPower();
+        hp = enemyhp;
         if (enemyhp <= 0)
         {
-            enemycharcter.SetHp(enemyhp);
-            WinLog(playercharacter);
+            enemyCharacter.SetHp(enemyhp);
+            WinLog(playerCharacter);
             return ResultStatus.Win;
         }
-        playerhp -= enemycharcter.GetPower();
-        copyplayerdamage = enemycharcter.GetPower();
+        return ResultStatus.Next;
+        /////////////////////
+        //ログ終了
+        /////////////////////
+    }
+
+    public ResultStatus BattleLate()
+    {
+        int enemyhp = enemyCharacter.GetHp();
+        int playerhp = playerCharacter.GetHp();
+
+        playerhp -= enemyCharacter.GetPower();
+        copyplayerdamage = enemyCharacter.GetPower();
+
         if (playerhp <= 0)
         {
-            playercharacter.SetHp(playerhp);
-            WinLog(enemycharcter);
+            playerCharacter.SetHp(playerhp);
+            WinLog(enemyCharacter);
             return ResultStatus.Lose;
         }
-        playercharacter.SetHp(playerhp);
-        enemycharcter.SetHp(enemyhp);
+        playerCharacter.SetHp(playerhp);
+        enemyCharacter.SetHp(enemyhp);
         return ResultStatus.Draw;
+
     }
 
     public int GameFinish(int playernumber)

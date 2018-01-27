@@ -28,6 +28,7 @@ public class BoardStatus : MonoBehaviour
     List<MassStatus> updateMoveAreaList = new List<MassStatus>();
     [SerializeField]
     GameObject[] massObjectArray;
+    [SerializeField]
     List<SummonStatus> summonCharacterList = new List<SummonStatus>();
     [SerializeField]
     List<MassStatus> summonMassList = new List<MassStatus>();
@@ -62,6 +63,19 @@ public class BoardStatus : MonoBehaviour
         for (int count = 0;count < summonCharacterList.Count;count++)
         {
             summonCharacterList[count].SetColor(true);
+        }
+    }
+
+    public void SummonCharacterRemoveat(GameObject target)
+    {
+        for (int count = 0; count < summonCharacterList.Count; count++)
+        {
+            if(target.name == summonCharacterList[count].name)
+            {
+                Debug.Break();
+                summonCharacterList.RemoveAt(count);
+            }
+
         }
     }
 

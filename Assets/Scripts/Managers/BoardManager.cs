@@ -128,6 +128,11 @@ public class BoardManager : MonoBehaviour
         boardStatusScript.ClearMoveDataList();
     }
 
+    public void SummonCharacterRemoveat(GameObject target)
+    {
+        boardStatusScript.SummonCharacterRemoveat(target);
+    }
+
     /// <summary>
     /// ボードの生成が完了したら
     /// </summary>

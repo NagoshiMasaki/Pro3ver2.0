@@ -52,6 +52,23 @@ public class SummonStatus : MonoBehaviour
     GameObject hpNumberObj;
     [SerializeField]
     GameObject attackNumberObj;
+    [SerializeField]
+    SpriteRenderer characterSprite;
+    [SerializeField]
+    int attackEffectNumber;
+
+    public int GetAttackEffectNumber()
+    {
+        return attackEffectNumber;
+    }
+
+    public void GetAllStatus(ref GameObject hpnumberobj, ref GameObject attacknumberobj,ref SpriteRenderer charactersprite,ref GameObject frame)
+    {
+        hpnumberobj = hpNumberObj;
+        attacknumberobj = attackNumberObj;
+        charactersprite = characterSprite;
+        frame = frameObj;
+    }
 
     public void GetIconObjects(ref GameObject hpnumberobj, ref GameObject attacknumberobj)
     {
@@ -88,6 +105,8 @@ public class SummonStatus : MonoBehaviour
 
     public void Ini()
     {
+        characterSprite = GetComponent<SpriteRenderer>();
+        Debug.Log(characterSprite);
         SetSpriteAttack();
         SetSpriteHp();
     }
@@ -225,6 +244,7 @@ public class SummonStatus : MonoBehaviour
         onAttachMass.SetMassStatus(BoardManager.MassMoveStatus.None);
         skillManagerScript.RemoveAtPasshiveSkillList(skillobj);
         onAttachMass.SetCharacterObj(null);
+        skillManagerScript.SummonCharacterRemoveat(gameObject);
         Destroy(gameObject);
     }
 

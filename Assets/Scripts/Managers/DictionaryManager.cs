@@ -8,6 +8,15 @@ public class DictionaryManager : MonoBehaviour {
     GameObject[] illustCharacterArray;
     [SerializeField]
     GameObject[] summonCharacterArray;
+    [SerializeField]
+    EffectAnimationBase[] effectObjectArray;
+
+
+    public EffectAnimationBase GetEffectObject(int num)
+    {
+        return effectObjectArray[num];
+    }
+
     public GameObject GetIllustCharacter(int num)
     {
         return illustCharacterArray[num];

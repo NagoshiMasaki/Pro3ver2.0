@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PhaseUIAnimation : MonoBehaviour
 {
-
     Vector3 copyScale;
     [SerializeField]
     float addValueX;

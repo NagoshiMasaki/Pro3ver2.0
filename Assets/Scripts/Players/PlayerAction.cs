@@ -348,7 +348,8 @@ public class PlayerAction : MonoBehaviour
             SummonStatus summonstatus = instanceobj.GetComponent<SummonStatus>();
             summonstatus.SetSkillManager(playerManagerScript.GetSkillManager());
             summonstatus.SetAttachMass(massstatus);
-            CharacterSkill skill = instanceobj.GetComponent<SummonStatus>().GetSkill();
+            summonstatus.Ini();
+            CharacterSkill skill = summonstatus.GetSkill();
             playerManagerScript.AddSkillList(skill);
             playerManagerScript.AddSummonCharacter(instanceobj.GetComponent<SummonStatus>());
             attachStatus = AttachStatus.None;
@@ -534,8 +535,20 @@ public class PlayerAction : MonoBehaviour
         {
             return;
         }
-        BattleStatus.ResultStatus result = playerManagerScript.Battle(playerstatus, enemystatus);//戦闘開始
-        BattleResult(result, attachmass, attachmassstatus, playerStatusScript.GetAttachSumonCard(), attachmassstatus.GetCharacterObj());
+        playerManagerScript.SetCardAnimation(playerstatus,enemystatus);
+        playerManagerScript.Battle(playerstatus, enemystatus, attachmass, attachmassstatus, playerStatusScript.GetAttachSumonCard(), attachmassstatus.GetCharacterObj());//戦闘開始
+        enabled = false;
+    }
+    //////////////////////
+    /// 戦闘に関する関数開始
+    //////////////////////
+
+    /// <summary>
+    /// 戦闘した結果の処理
+    /// </summary>
+    public void BattleResult(GameObject player, GameObject enemy, BattleStatus.ResultStatus result, GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
+    {
+        enabled = true;
         if (result == BattleStatus.ResultStatus.Draw)
         {
             playerManagerScript.BattaleEnd(player, enemy);
@@ -550,16 +563,6 @@ public class PlayerAction : MonoBehaviour
         }
         playerManagerScript.DecrementMoveCount();
 
-    }
-    //////////////////////
-    /// 戦闘に関する関数開始
-    //////////////////////
-
-    /// <summary>
-    /// 戦闘した結果の処理
-    /// </summary>
-    void BattleResult(BattleStatus.ResultStatus result, GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
-    {
         switch (result)
         {
             case BattleStatus.ResultStatus.Win:

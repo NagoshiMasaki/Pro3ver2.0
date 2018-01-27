@@ -96,8 +96,13 @@ public class SituationManager : MonoBehaviour
     public void DecrementMoveCount()
     {
         moveCount--;
-        if (moveCount == 0)
+    }
+
+    public void ChecMoveCount()
+    {
+        if (moveCount <= 0)
         {
+            moveCount = copyMoveCount;
             status = Phase.End;
             UpdatePhase();
         }

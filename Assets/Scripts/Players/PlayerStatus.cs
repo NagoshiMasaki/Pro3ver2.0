@@ -9,7 +9,6 @@ using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour
 {
-
     [SerializeField]
     PlayerManager playerManagerScript;
     [SerializeField]

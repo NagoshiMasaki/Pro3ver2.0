@@ -14,9 +14,35 @@ public class BattleManager : MonoBehaviour
     UImanager uiManagerScirpt;
     GameObject playerSumonCharacter;
     GameObject enemySumonCharacter;
-    public BattleStatus.ResultStatus Battle(SummonStatus player, SummonStatus enemy)
+    GameObject playerCharacter;
+    GameObject enemyCharacter;
+    MassStatus attachMassStatus;
+    GameObject attachMass;
+    [SerializeField]
+    PlayerManager playerManagerScript;
+
+    public void ResultBattleAction(BattleStatus.ResultStatus result)
     {
-       return battleStatusScript.Battle(player,enemy);
+        playerManagerScript.ResultBattleAction(playerSumonCharacter, enemySumonCharacter, result,attachMass,attachMassStatus,playerCharacter,enemyCharacter);
+    }
+
+    public void Battle(SummonStatus player, SummonStatus enemy, GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
+    {
+        battleStatusScript.Battle(player,enemy);
+        playerCharacter = playercharacter;
+        enemyCharacter = enemycharacter;
+        attachMassStatus = attachmassstatus;
+        attachMass = attachmass;
+    }
+
+    public BattleStatus.ResultStatus BattlePreeme(ref int hp)
+    {
+       return battleStatusScript.BattlePreeme(ref  hp);
+    }
+
+    public BattleStatus.ResultStatus BattleLate()
+    {
+        return battleStatusScript.BattleLate();
     }
 
     public void GameFinish(int playernum)

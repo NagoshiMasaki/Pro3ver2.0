@@ -46,6 +46,7 @@ public class SummonAnimation : MonoBehaviour
         copyWaitEffectTime = waitEffectTime;
         enabled = false;
     }
+
     public void StartAnimation(SummonStatus summon, MassStatus mass, IllustrationStatus illust, int playernumber)
     {
         playerNumber = playernumber;
@@ -94,10 +95,8 @@ public class SummonAnimation : MonoBehaviour
     void EffectWait()
     {
         waitEffectTime -= Time.deltaTime;
-        Debug.Log("duga2");
         if (waitEffectTime <= 0.0f)
         {
-            Debug.Log("duga");
             status = Status.EffectMove;
         }
     }
@@ -106,7 +105,6 @@ public class SummonAnimation : MonoBehaviour
     {
         Vector3 diff = (summonObj.transform.position - instanceeffectobj.transform.position).normalized;
         instanceeffectobj.transform.position += diff * moveEffectValue;
-        Debug.Log(diff);
         if(instanceeffectobj.transform.position.x  < summonObj.transform.position.x + 1 && instanceeffectobj.transform.position.x > summonObj.transform.position.x - 1)
         {
             status = Status.None;

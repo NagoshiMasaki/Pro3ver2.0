@@ -39,6 +39,7 @@ public class MoveAnimation : MonoBehaviour {
     {
         animationManagerScript.SePlay(SeNumbers.SUMMON_MOVE);
         targetObject.transform.position = targetPoint;
+        animationManagerScript.CheckMoveCount();
         enabled = false;
     }
 
@@ -93,6 +94,7 @@ public class MoveAnimation : MonoBehaviour {
                 isAnimation = false;
                 animationManagerScript.SePlay(SeNumbers.SUMMON_MOVE);
                 targetObject.transform.position = targetPoint;
+                animationManagerScript.CheckMoveCount();
                 enabled = false;
             }
             scaleSpeed = -scaleSpeed;
@@ -105,7 +107,7 @@ public class MoveAnimation : MonoBehaviour {
         targetObject.transform.position += diff * moveSpeed;
         if (targetObject.transform.position.x <targetPoint.x + 0.5f && targetObject.transform.position.x > targetPoint.x - 0.05f)
         {
-            if (targetObject.transform.position.y < targetPoint.y + 0.5f && targetObject.transform.position.y > targetPoint.y - 0.05f)
+            if (targetObject.transform.position.y < targetPoint.y + 0.5f && targetObject.transform.position.y > targetPoint.y - 0.5f)
             {
                 status = Status.SmallAnimation;
             }

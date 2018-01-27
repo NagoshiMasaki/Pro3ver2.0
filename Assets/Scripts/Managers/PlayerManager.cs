@@ -40,6 +40,15 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     BgmSeManager bgmSeManagerScript;
 
+    public void SetCardAnimation(SummonStatus preemptioncard,SummonStatus latecard)
+    {
+        animationManagerScript.SetAnimationCard(preemptioncard,latecard);
+    }
+
+    public void ResultBattleAction(GameObject player, GameObject enemy, BattleStatus.ResultStatus result, GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
+    {
+       playerActionScript.BattleResult( player,  enemy, result,  attachmass,  attachmassstatus,  playercharacter,  enemycharacter);
+    }
     public void SePlay(int number)
     {
         bgmSeManagerScript.SePlay(number);
@@ -145,9 +154,9 @@ public class PlayerManager : MonoBehaviour
        return boardManagerScript.CheckMoveList(target);
     }
 
-    public BattleStatus.ResultStatus Battle(SummonStatus player,SummonStatus enemy)
+    public void Battle(SummonStatus player,SummonStatus enemy, GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
     {
-       return battleManagerScript.Battle(player,enemy);
+       battleManagerScript.Battle(player,enemy,attachmass,attachmassstatus,playercharacter,enemycharacter);
     }
 
     public void ClearUpdateMoveList()

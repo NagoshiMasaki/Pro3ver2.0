@@ -76,6 +76,11 @@ public class SkillManager : MonoBehaviour
         return skillActionScript.BattleEnd(wincharacter);
     }
 
+    public void SummonCharacterRemoveat(GameObject target)
+    {
+        boardManagerScript.SummonCharacterRemoveat(target);
+    }
+
     public bool CheckMoveList(GameObject target)
     {
         return boardManagerScript.CheckMoveList(target);
