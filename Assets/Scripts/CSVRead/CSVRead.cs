@@ -28,7 +28,6 @@ public class CSVRead : MonoBehaviour
     public void ResourcesRead()
     {
        var csv = Resources.Load(fileName) as TextAsset;
-        Debug.Log(csv.text);
         StringReader read = new StringReader(csv.text);
         while (read.Peek() >= 0)
         {

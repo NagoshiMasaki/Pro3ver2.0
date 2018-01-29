@@ -15,14 +15,7 @@ public class LogUI : MonoBehaviour
     [SerializeField]
     GameObject targetObj;
     int num = 0;
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            LogUpdate(num.ToString());
-            num++;
-        }
-    }
+
     public void LogUpdate(string set)
     {
         logList.Add(set);
@@ -38,8 +31,5 @@ public class LogUI : MonoBehaviour
         }
     }
 
-    public void ShowLogList()
-    {
 
-    }
 }

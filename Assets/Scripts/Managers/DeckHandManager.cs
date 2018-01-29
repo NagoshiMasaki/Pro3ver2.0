@@ -12,7 +12,14 @@ public class DeckHandManager : MonoBehaviour
     Sprite backillustlation;
     [SerializeField]
     AnimationManager animationManagerScript;
-    
+    [SerializeField]
+    UImanager uiManagerScript;
+
+    public void GameFinish(int num)
+    {
+        uiManagerScript.GameFinish(num);
+    }
+
     public void DrawcardAnimation(GameObject drawobj,Vector3 target,GameObject deckobj)
     {
         animationManagerScript.DrawCardAnimation(drawobj,target,deckobj);

@@ -51,9 +51,9 @@ public class AnimationManager : MonoBehaviour
         return battleManagerScript.BattlePreeme(ref hp);
     }
 
-    public BattleStatus.ResultStatus BattleLate()
+    public BattleStatus.ResultStatus BattleLate(ref int hp)
     {
-        return battleManagerScript.BattleLate();
+        return battleManagerScript.BattleLate(ref hp);
     }
 
     public void SetAnimationCard(SummonStatus preemptioncard, SummonStatus latecard)

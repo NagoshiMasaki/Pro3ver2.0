@@ -1,13 +1,11 @@
-﻿
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PhaseUI : MonoBehaviour
 {
     [SerializeField]
-    Text phaseText;
+    Image phaseImage;
     [SerializeField]
     float showTime;
     [SerializeField]
@@ -21,37 +19,54 @@ public class PhaseUI : MonoBehaviour
     UImanager uiManagerScript;
     [SerializeField]
     int nextPhaseNumber;
+
     public void UpdatePhase(SituationManager.Phase phase,int playernum,int bgmnumber)
     {
+        Sprite turnsprite = null;
         switch (playernum)
         {
             case 1:
-                phaseText.color = Color.red;
+                switch(phase)
+                {
+                    case SituationManager.Phase.Battle:
+                        turnsprite = uiManagerScript.GetTurnSprite(ConstValues.YOUR_BATTLE_PHASE);
+                        break;
+                    case SituationManager.Phase.Summon:
+                        turnsprite = uiManagerScript.GetTurnSprite(ConstValues.YOUR_SUMMON_PHASE);
+                        break;
+                }
                 break;
             case 2:
-                phaseText.color = Color.blue;
+                switch (phase)
+                {
+                    case SituationManager.Phase.Battle:
+                        turnsprite = uiManagerScript.GetTurnSprite(ConstValues.ENEMY_BATTLE_PHASE);
+                        break;
+                    case SituationManager.Phase.Summon:
+                        turnsprite = uiManagerScript.GetTurnSprite(ConstValues.ENEMY_SUMMON_PHASE);
+                        break;
+                }
                 break;
         }
+        phaseImage.sprite = turnsprite;
         bgmNumber = bgmnumber;
         phauseUIAnimationScript.StartAnimation();
         uiManagerScript.SetNextPhase(0);
-        phaseText.text = phase.ToString() + "フェイズ" ;
-        Color copycolor = phaseText.color;
+        Color copycolor = phaseImage.color;
         copycolor.a = 1.0f;
-        phaseText.color = copycolor;
+        phaseImage.color = copycolor;
     }
 
     void Update()
     {
         showTime -= Time.deltaTime;
-        Color copycolor = phaseText.color;
+        Color copycolor = phaseImage.color;
         copycolor.a -= Time.deltaTime * alphaAddValue;
-        phaseText.color = copycolor;
-        if (phaseText.color.a <= 0.0f)
+        phaseImage.color = copycolor;
+        if (phaseImage.color.a <= 0.0f)
         {
             uiManagerScript.SetNextPhase(nextPhaseNumber);
             uiManagerScript.BgmPlay(bgmNumber);
-            phaseText.text = "";
             enabled = false;
             phauseUIAnimationScript.enabled = false;
             showTime = copyShowTime;

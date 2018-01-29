@@ -132,11 +132,6 @@ public class PlayerStatus : MonoBehaviour
         attachSumonCard = set;
     }
 
-    public void RemoveDeckHand(GameObject target)
-    {
-
-    }
-
     public LayerMask GetNextPhaseLayer()
     {
         return nextphaselayer;

@@ -54,6 +54,10 @@ public class DeckClass : MonoBehaviour
 
     void IniDeckDraw()
     {
+        if(characterList.Count == 0)
+        {
+            deckHandScript.GameFinish(playerNumber);
+        }
         int num = playerStatusScript.GetIniDeckHandCount();
         for (int count = 0; num >= count; count++)
         {

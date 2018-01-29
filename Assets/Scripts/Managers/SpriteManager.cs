@@ -8,6 +8,13 @@ public class SpriteManager : MonoBehaviour {
     List<Sprite> numberList;
     [SerializeField]
     List<Sprite> spList;
+    [SerializeField]
+    List<Sprite> turnSpriteList;
+
+    public Sprite GetTurnSprite(int number)
+    {
+        return turnSpriteList[number];
+    }
 
     public Sprite GetSpList(int num)
     {
@@ -16,6 +23,10 @@ public class SpriteManager : MonoBehaviour {
 
     public Sprite GetNumberList(int num)
     {
+        if(num == 9999)
+        {
+            num = 10;
+        }
         return numberList[num];
     }
 }

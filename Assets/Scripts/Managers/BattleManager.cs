@@ -40,9 +40,9 @@ public class BattleManager : MonoBehaviour
        return battleStatusScript.BattlePreeme(ref  hp);
     }
 
-    public BattleStatus.ResultStatus BattleLate()
+    public BattleStatus.ResultStatus BattleLate(ref int hp)
     {
-        return battleStatusScript.BattleLate();
+        return battleStatusScript.BattleLate(ref hp);
     }
 
     public void GameFinish(int playernum)

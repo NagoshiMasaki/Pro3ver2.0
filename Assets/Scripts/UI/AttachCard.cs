@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class AttachCard : MonoBehaviour {
@@ -11,6 +10,7 @@ public class AttachCard : MonoBehaviour {
     [SerializeField]
     Vector3 pos2;
     Vector3 defaultPos;
+
     void Start()
     {
         defaultPos = transform.position;
@@ -27,6 +27,5 @@ public class AttachCard : MonoBehaviour {
             transform.position = pos2;
         }
         mysprite.sprite = set;
-
     }
 }

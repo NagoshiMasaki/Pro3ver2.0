@@ -106,7 +106,6 @@ public class SummonStatus : MonoBehaviour
     public void Ini()
     {
         characterSprite = GetComponent<SpriteRenderer>();
-        Debug.Log(characterSprite);
         SetSpriteAttack();
         SetSpriteHp();
     }

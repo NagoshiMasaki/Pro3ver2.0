@@ -41,7 +41,6 @@ public class SituationManager : MonoBehaviour
     {
 
     }
-
     [SerializeField]
     int moveCount;
     [SerializeField]
@@ -55,10 +54,12 @@ public class SituationManager : MonoBehaviour
     {
         copyTimer = timer;
     }
+
     void Update()
     {
         timer -= Time.deltaTime;
     }
+
     public void Ini()
     {
         copyMoveCount = moveCount;
@@ -66,6 +67,7 @@ public class SituationManager : MonoBehaviour
         spapManagerScript.IniInstanceSp(playerTurn);
         TurnChange();
     }
+
     public bool GetIsGamePlay()
     {
         return gameMasterScript.GetIsGamePlay();

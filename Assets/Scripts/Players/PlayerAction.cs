@@ -3,12 +3,15 @@
 //クラス　ユーザーが操作するクラス
 /////////////////////////////
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAction : MonoBehaviour
 {
+    /////////////////////////////////
+    //グローバル変数開始
+    /////////////////////////////////
+
     [SerializeField]
     PlayerStatus playerStatusScript;
     int playerNumber = 1;
@@ -54,6 +57,10 @@ public class PlayerAction : MonoBehaviour
     GameObject moveIcon;
     Vector3 buttonDownPosition;
     bool isButtonDown;
+    /////////////////////////////////
+    //グローバル変数終了
+    /////////////////////////////////
+
     void Start()
     {
         copyDelayTime = delayTime;
@@ -67,6 +74,9 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// マウス動作に関する処理
+    /// </summary>
     void Mouse()
     {
         if (Input.GetMouseButtonDown(0))
@@ -79,12 +89,8 @@ public class PlayerAction : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            isLockOnRay = false;
-            buttonStatus = ButttonStatus.Up;
-            isRayAcition = false;
             ButtonUpSetting();
             RayAction();
-            attachStatus = AttachStatus.None;
             if (playerStatusScript.GetLockOnAttachMass() != null)
             {
                 playerStatusScript.GetLockOnAttachMass().SetDefaultMaterial();
@@ -111,6 +117,9 @@ public class PlayerAction : MonoBehaviour
         DelayCount();
     }
 
+    /// <summary>
+    /// マウスが押されたときの設定処理
+    /// </summary>
     void ButtonDownSetting()
     {
         playerManagerScript.SetSprite(null);
@@ -118,8 +127,15 @@ public class PlayerAction : MonoBehaviour
         buttonDownPosition = Input.mousePosition;
     }
 
+    /// <summary>
+    /// マウスを話したときの処理
+    /// </summary>
     void ButtonUpSetting()
     {
+        isLockOnRay = false;
+        buttonStatus = ButttonStatus.Up;
+        isRayAcition = false;
+
         playerManagerScript.ClearColorSummonMassList();
         DestroyInstancePosMass();
 
@@ -140,8 +156,13 @@ public class PlayerAction : MonoBehaviour
             frame.GetComponent<SpriteRenderer>().color = Color.white;
         }
         isButtonDown = false;
+        attachStatus = AttachStatus.None;
+
     }
 
+    /// <summary>
+    /// 例に関する処理
+    /// </summary>
     void RayAction()
     {
         if (delayTime >= 0.0f)
@@ -149,14 +170,11 @@ public class PlayerAction : MonoBehaviour
             return;
         }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         Object3DRay(ray);
         IllustlationRay(ray);
         ResetDelayCount();
-        //        playerManagerScript.ClearUpdateMoveList();
         buttonStatus = ButttonStatus.None;
         return;
-
     }
 
     /// <summary>
@@ -165,7 +183,6 @@ public class PlayerAction : MonoBehaviour
     void AtachMass(GameObject attachobj)
     {
         int length = 0, side = 0, number = 0;
-        Debug.Log(attachStatus);
         GameObject summoncharacter = attachobj.GetComponent<MassStatus>().GetCharacterObj();
         switch (attachStatus)
         {
@@ -210,6 +227,10 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 次のフェーズのオブジェクトに当たったときの処理
+    /// </summary>
+    /// <param name="attachobj"></param>
     void AttachNextPhase(GameObject attachobj)
     {
         if (playerManagerScript.GetPhase() != SituationManager.Phase.Draw)
@@ -224,8 +245,6 @@ public class PlayerAction : MonoBehaviour
     /// <param name="attachobj"></param>
     void AtachIllustration(GameObject attachobj)
     {
-        Debug.Log("カードをアタッチしました");
-        Debug.Log("カード名:" + attachobj);
         playerManagerScript.SetSprite(attachobj.GetComponent<IllustrationStatus>().GetInfomationSprite());
         if (playerStatusScript.GetAttachIllustCard() != null)
         {
@@ -234,7 +253,6 @@ public class PlayerAction : MonoBehaviour
         }
         if (playerStatusScript.GetPhase() == SituationManager.Phase.Summon)
         {
-
             int playernum = 0;
             int costnum = 0;
             int ratenum = 0;
@@ -340,7 +358,6 @@ public class PlayerAction : MonoBehaviour
             instanceobj.GetComponent<SummonStatus>().SetPlayerNumber(playernumber);
             massstatus.GetComponent<MassStatus>().SetCharacterObj(instanceobj);
             massstatus.GetComponent<MassStatus>().SetMassStatus(BoardManager.MassMoveStatus.Not);
-            //playerManagerScript.ReMoveIllustCard(playernumber, attachillustcard);
             GameObject status = playerStatusScript.GetAttachIllustCard();
             ResetScale(status);
             status.GetComponent<IllustrationStatus>().ResetScale();
@@ -431,7 +448,6 @@ public class PlayerAction : MonoBehaviour
         {
             if (attachmassstatus == masslist[count])
             {
-                Debug.Log(masslist[count].gameObject);
                 result = true;
             }
         }
@@ -615,7 +631,7 @@ public class PlayerAction : MonoBehaviour
 
     void BattleLose(GameObject attachmass, MassStatus attachmassstatus, GameObject playercharacter, GameObject enemycharacter)
     {
-        SummonStatus status = enemycharacter.GetComponent<SummonStatus>();
+        SummonStatus status = playercharacter.GetComponent<SummonStatus>();
         status.DestoryThisObj();
         attachmassstatus.SetMassStatus(BoardManager.MassMoveStatus.None);
     }
@@ -633,6 +649,10 @@ public class PlayerAction : MonoBehaviour
         delayTime = copyDelayTime;
     }
 
+    /// <summary>
+    /// 動かしたコマがポーンだった場合
+    /// </summary>
+    /// <param name="playerobj"></param>
     void FirstPornChangePorn(GameObject playerobj)
     {
         MoveData.Rate rate = playerobj.GetComponent<SummonStatus>().GetRate();
@@ -642,21 +662,19 @@ public class PlayerAction : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// もとの大きさに戻す処理
+    /// </summary>
+    /// <param name="obj"></param>
     void ResetScale(GameObject obj)
     {
         obj.GetComponent<IllustrationStatus>().ResetScale();
     }
 
-    void SkillIcon()
-    {
-
-    }
-
-    void Object2DRay()
-    {
-
-    }
-
+    /// <summary>
+    /// 3Dのオブジェクトにさわった場合
+    /// </summary>
+    /// <param name="ray"></param>
     void Object3DRay(Ray ray)
     {
         RaycastHit hit;
@@ -706,6 +724,10 @@ public class PlayerAction : MonoBehaviour
         attachStatus = set;
     }
 
+    /// <summary>
+    /// 召喚したときのログの処理
+    /// </summary>
+    /// <param name="instanceobj"></param>
     void SummonLog(GameObject instanceobj)
     {
         string log = "P";

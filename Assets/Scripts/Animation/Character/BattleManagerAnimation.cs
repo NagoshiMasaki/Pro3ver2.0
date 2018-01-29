@@ -8,6 +8,7 @@ public class BattleManagerAnimation:MonoBehaviour
     SummonStatusAnimation preemptionCard;
     [SerializeField]
     SummonStatusAnimation lateCard;
+    SummonStatusAnimation targetCard;
     [SerializeField]
     BattleActionAnimation battleActionAnimationScript;
     [SerializeField]
@@ -32,6 +33,7 @@ public class BattleManagerAnimation:MonoBehaviour
     {
         None,
         PreemptionAttack,
+        LateAttack,
     }
     BattleAnimationStatus battleAnimationStatus;
     BattleActionAnimation battleActionAnimation;
@@ -48,21 +50,24 @@ public class BattleManagerAnimation:MonoBehaviour
 
     public void CompleteAnimation(AnimationStatus set)
     {
-        Debug.Log("アニメーション終了");
         switch (set)
         {
             case AnimationStatus.Fade:
                 battleActionAnimationScript.SetAnimation(AnimationStatus.Wait);
+                battleAnimationStatus = BattleAnimationStatus.PreemptionAttack;
+                targetCard = lateCard;
                 break;
-            case AnimationStatus.Wait://松アニメーションが終わったとき
-                WaitFunction();
+            case AnimationStatus.Wait://待つアニメーションが終わったとき
+                WaitFunction(battleAnimationStatus, targetCard);
                 break;
             case AnimationStatus.LateBattleWait:
+                WaitFunction(battleAnimationStatus, targetCard);
                 break;
             case AnimationStatus.BattleWait:
                 CheckBattleResult();
 //                battleActionAnimationScript.SetAnimation(AnimationStatus.None);
                 break;
+
             case AnimationStatus.Dead:
                 preemptionCard.gameObject.SetActive(false);
                 lateCard.gameObject.SetActive(false);
@@ -73,19 +78,18 @@ public class BattleManagerAnimation:MonoBehaviour
         }
     }
 
-    public void WaitFunction()
+    public void WaitFunction(BattleAnimationStatus battleanimationstatus, SummonStatusAnimation summoncard)
     {
+        Debug.Log(targetCard);
         EffectAnimationBase effectobj = animaitonManagerScript.GetEffectObj(preemptionCardAttackEffectNumber);
-        EffectAnimationBase instanceobj = Instantiate(effectobj, lateCard.transform.position, Quaternion.identity);
+        EffectAnimationBase instanceobj = Instantiate(effectobj, summoncard.transform.position, Quaternion.identity);
         instanceobj.Ini(this);
         effect = instanceobj;
-        battleAnimationStatus = BattleAnimationStatus.PreemptionAttack;
+        battleAnimationStatus = battleanimationstatus;
     }
 
-    void BattleEffectAction()
+    void BattlePreemeEffectAction()
     {
-        Debug.Log("オラオラオラ!");
-
         int hp = 0;
         resultstatus = animaitonManagerScript.BattlePreeme(ref hp);
         if (hp <= 0)
@@ -98,14 +102,30 @@ public class BattleManagerAnimation:MonoBehaviour
         battleActionAnimationScript.SetAnimation(AnimationStatus.BattleWait);
     }
 
+    void BattleLateEffectAction()
+    {
+        int hp = 0;
+        resultstatus = animaitonManagerScript.BattleLate(ref hp);
+        if (hp <= 0)
+        {
+            hp = 0;
+        }
+        Sprite hpsprite = animaitonManagerScript.GetNumberSprite(hp);
+        preemptionCard.SetHpNumberSprite(hpsprite);
+        animaitonManagerScript.SePlay(1);
+        battleActionAnimationScript.SetAnimation(AnimationStatus.BattleWait);
+    }
+
     public void CompleteEffectAnimation()
     {
-        Debug.Log("終了");
         Destroy(effect.gameObject);
         switch(battleAnimationStatus)
         {
             case BattleAnimationStatus.PreemptionAttack:
-                BattleEffectAction();
+                BattlePreemeEffectAction();
+                break;
+            case BattleAnimationStatus.LateAttack:
+                BattleLateEffectAction();
                 break;
         }
     }
@@ -114,6 +134,7 @@ public class BattleManagerAnimation:MonoBehaviour
     {
         animaitonManagerScript.ResultBattleAction(resultstatus);
     }
+
     void CheckBattleResult()
     {
         switch(resultstatus)
@@ -122,6 +143,23 @@ public class BattleManagerAnimation:MonoBehaviour
                 battleActionAnimationScript.SetDeadSummon(lateCard);
                 battleActionAnimationScript.SetAnimation( AnimationStatus.Dead);
                 break;
+            case BattleStatus.ResultStatus.Next:
+                battleActionAnimationScript.SetAnimation(AnimationStatus.LateBattleWait);
+                battleAnimationStatus = BattleAnimationStatus.LateAttack;
+                targetCard = preemptionCard;
+                break;
+            case BattleStatus.ResultStatus.Draw:
+                preemptionCard.gameObject.SetActive(false);
+                lateCard.gameObject.SetActive(false);
+                ResultBattleAction();
+                Debug.Log("バトル終了");
+                battleActionAnimationScript.enabled = false;
+                break;
+            case BattleStatus.ResultStatus.Lose:
+                battleActionAnimationScript.SetDeadSummon(preemptionCard);
+                battleActionAnimationScript.SetAnimation(AnimationStatus.Dead);
+                break;
+
         }
     }
 

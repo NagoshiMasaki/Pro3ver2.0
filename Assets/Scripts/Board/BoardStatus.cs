@@ -72,7 +72,6 @@ public class BoardStatus : MonoBehaviour
         {
             if(target.name == summonCharacterList[count].name)
             {
-                Debug.Break();
                 summonCharacterList.RemoveAt(count);
             }
 

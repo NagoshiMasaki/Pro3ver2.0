@@ -6,9 +6,16 @@ public class DeckManager : MonoBehaviour {
 
     [SerializeField]
     DeckClass player1Deck;
-
     [SerializeField]
     DeckClass player2Deck;
+
+    [SerializeField]
+    UImanager uimanagerScript;
+
+    public void GameFinish(int num)
+    {
+        uimanagerScript.GameFinish(num);
+    }
 
     public GameObject GetDrawObj(int number)
     {

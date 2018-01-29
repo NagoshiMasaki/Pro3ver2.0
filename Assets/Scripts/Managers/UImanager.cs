@@ -25,6 +25,14 @@ public class UImanager : MonoBehaviour
     BgmSeManager bgmSeScript;
     [SerializeField]
     GameObject nextPhase;
+    [SerializeField]
+    SpriteManager spriteManagerScript;
+
+    public Sprite GetTurnSprite(int number)
+    {
+        return spriteManagerScript.GetTurnSprite(number);
+    }
+
     public void SePlay(int number)
     {
         bgmSeScript.SePlay(number);

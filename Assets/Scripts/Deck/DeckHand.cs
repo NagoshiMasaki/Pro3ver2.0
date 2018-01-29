@@ -26,6 +26,11 @@ public class DeckHand : MonoBehaviour {
     GameObject instanceDrawPosObj;
     bool isIniDraw = false;
 
+    public void GameFinish(int num)
+    {
+        deckHandManagerScript.GameFinish(num);
+    }
+
     public void SetIsIniDraw(bool set)
     {
         isIniDraw = set;

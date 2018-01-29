@@ -1,9 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿//////////////////////////////////////////
+//製作者　名越大樹
+//クラス　セントウシーンでのアニメーションに関するクラス
+//////////////////////////////////////////
+
 using UnityEngine;
 
 public class BattleActionAnimation : MonoBehaviour
 {
+    /////////////////////////////
+    //グローバル変数開始
+    /////////////////////////////
     [SerializeField]
     BattleManagerAnimation.AnimationStatus status;
     [SerializeField]
@@ -19,11 +25,10 @@ public class BattleActionAnimation : MonoBehaviour
     float battleWaitValue;
     float copybattleWaitValue;
     SummonStatusAnimation deadSummonStatusAnimaiton;
+    /////////////////////////////
+    //グローバル変数終了
+    /////////////////////////////
 
-    public void SetDeadSummon(SummonStatusAnimation set)
-    {
-       deadSummonStatusAnimaiton = set;
-    }
 
     void Start()
     {
@@ -32,7 +37,11 @@ public class BattleActionAnimation : MonoBehaviour
         enabled = false;
     }
 
-    
+    public void SetDeadSummon(SummonStatusAnimation set)
+    {
+        deadSummonStatusAnimaiton = set;
+    }
+
 
     public void Ini(SummonStatusAnimation preemptioncard, SummonStatusAnimation latecard)
     {
@@ -47,6 +56,7 @@ public class BattleActionAnimation : MonoBehaviour
         status = set;
         switch (set)
         {
+            case BattleManagerAnimation.AnimationStatus.LateBattleWait:
             case BattleManagerAnimation.AnimationStatus.Wait:
                 waitValue = copyWaitValue;
                 break;
@@ -83,6 +93,7 @@ public class BattleActionAnimation : MonoBehaviour
             case BattleManagerAnimation.AnimationStatus.Fade:
                 FadeAnimation();
                 break;
+            case BattleManagerAnimation.AnimationStatus.LateBattleWait:
             case BattleManagerAnimation.AnimationStatus.Wait:
                 WaitAnimation();
                 break;

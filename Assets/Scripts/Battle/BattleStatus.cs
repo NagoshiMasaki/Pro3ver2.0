@@ -61,13 +61,14 @@ public class BattleStatus : MonoBehaviour
         /////////////////////
     }
 
-    public ResultStatus BattleLate()
+    public ResultStatus BattleLate(ref int hp)
     {
         int enemyhp = enemyCharacter.GetHp();
         int playerhp = playerCharacter.GetHp();
 
         playerhp -= enemyCharacter.GetPower();
         copyplayerdamage = enemyCharacter.GetPower();
+        hp = playerhp;
 
         if (playerhp <= 0)
         {
