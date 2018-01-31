@@ -11,7 +11,7 @@ public class AttachCard : MonoBehaviour {
     Vector3 pos2;
     Vector3 defaultPos;
 
-    void Start()
+    public void Ini()
     {
         defaultPos = transform.position;
     }

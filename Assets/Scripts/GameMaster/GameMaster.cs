@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMaster : MonoBehaviour {
-
+public class GameMaster : MonoBehaviour
+{
     [SerializeField]
     bool isGamePlay = true;
     [SerializeField]
-    ReadData readDataScript;
+    Ini iniScript;
     void Start()
     {
-        readDataScript.Ini();
+        iniScript.IniStart();
     }
 
     public void SetIsGamePlay(bool set)

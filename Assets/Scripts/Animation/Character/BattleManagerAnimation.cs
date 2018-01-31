@@ -72,7 +72,6 @@ public class BattleManagerAnimation:MonoBehaviour
                 preemptionCard.gameObject.SetActive(false);
                 lateCard.gameObject.SetActive(false);
                 ResultBattleAction();
-                Debug.Log("バトル終了");
                 battleActionAnimationScript.enabled = false;
                 break;
         }
@@ -80,7 +79,6 @@ public class BattleManagerAnimation:MonoBehaviour
 
     public void WaitFunction(BattleAnimationStatus battleanimationstatus, SummonStatusAnimation summoncard)
     {
-        Debug.Log(targetCard);
         EffectAnimationBase effectobj = animaitonManagerScript.GetEffectObj(preemptionCardAttackEffectNumber);
         EffectAnimationBase instanceobj = Instantiate(effectobj, summoncard.transform.position, Quaternion.identity);
         instanceobj.Ini(this);
@@ -152,7 +150,6 @@ public class BattleManagerAnimation:MonoBehaviour
                 preemptionCard.gameObject.SetActive(false);
                 lateCard.gameObject.SetActive(false);
                 ResultBattleAction();
-                Debug.Log("バトル終了");
                 battleActionAnimationScript.enabled = false;
                 break;
             case BattleStatus.ResultStatus.Lose:

@@ -54,6 +54,11 @@ public class PlayerManager : MonoBehaviour
         bgmSeManagerScript.SePlay(number);
     }
 
+    public void PlayerAllAttachNull()
+    {
+        playerStatusScript.AllAttachNull();
+    }
+
     public void SummonAnimation(SummonStatus summon, MassStatus mass, IllustrationStatus illust, int playernumber)
     {
         animationManagerScript.SummonAnimation(summon,mass,illust,playernumber);

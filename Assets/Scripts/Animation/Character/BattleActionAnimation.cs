@@ -30,7 +30,7 @@ public class BattleActionAnimation : MonoBehaviour
     /////////////////////////////
 
 
-    void Start()
+    public void Ini()
     {
         copyWaitValue = waitValue;
         copybattleWaitValue = battleWaitValue;

@@ -244,12 +244,10 @@ public class BoardStatus : MonoBehaviour
 
     public void RemoveMoveDataList(GameObject target)
     {
-        Debug.Log("hdiahiohdihodshiso");
         for (int count = 0; count < movedatalist.Count; count++)
         {
             if (movedatalist[count] == target)
             {
-                Debug.Log("ヒット" + target);
                 movedatalist.RemoveAt(count);
             }
         }

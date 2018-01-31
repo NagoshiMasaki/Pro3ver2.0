@@ -59,7 +59,7 @@ public class DeckClass : MonoBehaviour
             deckHandScript.GameFinish(playerNumber);
         }
         int num = playerStatusScript.GetIniDeckHandCount();
-        for (int count = 0; num >= count; count++)
+        for (int count = 0; num > count; count++)
         {
             deckHandScript.SetDrawObj(characterList[0]);//デッキの一番先頭のカード
             characterList.RemoveAt(0);//デッキの一番最初のカードを削除
@@ -105,9 +105,10 @@ public class DeckClass : MonoBehaviour
             hpnumberobj.transform.rotation = Quaternion.Euler(0, 0, -180);
             attacknumberobj.transform.rotation = Quaternion.Euler(0, 0, -180);
         }
+        instance.GetComponent<SummonStatus>().SetSkillManager(skillmanager);
+        instance.GetComponent<SummonStatus>().Ini();
         instance.GetComponent<SummonStatus>().SetPlayerNumber(playernum);
         instance.GetComponent<SummonStatus>().SetAttachMass(massstatus);
-        instance.GetComponent<SummonStatus>().SetSkillManager(skillmanager);
         boardManagerScritpt.AddSummonCharacter(instance.GetComponent<SummonStatus>());
         SkillManager skillmamnager = instance.GetComponent<SummonStatus>().GetSkillManager();
         CharacterSkill skill = instance.GetComponent<SummonStatus>().GetSkill();

@@ -27,7 +27,7 @@ public class Timer : MonoBehaviour
     GameObject timerObj;
     int frameCount = 0;
 
-    void Start()
+    public void Ini()
     {
         defaultScale = maskObj.transform.localScale;
         copyTime = time;

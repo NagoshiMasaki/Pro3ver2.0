@@ -17,12 +17,7 @@ public class BoardAction : MonoBehaviour
     [SerializeField]
     GameObject instancePos;
 
-    void Start()
-    {
-        Ini();
-    }
-
-    void Ini()
+    public void Ini()
     {
         boardManagerScript.DeckHandIni();
         SetInstanceMathObjects();

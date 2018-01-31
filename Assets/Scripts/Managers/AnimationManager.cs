@@ -85,9 +85,9 @@ public class AnimationManager : MonoBehaviour
         deckHandManagerScript.RemoveIllustCard(playernum, target);
     }
 
-    public void DrawCardAnimation(GameObject drawcardobj, Vector3 target, GameObject deckobj)
+    public void DrawCardAnimation(GameObject drawcardobj, Vector3 target, GameObject deckobj,DeckHand deckhand)
     {
-        drawCardAnimationScript.StartAnimation(drawcardobj, target, deckobj);
+        drawCardAnimationScript.StartAnimation(drawcardobj, target, deckobj,deckhand);
     }
 
 }

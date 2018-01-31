@@ -2,8 +2,6 @@
 //制作者　名越大樹
 //クラス　キャラクターのスキルの基底クラス
 /////////////////////////////////////////
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CharacterSkill : MonoBehaviour {

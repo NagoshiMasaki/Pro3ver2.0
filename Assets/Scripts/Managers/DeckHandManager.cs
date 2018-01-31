@@ -14,15 +14,23 @@ public class DeckHandManager : MonoBehaviour
     AnimationManager animationManagerScript;
     [SerializeField]
     UImanager uiManagerScript;
+    [SerializeField]
+    SpriteManager spriteManagerScript;
+    [SerializeField]
+    SituationManager situaionManagerScript;
 
+    public Sprite GetNumber(int number)
+    {
+        return spriteManagerScript.GetNumberList(number);
+    }
     public void GameFinish(int num)
     {
         uiManagerScript.GameFinish(num);
     }
 
-    public void DrawcardAnimation(GameObject drawobj,Vector3 target,GameObject deckobj)
+    public void DrawcardAnimation(GameObject drawobj,Vector3 target,GameObject deckobj,DeckHand deckhand)
     {
-        animationManagerScript.DrawCardAnimation(drawobj,target,deckobj);
+        animationManagerScript.DrawCardAnimation(drawobj,target,deckobj,deckhand);
     }
 
     public Sprite BackIllustlation()
@@ -75,4 +83,8 @@ public class DeckHandManager : MonoBehaviour
         }
     }
 
+    public int GetPlayerTurn()
+    {
+        return situaionManagerScript.GetPlayerTurn();
+    }
 }

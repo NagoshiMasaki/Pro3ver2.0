@@ -20,6 +20,11 @@ public class PhaseUI : MonoBehaviour
     [SerializeField]
     int nextPhaseNumber;
 
+    public void Ini()
+    {
+        copyShowTime = showTime;
+    }
+
     public void UpdatePhase(SituationManager.Phase phase,int playernum,int bgmnumber)
     {
         Sprite turnsprite = null;

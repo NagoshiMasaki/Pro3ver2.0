@@ -95,6 +95,7 @@ public class PlayerAction : MonoBehaviour
             {
                 playerStatusScript.GetLockOnAttachMass().SetDefaultMaterial();
             }
+            attachStatus = AttachStatus.None;
             return;
         }
 
@@ -128,7 +129,7 @@ public class PlayerAction : MonoBehaviour
     }
 
     /// <summary>
-    /// マウスを話したときの処理
+    /// マウスを離したときの処理
     /// </summary>
     void ButtonUpSetting()
     {
@@ -156,8 +157,6 @@ public class PlayerAction : MonoBehaviour
             frame.GetComponent<SpriteRenderer>().color = Color.white;
         }
         isButtonDown = false;
-        attachStatus = AttachStatus.None;
-
     }
 
     /// <summary>
@@ -553,6 +552,7 @@ public class PlayerAction : MonoBehaviour
         }
         playerManagerScript.SetCardAnimation(playerstatus,enemystatus);
         playerManagerScript.Battle(playerstatus, enemystatus, attachmass, attachmassstatus, playerStatusScript.GetAttachSumonCard(), attachmassstatus.GetCharacterObj());//戦闘開始
+        playerStatusScript.AllAttachNull();
         enabled = false;
     }
     //////////////////////
@@ -603,7 +603,6 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     void BattleDraw()
     {
-        Debug.Log("ドロー");
     }
 
     /// <summary>

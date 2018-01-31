@@ -56,6 +56,19 @@ public class SummonStatus : MonoBehaviour
     SpriteRenderer characterSprite;
     [SerializeField]
     int attackEffectNumber;
+    [SerializeField]
+    SpriteRenderer hpSpriteRedner1;
+    [SerializeField]
+    SpriteRenderer hpSpriteRender2;
+    [SerializeField]
+    SpriteRenderer hpSpriteRender3;
+
+    [SerializeField]
+    SpriteRenderer attackSpriteRender1;
+    [SerializeField]
+    SpriteRenderer attackSpriteRender2;
+    [SerializeField]                
+    SpriteRenderer attackSpriteRender3;
 
     public int GetAttackEffectNumber()
     {
@@ -104,10 +117,16 @@ public class SummonStatus : MonoBehaviour
 
 
     public void Ini()
-    {
+    {   
         characterSprite = GetComponent<SpriteRenderer>();
         SetSpriteAttack();
         SetSpriteHp();
+        hpSpriteRedner1.transform.rotation = Quaternion.identity;
+        hpSpriteRender2.transform.rotation = Quaternion.identity;
+        hpSpriteRender3.transform.rotation = Quaternion.identity;
+        attackSpriteRender1.transform.rotation = Quaternion.identity;
+        attackSpriteRender2.transform.rotation = Quaternion.identity;
+        attackSpriteRender3.transform.rotation = Quaternion.identity;
     }
 
     public bool GetIniSkill()
@@ -277,13 +296,31 @@ public class SummonStatus : MonoBehaviour
 
     void SetSpriteAttack()
     {
-        Sprite sprite = skillManagerScript.GetSpriteNumber(power);
-        attackNumber.sprite = sprite;
+        SetSpriteNumbers(power,attackSpriteRender1, attackSpriteRender2, attackSpriteRender3);
     }
 
     void SetSpriteHp()
     {
-        Sprite sprite = skillManagerScript.GetSpriteNumber(hp);
-        hpNumber.sprite = sprite;
+        SetSpriteNumbers(hp, hpSpriteRedner1, hpSpriteRender2, hpSpriteRender3);
+    }
+
+    void SetSpriteNumbers(int number, SpriteRenderer sprite1, SpriteRenderer sprite2, SpriteRenderer sprite3)
+    {
+        if (number < 10 || number == 9999)
+        {
+            Sprite getsprite = skillManagerScript.GetSpriteNumber(number);
+            sprite1.sprite = getsprite;
+            sprite2.sprite = null;
+            sprite3.sprite = null;
+        }
+        else
+        {
+            Sprite getsprite1 = skillManagerScript.GetSpriteNumber(number / 10);
+            sprite2.sprite = getsprite1;
+            int i = number & 10;
+            Sprite getsprite2 = skillManagerScript.GetSpriteNumber(i);
+            sprite3.sprite = getsprite2;
+            sprite1.sprite = null;
+        }
     }
 }

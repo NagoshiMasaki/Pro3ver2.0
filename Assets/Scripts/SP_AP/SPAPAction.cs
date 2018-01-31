@@ -66,7 +66,6 @@ public class SPAPAction : MonoBehaviour
     {
         List<SpSprite> list = spapStatus.GetSPSpriteList();
         int sp = spapStatus.GetSP();
-        Debug.Log(sp);
         for (int count = 0; count < sp; count++)
         {
             list[count].SetStatsu(SpSprite.Status.Use);

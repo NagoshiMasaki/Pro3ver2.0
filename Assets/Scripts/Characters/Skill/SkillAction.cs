@@ -79,7 +79,6 @@ public class SkillAction : MonoBehaviour {
     public SkillStatus.Status MoveEnd(GameObject playercharacter)
     {
         SkillStatus.Status status = skillStatusScript.GetStatus();
-        Debug.Log(playercharacter);
         CharacterSkill playerskill = playercharacter.GetComponent<SummonStatus>().GetSkill();
         playerskill.MoveEnd();
         return SkillStatus.Status.None;

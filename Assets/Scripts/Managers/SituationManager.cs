@@ -48,12 +48,8 @@ public class SituationManager : MonoBehaviour
     [SerializeField]
     int playerTurn;
     int copyMoveCount;
-
-
-    void Start()
-    {
-        copyTimer = timer;
-    }
+    [SerializeField]
+    PlayerManager playerManagerScript;
 
     void Update()
     {
@@ -62,9 +58,10 @@ public class SituationManager : MonoBehaviour
 
     public void Ini()
     {
+        copyTimer = timer;
         copyMoveCount = moveCount;
-        DrawAction(playerTurn);
         spapManagerScript.IniInstanceSp(playerTurn);
+        enabled = true;
         TurnChange();
     }
 
@@ -130,6 +127,7 @@ public class SituationManager : MonoBehaviour
                 P2Obj.SetActive(false);
                 break;
         }
+        playerManagerScript.PlayerAllAttachNull();
         attachCardScript.SetSprite(null);
         uiManegerScript.Reset();
         boardManagerScript.SummonCharacterListColorClear();

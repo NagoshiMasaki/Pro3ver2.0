@@ -48,8 +48,6 @@ public class Behemoth : CharacterSkill
                 int number = status.GetPlayer();
                 if(number == parentObj.GetPlayer())
                 {
-                    Debug.Log("味方を発見しました");
-                    Debug.Log(character);
                     status.RecoveryHp(recoveryvalue);
                 }
             }

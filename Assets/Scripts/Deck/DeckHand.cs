@@ -81,13 +81,14 @@ public class DeckHand : MonoBehaviour {
         GameObject instsnceobj = null;
         if (isIniDraw)
         {
+            Debug.Log(obj);
             instsnceobj = Instantiate(obj, instanceDrawPosObj.transform.position, Quaternion.identity);//カードの生成
         }
         else
         {
             instsnceobj = Instantiate(obj,pos, Quaternion.identity);//カードの生成
         }
-
+        instsnceobj.GetComponent<IllustrationStatus>().Ini(deckHandManagerScript);
         instsnceobj.GetComponent<IllustrationStatus>().SetPlayerNumber(playerNumber);
         instsnceobj.GetComponent<IllustrationStatus>().SetDefaultScale(illsutlationScale);
         if (playerNumber == 2)
@@ -98,7 +99,7 @@ public class DeckHand : MonoBehaviour {
         MoveDeckHandPos();
         if (isIniDraw)
         {
-            deckHandManagerScript.DrawcardAnimation(instsnceobj,copypos,instanceDrawPosObj);
+            deckHandManagerScript.DrawcardAnimation(instsnceobj,copypos,instanceDrawPosObj,this);
         }
         else
         {

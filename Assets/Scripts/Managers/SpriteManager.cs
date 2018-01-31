@@ -23,9 +23,9 @@ public class SpriteManager : MonoBehaviour {
 
     public Sprite GetNumberList(int num)
     {
-        if(num == 9999)
+        if(num > 100)
         {
-            num = 10;
+            num = 11;
         }
         return numberList[num];
     }

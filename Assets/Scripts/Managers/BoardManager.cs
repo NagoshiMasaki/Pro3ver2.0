@@ -37,6 +37,7 @@ public class BoardManager : MonoBehaviour
     SPAPManager spapManagerScript;
     [SerializeField]
     BoardAction boardActionScript;
+
     public enum MassMoveStatus
     {
         None,

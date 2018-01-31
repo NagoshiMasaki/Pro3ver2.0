@@ -40,7 +40,7 @@ public class SummonAnimation : MonoBehaviour
     [SerializeField]
     Status status;
 
-    void Start()
+    public void Ini()
     {
         copyScaleTimer = scaleTimer;
         copyWaitEffectTime = waitEffectTime;

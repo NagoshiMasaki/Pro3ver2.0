@@ -35,6 +35,7 @@ public class PlayerStatus : MonoBehaviour
     LayerMask normalIconLayer;
     [SerializeField]
     MassStatus copyMass;
+    [SerializeField]
     GameObject attachiIlustCard;
     int sp;
     List<MassStatus> moveList = new List<MassStatus>();
@@ -169,4 +170,13 @@ public class PlayerStatus : MonoBehaviour
         return normalIconLayer;
     }
 
+    public void AllAttachNull()
+    {
+        attachMass = null;
+        attachSumonCard = null;
+        attachiIlustCard = null;
+        copyMass = null;
+        lockOnAttachMass = null;
+        copyLockOnAttachMass = null;
+    }
 }

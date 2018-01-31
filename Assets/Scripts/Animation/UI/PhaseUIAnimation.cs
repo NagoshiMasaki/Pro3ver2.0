@@ -11,10 +11,11 @@ public class PhaseUIAnimation : MonoBehaviour
     int animationCount;
     int copyAnimationCount;
 
-    void Start()
+    public void Ini()
     {
         copyAnimationCount = animationCount;
         copyScale = transform.localScale;
+        enabled = false;
     }
 
     void Update ()
@@ -29,10 +30,6 @@ public class PhaseUIAnimation : MonoBehaviour
             scale.y += Time.deltaTime * addValueY;
             transform.localScale = scale;
             animationCount--;
-        if(animationCount <= 0)
-        {
-
-        }
     }
 
     public void StartAnimation()
