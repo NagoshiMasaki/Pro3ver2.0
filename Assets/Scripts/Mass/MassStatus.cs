@@ -36,7 +36,10 @@ public class MassStatus : MonoBehaviour
         status = BoardManager.MassMoveStatus.None;
         SetMaterial(materialnum);
     }
-
+    public int GetNumber()
+    {
+        return massNumber;
+    }
 
     public bool GetIsSetColor()
     {

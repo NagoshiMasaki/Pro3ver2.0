@@ -502,6 +502,20 @@ public class PlayerAction : MonoBehaviour
     /// </summary>
     void MoveMassNoneCharacter(GameObject attachmass, MassStatus attachmassstatus)
     {
+        int massnumber = attachmassstatus.GetNumber();
+        List<MassStatus> movemasslist = playerManagerScript.GetMoveList();
+        bool result = false;
+        for(int count = 0; count < movemasslist.Count; count++)
+        {
+            if(massnumber == movemasslist[count].GetNumber())
+            {
+                result = true;
+            }
+        }
+        if(!result)
+        {
+            return;
+        }
         GameObject sumoncard = playerStatusScript.GetAttachSumonCard();
         Vector3 pos = attachmass.transform.position;
         pos.z = -1;
@@ -510,9 +524,11 @@ public class PlayerAction : MonoBehaviour
         attachmassstatus.SetCharacterObj(sumoncard);
         sumoncard.GetComponent<SummonStatus>().SetMassNull();
         sumoncard.GetComponent<SummonStatus>().SetAttachMass(attachmassstatus);
+        attachmassstatus.SetMassStatus( BoardManager.MassMoveStatus.Not);
         DestroyInstancePosMass();
         playerManagerScript.DecrementMoveCount();
         playerManagerScript.AddMoveList(sumoncard);
+        playerManagerScript.ClearUpdateMoveList();
         FirstPornChangePorn(playerStatusScript.GetAttachSumonCard());
         MoveLog(sumoncard.GetComponent<SummonStatus>());
         attachStatus = AttachStatus.None;
@@ -595,7 +611,8 @@ public class PlayerAction : MonoBehaviour
         {
             FirstPornChangePorn(playercharacter);
         }
-
+        playerManagerScript.ClearUpdateMoveList();
+        playerStatusScript.AllAttachNull();
     }
 
     /// <summary>

@@ -94,7 +94,7 @@ public class MoveData : MonoBehaviour
                     MassOnNotCharacter(length, sidesum, massobjects, massstatuses, instanceobj);
                 }
 
-                else if (playernum != num)
+                else if (playernum != num　&& count != 0 && character != null)
                 {
                     MassOnEnemyCharacter(length, sidesum, massobjects, massstatuses, instanceobj);
                 }
@@ -330,7 +330,7 @@ public class MoveData : MonoBehaviour
             if (result && count != 0)
             {
                 GameObject character = massstatuses[lengthsum, sidesum].GetCharacterObj();
-                if (character != null)
+                if (character != null )
                 {
                     int getplayernum = character.GetComponent<SummonStatus>().GetPlayer();
                     if (getplayernum != playernum)

@@ -78,6 +78,23 @@ public class BoardStatus : MonoBehaviour
         }
     }
 
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            AllRender();
+        }
+    }
+
+    void AllRender()
+    {
+        foreach(MassStatus mass in updateMoveAreaList)
+        {
+            mass.SetMaterial(5);////////////////////////////////////////////
+        }
+    }
+
     public GameObject GetMass(int length, int side)
     {
         return massObjects[length, side];
