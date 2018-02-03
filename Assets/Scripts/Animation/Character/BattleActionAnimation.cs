@@ -29,7 +29,6 @@ public class BattleActionAnimation : MonoBehaviour
     //グローバル変数終了
     /////////////////////////////
 
-
     public void Ini()
     {
         copyWaitValue = waitValue;
@@ -103,7 +102,6 @@ public class BattleActionAnimation : MonoBehaviour
             case BattleManagerAnimation.AnimationStatus.Dead:
                 DeadAnimation();
                 break;
-
         }
     }
 
@@ -126,7 +124,6 @@ public class BattleActionAnimation : MonoBehaviour
             battleManagerAnimationScript.CompleteAnimation(status);
         }
     }
-
 
     void FadeAnimation()
     {
