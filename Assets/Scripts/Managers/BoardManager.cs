@@ -37,7 +37,8 @@ public class BoardManager : MonoBehaviour
     SPAPManager spapManagerScript;
     [SerializeField]
     BoardAction boardActionScript;
-
+    [SerializeField]
+    SocketAction socketActionScript;
     public enum MassMoveStatus
     {
         None,
@@ -139,7 +140,14 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public void DoneBoardMass()
     {
-        csvReadScriptDeck1.ResourcesRead();
+        if (!gameMasterScript.GetIsNetWork())
+        {
+            csvReadScriptDeck1.ResourcesRead();
+        }
+        else
+        {
+            socketActionScript.DeckRead();
+        }
         csvReadScriptDeck2.ResourcesRead();
         situatitonManagerScript.Ini();
         spapManagerScript.Ini();
@@ -204,6 +212,7 @@ public class BoardManager : MonoBehaviour
     {
         return situatitonManagerScript.GetPlayerTurn();
     }
+
     public void EnemyMoveEndSkill(SummonStatus character)
     {
         boardActionScript.EnemyMoveEndSkill(character);

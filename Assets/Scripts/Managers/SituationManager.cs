@@ -50,11 +50,13 @@ public class SituationManager : MonoBehaviour
     int copyMoveCount;
     [SerializeField]
     PlayerManager playerManagerScript;
-
+    static int turnMasterNumber;
     void Update()
     {
         timer -= Time.deltaTime;
     }
+
+    public static int TurnMasterNumber { get { return turnMasterNumber; } set { turnMasterNumber = value; } }
 
     public void Ini()
     {
@@ -109,24 +111,36 @@ public class SituationManager : MonoBehaviour
 
     public void TurnChange()
     {
-        skillManagerScript.TurnEndSkillList();
-        switch (playerTurn)
+        if(gameMasterScript.GetIsNetWork())
         {
-            case 1:
-                SetPlayerTurn(2);
-                spapManagerScript.AddSP(2);
-                DrawAction(2);
-                P1Obj.SetActive(false);
-                P2Obj.SetActive(true);
-                break;
-            case 2:
-                SetPlayerTurn(1);
-                spapManagerScript.AddSP(1);
-                DrawAction(1);
-                P1Obj.SetActive(true);
-                P2Obj.SetActive(false);
-                break;
+            NetWorkTurnChange();
         }
+        else
+        {
+            switch (playerTurn)
+            {
+                case 1:
+                    SetPlayerTurn(2);
+                    spapManagerScript.AddSP(2);
+                    DrawAction(2);
+                    P1Obj.SetActive(false);
+                    P2Obj.SetActive(true);
+                    deckHandManagerScript.AllChangeCard(1,false);
+                    deckHandManagerScript.AllChangeCard(2, true);
+                    break;
+                case 2:
+                    SetPlayerTurn(1);
+                    spapManagerScript.AddSP(1);
+                    DrawAction(1);
+                    P1Obj.SetActive(true);
+                    P2Obj.SetActive(false);
+                    deckHandManagerScript.AllChangeCard(2, false);
+                    deckHandManagerScript.AllChangeCard(1, true);
+
+                    break;
+            }
+        }
+        skillManagerScript.TurnEndSkillList();
         playerManagerScript.PlayerAllAttachNull();
         attachCardScript.SetSprite(null);
         uiManegerScript.Reset();
@@ -137,9 +151,55 @@ public class SituationManager : MonoBehaviour
         UpdatePhase();
     }
 
+
+    void NetWorkTurnChange()
+    {
+        if (turnMasterNumber == 1)
+        {
+            switch (playerTurn)
+            {
+                case 1:
+                    SetPlayerTurn(2);
+                    spapManagerScript.AddSP(2);
+                    DrawAction(2);
+                    P1Obj.SetActive(false);
+                    P2Obj.SetActive(true);
+                    break;
+                case 2:
+                    SetPlayerTurn(1);
+                    spapManagerScript.AddSP(1);
+                    DrawAction(1);
+                    P1Obj.SetActive(true);
+                    P2Obj.SetActive(false);
+                    break;
+            }
+        }
+        else
+        {
+            switch (playerTurn)
+            {
+                case 1:
+                    SetPlayerTurn(1);
+                    spapManagerScript.AddSP(1);
+                    DrawAction(1);
+                    P1Obj.SetActive(false);
+                    P2Obj.SetActive(true);
+                    break;
+                case 2:
+                    SetPlayerTurn(2);
+                    spapManagerScript.AddSP(2);
+                    DrawAction(2);
+                    P1Obj.SetActive(true);
+                    P2Obj.SetActive(false);
+                    break;
+            }
+        }
+
+    }
+
     public void NextPhase()
     {
-        if(timer > 0.0f)
+        if (timer > 0.0f)
         {
             return;
         }
@@ -149,7 +209,8 @@ public class SituationManager : MonoBehaviour
         {
             TurnChange();
         }
-        else {
+        else
+        {
             UpdatePhase();
         }
     }
@@ -167,14 +228,14 @@ public class SituationManager : MonoBehaviour
             case Phase.Summon:
                 bgmnumber = 2;
                 bgmSeManagerScript.SePlay(1);
-                
+
                 break;
             case Phase.Battle:
                 bgmnumber = 3;
                 bgmSeManagerScript.SePlay(2);
                 break;
         }
-        uiManegerScript.UpdatePhase(status, playerTurn,bgmnumber);
+        uiManegerScript.UpdatePhase(status, playerTurn, bgmnumber);
     }
 
     void DrawAction(int playernum)

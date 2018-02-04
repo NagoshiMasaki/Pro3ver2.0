@@ -24,6 +24,8 @@ public class Ini : MonoBehaviour
     PhaseUI phaseUIScript;
     [SerializeField]
     DrawCardAnimation drawCardAnimationScript;
+    [SerializeField]
+    PlayerAction playerActionScript;
     public enum Status
     {
         None,
@@ -34,6 +36,7 @@ public class Ini : MonoBehaviour
         End,
     }
     Status status = Status.IniSetting;
+
     public void IniStart()
     {
         copycCount = count;
@@ -86,6 +89,8 @@ public class Ini : MonoBehaviour
         summonAnimationScript.Ini();
         phaseUIAnimationScript.Ini();
         phaseUIScript.Ini();
+        playerActionScript.enabled = true;
+        timerScript.Ini();
     }
 
     void ResetCount()

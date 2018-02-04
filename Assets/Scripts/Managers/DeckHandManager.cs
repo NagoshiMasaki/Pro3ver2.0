@@ -87,4 +87,19 @@ public class DeckHandManager : MonoBehaviour
     {
         return situaionManagerScript.GetPlayerTurn();
     }
+
+    public void AllChangeCard(int playernum, bool set)
+    {
+        switch (playernum)
+        {
+            case 1:
+                decxHand1Script.AllChangeCard(set);
+                break;
+            case 2:
+                decxHand2Script.AllChangeCard(set);
+                break;
+
+        }
+
+    }
 }

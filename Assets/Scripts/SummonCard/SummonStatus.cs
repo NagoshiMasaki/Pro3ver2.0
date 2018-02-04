@@ -62,13 +62,15 @@ public class SummonStatus : MonoBehaviour
     SpriteRenderer hpSpriteRender2;
     [SerializeField]
     SpriteRenderer hpSpriteRender3;
-
     [SerializeField]
     SpriteRenderer attackSpriteRender1;
     [SerializeField]
     SpriteRenderer attackSpriteRender2;
     [SerializeField]                
     SpriteRenderer attackSpriteRender3;
+    int instanceID;
+
+    public int InstanceID { get { return instanceID; } set { instanceID = value; } }
 
     public int GetAttackEffectNumber()
     {
@@ -117,7 +119,9 @@ public class SummonStatus : MonoBehaviour
 
 
     public void Ini()
-    {   
+    {
+        instanceID = InstanceId.instanceid;
+        InstanceId.instanceid++;
         characterSprite = GetComponent<SpriteRenderer>();
         SetSpriteAttack();
         SetSpriteHp();

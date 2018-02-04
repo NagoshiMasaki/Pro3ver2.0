@@ -3,11 +3,11 @@
 //クラス名　手札を管理するクラス
 /////////////////
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeckHand : MonoBehaviour {
+public class DeckHand : MonoBehaviour
+{
 
     [SerializeField]
     List<GameObject> deckHandList;
@@ -86,7 +86,7 @@ public class DeckHand : MonoBehaviour {
         }
         else
         {
-            instsnceobj = Instantiate(obj,pos, Quaternion.identity);//カードの生成
+            instsnceobj = Instantiate(obj, pos, Quaternion.identity);//カードの生成
         }
         instsnceobj.GetComponent<IllustrationStatus>().Ini(deckHandManagerScript);
         instsnceobj.GetComponent<IllustrationStatus>().SetPlayerNumber(playerNumber);
@@ -94,12 +94,14 @@ public class DeckHand : MonoBehaviour {
         if (playerNumber == 2)
         {
             instsnceobj.GetComponent<SpriteRenderer>().sprite = deckHandManagerScript.BackIllustlation();
+            GameObject iconparent = instsnceobj.GetComponent<IllustrationStatus>().GetIconParentObj();
+            iconparent.SetActive(false);
         }
         deckHandList.Add(instsnceobj);
         MoveDeckHandPos();
         if (isIniDraw)
         {
-            deckHandManagerScript.DrawcardAnimation(instsnceobj,copypos,instanceDrawPosObj,this);
+            deckHandManagerScript.DrawcardAnimation(instsnceobj, copypos, instanceDrawPosObj, this);
         }
         else
         {
@@ -110,14 +112,14 @@ public class DeckHand : MonoBehaviour {
     void MoveDeckHandPos()
     {
         Vector3 pos = deckHandPos.transform.position;
-        pos.x+= spaceX;
+        pos.x += spaceX;
         deckHandPos.transform.position = pos;
     }
 
     public void ResetPos()
     {
         deckHandPos.transform.position = defaultPos;
-        for(int count = 0;count < deckHandList.Count;count++)
+        for (int count = 0; count < deckHandList.Count; count++)
         {
             deckHandList[count].transform.position = deckHandPos.transform.position;
             MoveDeckHandPos();
@@ -139,5 +141,29 @@ public class DeckHand : MonoBehaviour {
         deckHandPos.transform.position = pos;
     }
 
+    public void AllChangeCard(bool set)
+    {
+        foreach (GameObject card in deckHandList)
+        {
+            if (set)
+            {
+                card.GetComponent<SpriteRenderer>().sprite = card.GetComponent<IllustrationStatus>().GetDefaultSprite();
+            }
 
+            else
+            {
+                card.GetComponent<SpriteRenderer>().sprite = deckHandManagerScript.BackIllustlation();
+            }
+            GameObject iconparent = card.GetComponent<IllustrationStatus>().GetIconParentObj();
+            iconparent.SetActive(set);
+        }
+    }
+
+    public void AllCardSendSetting()
+    {
+        foreach(GameObject card in deckHandList)
+        {
+            card.GetComponent<IllustrationStatus>().IniSendDataSetting();
+        }
+    }
 }

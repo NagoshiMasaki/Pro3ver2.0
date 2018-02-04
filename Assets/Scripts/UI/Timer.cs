@@ -31,6 +31,7 @@ public class Timer : MonoBehaviour
     {
         defaultScale = maskObj.transform.localScale;
         copyTime = time;
+        enabled = true;
     }
 
     void Update()

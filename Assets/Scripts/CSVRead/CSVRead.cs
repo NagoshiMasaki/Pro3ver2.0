@@ -24,7 +24,6 @@ public class CSVRead : MonoBehaviour
         deckClassScript.IniShaffle();
     }
 
-
     public void ResourcesRead()
     {
        var csv = Resources.Load(fileName) as TextAsset;
@@ -33,10 +32,17 @@ public class CSVRead : MonoBehaviour
         {
             string[] cols = read.ReadLine().Split(',');
             int col = int.Parse(cols[0]);
-            deckClassScript.SetCharacter(col, playernumber);
+            deckClassScript.SetCharacter(col, deckClassScript.GetPlayerNumber());
         }
         deckClassScript.IniShaffle();
     }
 
+
+    public StringReader ResourcesReadSocket()
+    {
+        var csv = Resources.Load(fileName) as TextAsset;
+        StringReader read = new StringReader(csv.text);
+        return read;
+    }
 
 }

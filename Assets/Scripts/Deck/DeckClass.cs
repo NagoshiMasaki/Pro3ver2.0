@@ -3,7 +3,6 @@
 //クラス　各プレイヤーにあるデッキを管理するクラス
 //////////////////////////////
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +22,19 @@ public class DeckClass : MonoBehaviour
     PlayerStatus playerStatusScript;
     [SerializeField]
     BoardManager boardManagerScritpt;
+    string inisendData;
 
+    public string IniSendData { get { return inisendData; } set { inisendData = value; } }
+
+    public void SetPlayerNumber(int set)
+    {
+        playerNumber = set;
+    }
+
+    public int GetPlayerNumber()
+    {
+        return playerNumber;
+    }
 
     public void SetCharacter(int num, int playernum)
     {
@@ -54,7 +65,7 @@ public class DeckClass : MonoBehaviour
 
     void IniDeckDraw()
     {
-        if(characterList.Count == 0)
+        if (characterList.Count == 0)
         {
             deckHandScript.GameFinish(playerNumber);
         }
@@ -64,11 +75,8 @@ public class DeckClass : MonoBehaviour
             deckHandScript.SetDrawObj(characterList[0]);//デッキの一番先頭のカード
             characterList.RemoveAt(0);//デッキの一番最初のカードを削除
         }
+
         deckHandScript.SetIsIniDraw(true);
-    }
-    public int GetPlayerNumber()
-    {
-        return playerNumber;
     }
 
     /// <summary>
@@ -96,22 +104,25 @@ public class DeckClass : MonoBehaviour
         massstatus = mass.GetComponent<MassStatus>();
         instancepos.z--;
         GameObject instance = Instantiate(sumonobj, instancepos, Quaternion.identity);
-        if(playernum == 2)
+        if (playernum == 2)
         {
             GameObject frame = instance.GetComponent<SummonStatus>().GetFrame();
             GameObject hpnumberobj = null, attacknumberobj = null;
-            instance.GetComponent<SummonStatus>().GetIconObjects(ref hpnumberobj,ref attacknumberobj);
+            instance.GetComponent<SummonStatus>().GetIconObjects(ref hpnumberobj, ref attacknumberobj);
             frame.transform.rotation = Quaternion.Euler(0, 0, 180);
             hpnumberobj.transform.rotation = Quaternion.Euler(0, 0, -180);
             attacknumberobj.transform.rotation = Quaternion.Euler(0, 0, -180);
         }
-        instance.GetComponent<SummonStatus>().SetSkillManager(skillmanager);
-        instance.GetComponent<SummonStatus>().Ini();
-        instance.GetComponent<SummonStatus>().SetPlayerNumber(playernum);
-        instance.GetComponent<SummonStatus>().SetAttachMass(massstatus);
-        boardManagerScritpt.AddSummonCharacter(instance.GetComponent<SummonStatus>());
-        SkillManager skillmamnager = instance.GetComponent<SummonStatus>().GetSkillManager();
-        CharacterSkill skill = instance.GetComponent<SummonStatus>().GetSkill();
+        SummonStatus instancesummon = instance.GetComponent<SummonStatus>();
+        instancesummon.SetSkillManager(skillmanager);
+        instancesummon.Ini();
+        instancesummon.SetPlayerNumber(playernum);
+        instancesummon.SetAttachMass(massstatus);
+        boardManagerScritpt.AddSummonCharacter(instancesummon);
+        int id = instancesummon.InstanceID;
+        SocketGameStatus.kingdata = "summon" + " / " + id.ToString();
+        SkillManager skillmamnager = instancesummon.GetSkillManager();
+        CharacterSkill skill = instancesummon.GetSkill();
         skillmamnager.AddSkillList(skill);
         massstatus.SetMassStatus(BoardManager.MassMoveStatus.Not);
         massstatus.SetCharacterObj(instance);

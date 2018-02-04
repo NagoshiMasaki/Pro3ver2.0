@@ -37,15 +37,32 @@ public class IllustrationStatus : MonoBehaviour
     SpriteRenderer attackNumberSprite2;
     [SerializeField]
     SpriteRenderer attackNumberSprite3;
+    [SerializeField]
+    GameObject iconParentObj;
+    Sprite defaultSprite;
+    int instanceID;
 
+    public int InstanceID { get { return instanceID; } set { instanceID = value; } }
+
+    public GameObject GetIconParentObj()
+    {
+        return iconParentObj;
+    }
 
     public void Ini(DeckHandManager set)
     {
+        instanceID = InstanceId.instanceid;
+        InstanceId.instanceid++;
+        defaultSprite = GetComponent<SpriteRenderer>().sprite;
         deckHandManagerScript = set;
         SetHpNumberSprite();
         SetAttackNumberSprite();
     }
 
+    public Sprite GetDefaultSprite()
+    {
+        return defaultSprite;
+    }
     void SetHpNumberSprite()
     {
         SetSpriteNumbers(hpNumber,hpNumberSprite1, hpNumberSprite2, hpNumberSprite3);
@@ -103,6 +120,7 @@ public class IllustrationStatus : MonoBehaviour
     {
         transform.localScale = defaultScale;
     }
+
     public int GetDictionaryNumber()
     {
         return dictionaryNumber;
@@ -120,6 +138,7 @@ public class IllustrationStatus : MonoBehaviour
         costnum = costNumber;
         playernum = playerNumber;
     }
+
     public void SetPlayerNumber(int num)
     {
         playerNumber = num;
@@ -129,8 +148,14 @@ public class IllustrationStatus : MonoBehaviour
     {
         return costNumber;
     }
+
     public MoveData.Rate GetRate()
     {
         return rate;
+    }
+
+    public void IniSendDataSetting()
+    {
+        SocketGameStatus.inidata += instanceID.ToString() + "," + dictionaryNumber.ToString() + "/";
     }
 }

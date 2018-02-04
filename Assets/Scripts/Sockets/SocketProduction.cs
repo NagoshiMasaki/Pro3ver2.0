@@ -29,6 +29,7 @@ public class SocketProduction
 
     public static void SockSend(Socket sock, string senddata)
     {
+        Debug.Log("送信内容 =" + senddata);
         byte[] sendbyte = Encoding.UTF8.GetBytes(senddata);
         sock.Send(sendbyte);
     }
@@ -37,6 +38,7 @@ public class SocketProduction
     {
         sock.Receive(recvbyte);
         string data = Encoding.UTF8.GetString(recvbyte);
+        Debug.Log(data +"を受信しました");
         return data;
     }
 }

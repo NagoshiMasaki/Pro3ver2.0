@@ -14,7 +14,7 @@ public class PlayerAction : MonoBehaviour
 
     [SerializeField]
     PlayerStatus playerStatusScript;
-    int playerNumber = 1;
+    static int playerNumber = 1;
     [SerializeField]
     BoardStatus boardStatusScript;
     [SerializeField]
@@ -57,6 +57,8 @@ public class PlayerAction : MonoBehaviour
     GameObject moveIcon;
     Vector3 buttonDownPosition;
     bool isButtonDown;
+
+    public static int PlayerNumber { get { return playerNumber; } set { playerNumber = value; } }
     /////////////////////////////////
     //グローバル変数終了
     /////////////////////////////////

@@ -8,9 +8,20 @@ public class GameMaster : MonoBehaviour
     bool isGamePlay = true;
     [SerializeField]
     Ini iniScript;
+    [SerializeField]
+    bool isNetWork;
+
     void Start()
     {
-        iniScript.IniStart();
+        if(!isNetWork)
+        {
+            iniScript.IniStart();
+        }
+    }
+
+    public bool GetIsNetWork()
+    {
+        return isNetWork;
     }
 
     public void SetIsGamePlay(bool set)
@@ -21,5 +32,10 @@ public class GameMaster : MonoBehaviour
     public bool GetIsGamePlay()
     {
         return isGamePlay;
+    }
+
+    public void Ini()
+    {
+        iniScript.IniStart();
     }
 }
