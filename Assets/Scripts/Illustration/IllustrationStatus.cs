@@ -63,6 +63,7 @@ public class IllustrationStatus : MonoBehaviour
     {
         return defaultSprite;
     }
+
     void SetHpNumberSprite()
     {
         SetSpriteNumbers(hpNumber,hpNumberSprite1, hpNumberSprite2, hpNumberSprite3);
@@ -156,6 +157,6 @@ public class IllustrationStatus : MonoBehaviour
 
     public void IniSendDataSetting()
     {
-        SocketGameStatus.inidata += instanceID.ToString() + "," + dictionaryNumber.ToString() + "/";
+        SocketGameStatus.inidata += ":" + instanceID.ToString() + "," + dictionaryNumber.ToString() + "/";
     }
 }

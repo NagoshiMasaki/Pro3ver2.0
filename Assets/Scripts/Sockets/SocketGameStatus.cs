@@ -37,5 +37,4 @@ public class SocketGameStatus : MonoBehaviour
     {
         return playerDeckClassScript;
     }
-
 }

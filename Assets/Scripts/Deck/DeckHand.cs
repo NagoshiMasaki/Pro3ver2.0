@@ -8,7 +8,6 @@ using UnityEngine;
 
 public class DeckHand : MonoBehaviour
 {
-
     [SerializeField]
     List<GameObject> deckHandList;
     [SerializeField]
@@ -161,9 +160,14 @@ public class DeckHand : MonoBehaviour
 
     public void AllCardSendSetting()
     {
-        foreach(GameObject card in deckHandList)
+        foreach (GameObject card in deckHandList)
         {
             card.GetComponent<IllustrationStatus>().IniSendDataSetting();
         }
+    }
+
+    public void IniSetInstanceNumber(List<int> idlist, List<int> number)
+    {
+
     }
 }

@@ -2,8 +2,8 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.IO;
-
+using System;
+using System.Collections.Generic;
 public class SocketAction : MonoBehaviour
 {
     Socket parentSock;
@@ -70,8 +70,6 @@ public class SocketAction : MonoBehaviour
         }
     }
 
-
-
     void Send()
     {
         string message = "Hello World";
@@ -116,26 +114,15 @@ public class SocketAction : MonoBehaviour
         switch (sendstatus)
         {
             case SendStatus.Ini:
-                sendData = "ini" + "/" + SocketGameStatus.inidata + SocketGameStatus.kingdata;
+                sendData = "ini" + "/" + SocketGameStatus.inidata;
                 break;
         }
         sendstatus = SendStatus.None;
         SocketProduction.SockSend(parentSock, sendData);
+        sendData = "";
         return;
     }
 
-    /// <summary>
-    /// 受信処理
-    /// </summary>
-    void RecvSocket()
-    {
-        bool ret = true;
-
-        while (ret)
-        {
-
-        }
-    }
 
     void RecvDataAnalysis(string recvdata)
     {
@@ -152,9 +139,28 @@ public class SocketAction : MonoBehaviour
                 break;
             case "ini":
                 break;
+            case "king":
+                break;
         }
     }
 
+
+    void DeckHandInstanceIdSet(string[] data)
+    {
+        List<int> idlist = new List<int>();
+        List<int> numberlist = new List<int>();
+        Array.Clear(data,0,1);
+        foreach(string index in data)
+        {
+            string[] iddictionary = index.Split(':');//図鑑ナンバーとIDナンバー
+            foreach(string dictionary in iddictionary)
+            {
+                string[] numbers = dictionary.Split(',');
+                idlist.Add(int.Parse(numbers[0]));
+                numberlist.Add(int.Parse(numbers[1]));
+            }
+        }
+    }
 
     void SetCards(string[] data)
     {
@@ -190,7 +196,6 @@ public class SocketAction : MonoBehaviour
         RecvComplete();
         DeckSend();
     }
-
 
     /// <summary>
     /// デッキを読み取り送る処理
