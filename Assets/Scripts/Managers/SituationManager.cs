@@ -136,7 +136,6 @@ public class SituationManager : MonoBehaviour
                     P2Obj.SetActive(false);
                     deckHandManagerScript.AllChangeCard(2, false);
                     deckHandManagerScript.AllChangeCard(1, true);
-
                     break;
             }
         }

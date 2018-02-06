@@ -2,7 +2,7 @@
 using System.Net;
 using System.Text;
 using UnityEngine;
-
+using System;
 public class SocketProduction
 {
     static　byte[] recvbyte = new byte[1000];
@@ -32,13 +32,16 @@ public class SocketProduction
         Debug.Log("送信内容 =" + senddata);
         byte[] sendbyte = Encoding.UTF8.GetBytes(senddata);
         sock.Send(sendbyte);
+        Debug.Log("送信完了");
     }
 
     public static string SockRecv(Socket sock)
     {
+        Debug.Log("受信開始");
         sock.Receive(recvbyte);
         string data = Encoding.UTF8.GetString(recvbyte);
         Debug.Log(data +"を受信しました");
+        Array.Clear(recvbyte,0,recvbyte.Length-1);
         return data;
     }
 }

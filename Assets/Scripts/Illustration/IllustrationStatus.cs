@@ -40,9 +40,12 @@ public class IllustrationStatus : MonoBehaviour
     [SerializeField]
     GameObject iconParentObj;
     Sprite defaultSprite;
+    [SerializeField]
     int instanceID;
 
     public int InstanceID { get { return instanceID; } set { instanceID = value; } }
+
+    public int DictionaryNumber { get { return dictionaryNumber; } set { dictionaryNumber = value; } }
 
     public GameObject GetIconParentObj()
     {
@@ -155,8 +158,19 @@ public class IllustrationStatus : MonoBehaviour
         return rate;
     }
 
+    /// <summary>
+    /// 初期の手札の処理
+    /// </summary>
     public void IniSendDataSetting()
     {
-        SocketGameStatus.inidata += ":" + instanceID.ToString() + "," + dictionaryNumber.ToString() + "/";
+        SocketGameStatus.inidata += dictionaryNumber.ToString() + "," + instanceID.ToString() + "/";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void SetSendDataIDSetting()
+    {
+        SocketGameStatus.senddata = dictionaryNumber.ToString() + "," + InstanceID.ToString();
     }
 }

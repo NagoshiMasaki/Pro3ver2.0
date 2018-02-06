@@ -21,7 +21,7 @@ public class CSVRead : MonoBehaviour
             int col = int.Parse(cols[0]);
             deckClassScript.SetCharacter(col, playernumber);
         }
-        deckClassScript.IniShaffle();
+        deckClassScript.IniShaffle(true);
     }
 
     public void ResourcesRead()
@@ -34,7 +34,7 @@ public class CSVRead : MonoBehaviour
             int col = int.Parse(cols[0]);
             deckClassScript.SetCharacter(col, deckClassScript.GetPlayerNumber());
         }
-        deckClassScript.IniShaffle();
+        deckClassScript.IniShaffle(true);
     }
 
 

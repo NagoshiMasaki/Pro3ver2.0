@@ -10,6 +10,9 @@ public class GameMaster : MonoBehaviour
     Ini iniScript;
     [SerializeField]
     bool isNetWork;
+    int netWorkPlayerNumber;//通信するときの自分の番号
+
+    public int NetWorkPlayerNumber { get { return netWorkPlayerNumber; } set { netWorkPlayerNumber = value; } }
 
     void Start()
     {
@@ -33,6 +36,7 @@ public class GameMaster : MonoBehaviour
     {
         return isGamePlay;
     }
+
 
     public void Ini()
     {

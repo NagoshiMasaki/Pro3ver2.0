@@ -106,6 +106,16 @@ public class DeckHand : MonoBehaviour
         {
             instsnceobj.GetComponent<IllustrationStatus>().ResetScale();
         }
+        SetSendDataSetting(instsnceobj.GetComponent<IllustrationStatus>());
+    }
+
+    void SetSendDataSetting(IllustrationStatus card)
+    {
+        if(deckHandManagerScript.GetIsNetWork() && deckHandManagerScript.GetNetWorkPlayerNumber() == deckHandManagerScript.GetPlayerTurn())
+        {
+            card.SetSendDataIDSetting();
+            deckHandManagerScript.AddSocketStataus();
+        }
     }
 
     void MoveDeckHandPos()
@@ -166,8 +176,26 @@ public class DeckHand : MonoBehaviour
         }
     }
 
-    public void IniSetInstanceNumber(List<int> idlist, List<int> number)
+    /// <summary>
+    /// 初期の手札にセットされる値
+    /// </summary>
+    /// <param name="idlist"></param>
+    /// <param name="number"></param>
+    public void IniSetInstanceNumber(List<int> dictionarylist, List<int> numberlist)
     {
-
+        for(int count = 0; count < deckHandList.Count; count++)
+        {
+            IllustrationStatus card = deckHandList[count].GetComponent<IllustrationStatus>();
+            int id = card.DictionaryNumber;
+            for(int index = 0; index < dictionarylist.Count; index++)
+            {
+                if(id == dictionarylist[index])
+                {
+                    card.InstanceID = numberlist[index];
+                    dictionarylist.RemoveAt(index);
+                    numberlist.RemoveAt(index);
+                }
+            }
+        }
     }
 }

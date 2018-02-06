@@ -18,6 +18,25 @@ public class DeckHandManager : MonoBehaviour
     SpriteManager spriteManagerScript;
     [SerializeField]
     SituationManager situaionManagerScript;
+    [SerializeField]
+    GameMaster gameMasterScript;
+    [SerializeField]
+    SocketManager socketManagerScript;
+
+    public void AddSocketStataus()
+    {
+        socketManagerScript.AddStaus(SocketAction.GameStatus.DrawCardID);
+    }
+
+    public bool GetIsNetWork()
+    {
+        return gameMasterScript.GetIsNetWork();
+    }
+
+    public int GetNetWorkPlayerNumber()
+    {
+        return gameMasterScript.NetWorkPlayerNumber;
+    }
 
     public Sprite GetNumber(int number)
     {
@@ -98,7 +117,6 @@ public class DeckHandManager : MonoBehaviour
             case 2:
                 decxHand2Script.AllChangeCard(set);
                 break;
-
         }
 
     }

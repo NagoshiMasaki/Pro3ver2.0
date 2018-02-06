@@ -56,14 +56,35 @@ public class DeckClass : MonoBehaviour
     }
 
     /// <summary>
-    /// 読み込んだデッキをシャッフル処理
+    /// オンライン時の自分の引いたカードの生成処理
     /// </summary>
-    public void IniShaffle()
+    /// <param name="dictionarynumber"></param>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public GameObject InstanceCard(int dictionarynumber, int id)
     {
-        IniDeckDraw();
+        for(int count = 0; count < characterList.Count; count++)
+        {
+            IllustrationStatus card = characterList[count].GetComponent<IllustrationStatus>();
+            if(card.GetDictionaryNumber() == dictionarynumber)
+            {
+                GameObject cardobj = characterList[count];
+                characterList.RemoveAt(count);
+                return cardobj;
+            }
+        }
+        return null;
     }
 
-    void IniDeckDraw()
+    /// <summary>
+    /// 読み込んだデッキをシャッフル処理
+    /// </summary>
+    public void IniShaffle(bool isplayer)
+    {
+        IniDeckDraw(isplayer);
+    }
+
+    void IniDeckDraw(bool isplayer)
     {
         if (characterList.Count == 0)
         {
@@ -75,7 +96,11 @@ public class DeckClass : MonoBehaviour
             deckHandScript.SetDrawObj(characterList[0]);//デッキの一番先頭のカード
             characterList.RemoveAt(0);//デッキの一番最初のカードを削除
         }
-
+        if (!isplayer)
+        {
+            deckHandScript.AllCardSendSetting();
+        }
+        Debug.Log("初期の手札の設定完了");
         deckHandScript.SetIsIniDraw(true);
     }
 
@@ -126,5 +151,10 @@ public class DeckClass : MonoBehaviour
         skillmamnager.AddSkillList(skill);
         massstatus.SetMassStatus(BoardManager.MassMoveStatus.Not);
         massstatus.SetCharacterObj(instance);
+    }
+
+    public DeckHand GetDeckHand()
+    {
+        return deckHandScript;
     }
 }
