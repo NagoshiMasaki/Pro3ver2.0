@@ -23,6 +23,7 @@ public class SocketGameStatus : MonoBehaviour
     public static string kingdata = "";
     public static string recvinhanddata;
     public static string senddata;
+    public static string recvdata;
     [SerializeField]
     List<SocketAction.GameStatus> gameStatusList = new List<SocketAction.GameStatus>();
 
@@ -30,7 +31,7 @@ public class SocketGameStatus : MonoBehaviour
     public List<string> RecvDataList { get { return recvDataList; } set { recvDataList = value; } }
 
     public DeckManager DeckManagerScript { get { return deckManagerScript; } }
-    public SituationManager SituationManagerScropt { get { return situationManagerScript; } }
+    public SituationManager SituationManagerScript { get { return situationManagerScript; } }
     public string CopyRecvData { get { return copyRecvData; } set { copyRecvData = value; } }
     public DeckClass DeckClassScript { get { return deckclassScript; }}
     public CSVRead CsvReadScript { get { return csvreadScript; } }

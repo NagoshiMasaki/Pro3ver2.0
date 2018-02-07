@@ -22,6 +22,7 @@ public class SocketAction : MonoBehaviour
         DeckReadComplete,
         IniDeckHandIDRecv,
         DrawCardID,
+        DrawCardSetting,
     }
     [SerializeField]
     GameStatus status;
@@ -88,15 +89,25 @@ public class SocketAction : MonoBehaviour
                 break;
             case GameStatus.IniDeckHandIDRecv://受け取った初期の手札のidを振り分ける返す
                 RecvDataAnalysis(RecvStatus.IniDeckHandIDRecv);
-                SocketCloseStart();
+               // SocketCloseStart();
                 break;
-            case GameStatus.DrawCardID:
+            case GameStatus.DrawCardID://ドローした手札のidを送る
                 sendstatus = SendStatus.DrawId;
                 SocketStart();
+                break;
+            case GameStatus.DrawCardSetting:
+                DrawCardSetting(SocketGameStatus.recvdata);
                 break;
         }
     }
 
+    void IniTurnSetting()
+    {
+        if (gameMasterScript.NetWorkPlayerNumber == 1)
+        {
+            RecvStart();
+        }
+    }
 
     void SocketIni()
     {
@@ -117,10 +128,22 @@ public class SocketAction : MonoBehaviour
         return;
     }
 
-    public void SocketStart()
+    void SocketStart()
     {
         socketThread = new Thread(SendSocketData);
         socketThread.Start();
+    }
+
+    void RecvStart()
+    {
+        socketThread = new Thread(RecvSocket);
+        socketThread.Start();
+    }
+
+    void RecvSocket()
+    {
+        string recvdata = SocketProduction.SockRecv(parentSock);
+        RecvDataAnalysis(recvdata);
     }
 
     /// <summary>
@@ -170,24 +193,29 @@ public class SocketAction : MonoBehaviour
                 socketGameStatusScript.GameStatusList.Add(idrecv);
                 RecvComplete();
                 break;
-            case "dc":
+            case "dc"://通信相手がドローのデータを送信してきた時の処理
                 Debug.Log("dcの処理をします");
-                DrawCardSetting(spritdata);
+                GameStatus drawid = GameStatus.DrawCardSetting;
+                socketGameStatusScript.GameStatusList.Add(drawid);
+                SocketGameStatus.recvdata = copyrecvdata;
                 break;
             case "king":
                 break;
         }
     }
 
-    void DrawCardSetting(string[] data)
+    void DrawCardSetting(string data)
     {
-        string[] carddata = data[1].Split(',');
+        Debug.Log("ドローの設定を行います。");
+        string[] splitdata= data.Split('/');
+        string[] carddata = splitdata[1].Split(',');
         int id = int.Parse(carddata[1]);
         int dictionarnumber = int.Parse(carddata[0]);
         DeckClass deckclass = socketGameStatusScript.GetDeckClassScript();
         GameObject card = deckclass.InstanceCard(dictionarnumber,id);
         DeckHand deckhand = deckclass.GetDeckHand();
         deckhand.SetDrawObj(card);
+        socketGameStatusScript.SituationManagerScript.NetWorkDrawAction();
     }
 
 
@@ -217,7 +245,6 @@ public class SocketAction : MonoBehaviour
         Debug.Log("デッキのidを設定します。");
         List<int> dictionarylist = new List<int>();
         List<int> numberlist = new List<int>();
-        //        Array.Clear(data, 0, 1);
         int length = data.Length;
         for (int count = 1; count < length - 2; count++)
         {
@@ -251,11 +278,6 @@ public class SocketAction : MonoBehaviour
     {
         parentSock.Close();
         Debug.Log("ソケットを閉じます");
-    }
-
-    void SetCards(string[] data)
-    {
-
     }
 
     /// <summary>

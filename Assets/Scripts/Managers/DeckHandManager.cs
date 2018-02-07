@@ -75,7 +75,6 @@ public class DeckHandManager : MonoBehaviour
         decxHand2Script.Ini();
     }
 
-
     public void InstanceDrawCard(int num,GameObject drawobj)
     {
         switch (num)
@@ -118,6 +117,5 @@ public class DeckHandManager : MonoBehaviour
                 decxHand2Script.AllChangeCard(set);
                 break;
         }
-
     }
 }

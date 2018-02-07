@@ -80,8 +80,7 @@ public class DeckHand : MonoBehaviour
         GameObject instsnceobj = null;
         if (isIniDraw)
         {
-            Debug.Log(obj);
-            instsnceobj = Instantiate(obj, instanceDrawPosObj.transform.position, Quaternion.identity);//カードの生成
+            instsnceobj = Instantiate(obj, instanceDrawPosObj.transform.position, Quaternion.identity);//初期手札のドローでない時の処理
         }
         else
         {

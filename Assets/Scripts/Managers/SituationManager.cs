@@ -37,10 +37,6 @@ public class SituationManager : MonoBehaviour
         Battle,
         End,
     }
-    public enum SkillStatus
-    {
-
-    }
     [SerializeField]
     int moveCount;
     [SerializeField]
@@ -51,6 +47,7 @@ public class SituationManager : MonoBehaviour
     [SerializeField]
     PlayerManager playerManagerScript;
     static int turnMasterNumber;
+
     void Update()
     {
         timer -= Time.deltaTime;
@@ -193,7 +190,6 @@ public class SituationManager : MonoBehaviour
                     break;
             }
         }
-
     }
 
     public void NextPhase()
@@ -239,8 +235,20 @@ public class SituationManager : MonoBehaviour
 
     void DrawAction(int playernum)
     {
+        if(playernum != gameMasterScript.NetWorkPlayerNumber)
+        {
+            return;
+        }
         GameObject drawobj = deckManagerScript.GetDrawObj(playernum);
         deckHandManagerScript.InstanceDrawCard(playernum, drawobj);
+        status = Phase.Summon;
+        UpdatePhase();
+    }
+
+
+    public void NetWorkDrawAction()
+    {
+        Debug.Log("ネットワークからのドローです。");
         status = Phase.Summon;
         UpdatePhase();
     }

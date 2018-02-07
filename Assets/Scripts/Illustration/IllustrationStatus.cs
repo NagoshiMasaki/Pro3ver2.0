@@ -159,7 +159,7 @@ public class IllustrationStatus : MonoBehaviour
     }
 
     /// <summary>
-    /// 初期の手札の処理
+    /// 初期の手札のデータの時の処理
     /// </summary>
     public void IniSendDataSetting()
     {
@@ -167,7 +167,7 @@ public class IllustrationStatus : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// 通常のドローをした時の処理
     /// </summary>
     public void SetSendDataIDSetting()
     {
